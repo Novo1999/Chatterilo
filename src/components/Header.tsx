@@ -1,9 +1,8 @@
-import { Plus, Search } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
 import ShimmerBtn from './ui/shimmer-btn'
-import { SparklesCore } from './ui/sparkles'
 import UserNameSparkle from './UserNameSparkle'
 
 const Header = () => {
