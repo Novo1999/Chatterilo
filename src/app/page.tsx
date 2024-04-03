@@ -4,7 +4,7 @@ import Header from '../components/Header'
 
 export default function Home() {
   return (
-    <main className='bg-[#23262e] min-h-screen p-6'>
+    <main className='bg-[#23262e] min-h-screen px-6 pt-6'>
       <Header />
       <Stories />
       <ChatUsers />

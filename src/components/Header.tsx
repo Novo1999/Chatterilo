@@ -15,14 +15,14 @@ const Header = () => {
         </Avatar>
         <div className='w-full ml-4 bg-[#23262e] flex flex-col items-center justify-center overflow-hidden rounded-md'>
           {/* user name */}
-          <h1 className='md:text-7xl text-md lg:text-9xl font-bold text-center text-white relative z-20'>
+          <h1 className='md:text-xl text-md font-bold text-center text-white relative z-20'>
             Novodip Mondal
           </h1>
           {/* sparkle */}
           <UserNameSparkle />
         </div>
       </div>
-      <div className='flex *:text-white  flex-col mt-4'>
+      <div className='flex *:text-white items-center flex-col mt-4'>
         {/* label */}
         <Label className='mb-4' htmlFor='firstname'>
           Search Users
