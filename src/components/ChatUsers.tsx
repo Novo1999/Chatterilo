@@ -3,9 +3,9 @@ import ChatUserItem from './ChatUserItem'
 
 const ChatUsers = () => {
   return (
-    <section className='mt-6 block md:flex flex-row'>
+    <section className='mt-6 block md:flex flex-row max-h-[540px] 2xl:max-h-[620px]'>
       {/* chat users */}
-      <div className='flex flex-col gap-4 h-[550px] xl:h-[620px] xl:w-[35rem] overflow-y-scroll'>
+      <div className='flex flex-col gap-4 xl:w-[35rem] overflow-y-scroll'>
         <ChatUserItem />
       </div>
       {/* chat box */}
