@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Poppins, Sora } from 'next/font/google'
+import { Caveat, Poppins, Sora } from 'next/font/google'
 import './globals.css'
 
 const sora = Sora({
@@ -15,6 +15,13 @@ const poppins = Poppins({
   variable: '--font-poppins',
 })
 
+const caveat = Caveat({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  fallback: ['Inter'],
+  variable: '--font-caveat',
+})
+
 export const metadata: Metadata = {
   title: 'Chatterilo',
   description: 'A Chat Application',
@@ -27,7 +34,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${sora.className} ${poppins.variable}`}>
+      <body
+        className={`${sora.className} ${poppins.variable} ${caveat.variable}`}
+      >
         {children}
       </body>
     </html>
