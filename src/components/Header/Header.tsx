@@ -1,13 +1,23 @@
+'use client'
 import { Plus } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
-import { Input } from './ui/input'
-import { Label } from './ui/label'
-import ShimmerBtn from './ui/shimmer-btn'
-import UserNameSparkle from './UserNameSparkle'
+import dynamic from 'next/dynamic'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
+import { Input } from '../ui/input'
+import { Label } from '../ui/label'
+import ShimmerBtn from '../ui/shimmer-btn'
+import UserNameSparkle from '../UserNameSparkle'
+
+// causes hydration error so make this a non ssr
+const NoSSRConnectionNotifier = dynamic(() => import('./ConnectionNotifier'), {
+  ssr: false,
+})
 
 const Header = () => {
   return (
     <>
+      <div className='h-6'>
+        <NoSSRConnectionNotifier />
+      </div>
       <div className='flex-between justify-center pt-4'>
         <div className='block md:flex'>
           <Avatar>

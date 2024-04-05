@@ -148,3 +148,11 @@
     @apply bg-gray-300 !important;
   }
 }
+
+/* hide scrollbars */
+
+.story-section::-webkit-scrollbar,
+.chat-users::-webkit-scrollbar,
+.message-container::-webkit-scrollbar {
+  width: 0;
+}

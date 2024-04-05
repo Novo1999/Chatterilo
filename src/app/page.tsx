@@ -1,6 +1,6 @@
 import ChatUsers from '@/components/ChatUsers'
+import Header from '@/components/Header/Header'
 import Stories from '@/components/Stories'
-import Header from '../components/Header'
 
 export default function Home() {
   return (
