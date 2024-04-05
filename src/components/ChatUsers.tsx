@@ -5,7 +5,8 @@ const ChatUsers = () => {
   return (
     <section className='mt-6 block md:flex flex-row md:max-h-[540px] xl:max-h-[600px] 2xl:max-h-[600px]'>
       {/* chat users */}
-      <div className='flex flex-col gap-4 xl:w-[35rem] overflow-y-scroll chat-users'>
+      <div className='flex flex-col gap-4 xl:w-[35rem] overflow-y-scroll chat-users shadow-sm shadow-slate-200 rounded-md p-2'>
+        <p className='text-white'>Messages</p>
         <ChatUserItem />
       </div>
       {/* chat box */}

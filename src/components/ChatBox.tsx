@@ -1,4 +1,5 @@
 'use client'
+import { socket } from '@/lib/socket'
 import {
   ArrowLeft,
   Info,
@@ -9,17 +10,35 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import MessagesContainer from './MessagesContainer'
 import { Input } from './ui/input'
 
+type MessageInput = {
+  message: string
+}
+
 const Chatbox = () => {
   const pathname = usePathname()
+  const { register, handleSubmit, resetField } = useForm<MessageInput>()
+
+  const sendMessage = (message: string) => {
+    socket.emit('message', message)
+    socket.on('message', (socket) => {
+      console.log(socket)
+    })
+  }
+
+  const onSubmit: SubmitHandler<MessageInput> = (data) => {
+    sendMessage(data.message)
+    resetField('message')
+  }
 
   return (
     <div
-      className={`p-3 w-80 min-[375px]:w-96 min-[425px]:w-[35rem] ${
+      className={`w-80 min-[375px]:w-96 min-[425px]:w-[35rem] ${
         pathname.startsWith('/messages') ? 'flex' : 'hidden'
-      } sm:w-[25rem] lg:w-[37rem] md:w-[28rem] xl:w-full md:flex flex-col justify-between`}
+      } sm:w-[25rem] lg:w-[37rem] md:w-[28rem] xl:w-full md:flex flex-col justify-between ml-2 rounded-md shadow-slate-400 p-4 shadow-sm`}
     >
       <nav className='flex-between text-gray-200 text-xs'>
         {/* nav left */}
@@ -65,15 +84,18 @@ const Chatbox = () => {
           <Paperclip />{' '}
         </div>
         <div className='flex-grow relative'>
-          <Input
-            gradient='teal'
-            className='bg-black text-white w-full'
-            placeholder='Write your message...'
-            type='text'
-          />
-          <button className='text-white absolute right-4 bottom-2'>
-            <Send />
-          </button>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Input
+              gradient='teal'
+              className='bg-slate-700 text-white w-full'
+              placeholder='Write your message...'
+              type='text'
+              {...register('message', { required: true })}
+            />
+            <button className='text-white absolute right-4 bottom-2'>
+              <Send />
+            </button>
+          </form>
         </div>
       </div>
     </div>
