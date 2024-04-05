@@ -70,7 +70,7 @@ const SignUpPage = () => {
               />
             </motion.div>
           </div>
-          <div className='flex flex-col gap-2'>
+          <div className='flex flex-col gap-3'>
             <FormField
               control={form.control}
               name='username'
@@ -80,6 +80,7 @@ const SignUpPage = () => {
                     <motion.div
                       initial={{ x: -30, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.3 }}
                     >
                       <Input
                         gradient='red'
@@ -103,6 +104,7 @@ const SignUpPage = () => {
                     <motion.div
                       initial={{ x: 30, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.3 }}
                     >
                       <Input
                         gradient='red'
@@ -126,6 +128,7 @@ const SignUpPage = () => {
                     <motion.div
                       initial={{ x: -30, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.3 }}
                     >
                       <Input
                         gradient='red'
@@ -145,6 +148,7 @@ const SignUpPage = () => {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 whileTap={{ scale: 0.8 }}
+                transition={{ delay: 0.3 }}
                 className='bg-teal-400 text-white p-2 rounded-md shadow-md mb-4'
                 type='submit'
               >
@@ -155,6 +159,7 @@ const SignUpPage = () => {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               whileTap={{ y: -3 }}
+              transition={{ delay: 0.3 }}
               className='flex-center'
             >
               <Link

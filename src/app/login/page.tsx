@@ -61,7 +61,7 @@ const LoginPage = () => {
               />
             </motion.div>
           </div>
-          <div className='flex flex-col gap-2 md:pt-12'>
+          <div className='flex flex-col gap-3 md:pt-12'>
             <FormField
               control={form.control}
               name='email'
@@ -71,6 +71,7 @@ const LoginPage = () => {
                     <motion.div
                       initial={{ x: 30, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.3 }}
                     >
                       <Input
                         gradient='red'
@@ -94,6 +95,7 @@ const LoginPage = () => {
                     <motion.div
                       initial={{ x: -30, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.3 }}
                     >
                       <Input
                         gradient='red'
@@ -113,6 +115,7 @@ const LoginPage = () => {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 whileTap={{ scale: 0.8 }}
+                transition={{ delay: 0.3 }}
                 className='bg-blue-400 text-white p-2 rounded-md shadow-md mb-4'
                 type='submit'
               >
@@ -123,6 +126,7 @@ const LoginPage = () => {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               whileTap={{ y: -3 }}
+              transition={{ delay: 0.3 }}
               className='flex-center'
             >
               <Link
