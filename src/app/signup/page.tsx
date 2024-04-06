@@ -1,5 +1,4 @@
 'use client'
-import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -8,9 +7,11 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import useSignUp from '@/hooks/api/useSignUp'
 import validateEmail from '@/utils/validateEmail'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Player } from '@lottiefiles/react-lottie-player'
+import { AxiosError } from 'axios'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
@@ -32,6 +33,7 @@ const formSchema = z.object({
 })
 
 const SignUpPage = () => {
+  const { mutate, isPending } = useSignUp()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -42,8 +44,23 @@ const SignUpPage = () => {
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+    mutate(values, {
+      onSuccess: () => form.reset(),
+      onError: (error) => {
+        if (error instanceof AxiosError) {
+          form.setError('root', {
+            type: 'custom',
+            message: error?.response?.data?.msg,
+          })
+        }
+      },
+    })
   }
+
+  // set gradient based on error
+  const hasError = Object.keys(form.formState.errors).length > 0
+  const gradientColor = hasError ? 'red' : 'blue'
+
   return (
     <main className='flex justify-center flex-col items-center min-h-[100vh] bg-gradient-to-r from-teal-400 to-blue-600'>
       <Form {...form}>
@@ -83,7 +100,7 @@ const SignUpPage = () => {
                       transition={{ delay: 0.3 }}
                     >
                       <Input
-                        gradient='red'
+                        gradient={gradientColor}
                         className='bg-cyan-500 text-white w-full shadow-md md:w-72'
                         placeholder='Username'
                         type='text'
@@ -107,7 +124,7 @@ const SignUpPage = () => {
                       transition={{ delay: 0.3 }}
                     >
                       <Input
-                        gradient='red'
+                        gradient={gradientColor}
                         className='bg-cyan-500 text-white shadow-md md:w-72'
                         placeholder='Email'
                         type='text'
@@ -131,7 +148,7 @@ const SignUpPage = () => {
                       transition={{ delay: 0.3 }}
                     >
                       <Input
-                        gradient='red'
+                        gradient={gradientColor}
                         className='bg-cyan-500 text-white shadow-md md:w-72'
                         placeholder='Password'
                         type='text'
@@ -143,23 +160,30 @@ const SignUpPage = () => {
                 </FormItem>
               )}
             />
+            {/* error from response */}
+            {form.formState.errors?.root?.message && (
+              <p className='text-red-500 text-sm'>
+                {form.formState.errors?.root?.message}
+              </p>
+            )}
             <div className='flex-center'>
               <motion.button
                 initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
+                animate={{ y: 0, opacity: 1, transition: { delay: 0.3 } }}
                 whileTap={{ scale: 0.8 }}
-                transition={{ delay: 0.3 }}
-                className='bg-teal-400 text-white p-2 rounded-md shadow-md mb-4'
+                className={`${
+                  isPending ? 'bg-gray-400' : 'bg-teal-400 '
+                } text-white p-2 rounded-md shadow-md mb-4`}
                 type='submit'
+                disabled={isPending}
               >
                 Sign Up
               </motion.button>
             </div>
             <motion.div
               initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
+              animate={{ y: 0, opacity: 1, transition: { delay: 0.3 } }}
               whileTap={{ y: -3 }}
-              transition={{ delay: 0.3 }}
               className='flex-center'
             >
               <Link

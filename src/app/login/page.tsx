@@ -32,6 +32,9 @@ const LoginPage = () => {
     },
   })
 
+  const hasError = Object.keys(form.formState.errors).length > 0
+  const gradientColor = hasError ? 'red' : 'blue'
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
   }
@@ -74,7 +77,7 @@ const LoginPage = () => {
                       transition={{ delay: 0.3 }}
                     >
                       <Input
-                        gradient='red'
+                        gradient={gradientColor}
                         className='bg-cyan-500 text-white shadow-md md:w-72'
                         placeholder='Email'
                         type='text'
@@ -98,7 +101,7 @@ const LoginPage = () => {
                       transition={{ delay: 0.3 }}
                     >
                       <Input
-                        gradient='red'
+                        gradient={gradientColor}
                         className='bg-cyan-500 text-white shadow-md md:w-72'
                         placeholder='Password'
                         type='text'
@@ -113,9 +116,8 @@ const LoginPage = () => {
             <div className='flex-center'>
               <motion.button
                 initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
+                animate={{ y: 0, opacity: 1, transition: { delay: 0.3 } }}
                 whileTap={{ scale: 0.8 }}
-                transition={{ delay: 0.3 }}
                 className='bg-blue-400 text-white p-2 rounded-md shadow-md mb-4'
                 type='submit'
               >
@@ -124,9 +126,8 @@ const LoginPage = () => {
             </div>
             <motion.div
               initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
+              animate={{ y: 0, opacity: 1, transition: { delay: 0.3 } }}
               whileTap={{ y: -3 }}
-              transition={{ delay: 0.3 }}
               className='flex-center'
             >
               <Link
