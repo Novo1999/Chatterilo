@@ -29,3 +29,6 @@ const metadata: Metadata = {
 }
 
 export const createMetadata = () => metadata
+
+export const signUpFormFields = ['username', 'email', 'password']
+export const loginFormFields = ['email', 'password']

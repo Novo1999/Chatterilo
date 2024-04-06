@@ -1,15 +1,13 @@
 'use client'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+import { AuthBtn } from '@/components/Button'
+import FormRow from '@/components/Form/FormRow'
+import LottiePlayer from '@/components/misc/LottiePlayer'
+import { Form } from '@/components/ui/form'
+import useLogin from '@/hooks/api/useLogin'
+import { loginFormFields } from '@/utils/constants'
 import validateEmail from '@/utils/validateEmail'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Player } from '@lottiefiles/react-lottie-player'
+import { AxiosError } from 'axios'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
@@ -24,6 +22,7 @@ const formSchema = z.object({
 })
 
 const LoginPage = () => {
+  const { mutate, isPending } = useLogin()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -36,7 +35,17 @@ const LoginPage = () => {
   const gradientColor = hasError ? 'red' : 'blue'
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+    mutate(values, {
+      onSuccess: () => form.reset(),
+      onError: (error) => {
+        if (error instanceof AxiosError) {
+          form.setError('root', {
+            type: 'custom',
+            message: error?.response?.data?.msg,
+          })
+        }
+      },
+    })
   }
   return (
     <main className='flex justify-center flex-col items-center min-h-[100vh] bg-gradient-to-r from-teal-400 to-blue-400'>
@@ -56,74 +65,39 @@ const LoginPage = () => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5 }}
             >
-              <Player
-                autoplay
-                loop
-                src='https://lottie.host/33ab8914-168a-470f-b486-5fcd498156a2/82R0q8FBw9.json'
-                className='size-32 min-[375px]:size-60'
+              <LottiePlayer
+                url='https://lottie.host/33ab8914-168a-470f-b486-5fcd498156a2/82R0q8FBw9.json'
+                className='size-32 min-[375px]:size-48'
               />
             </motion.div>
           </div>
           <div className='flex flex-col gap-3 md:pt-12'>
-            <FormField
-              control={form.control}
-              name='email'
-              render={({ field }) => (
-                <FormItem className='space-y-0'>
-                  <FormControl>
-                    <motion.div
-                      initial={{ x: 30, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.3 }}
-                    >
-                      <Input
-                        gradient={gradientColor}
-                        className='bg-cyan-500 text-white shadow-md md:w-72'
-                        placeholder='Email'
-                        type='text'
-                        {...field}
-                      />
-                    </motion.div>
-                  </FormControl>
-                  <FormMessage className='text-xs' />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='password'
-              render={({ field }) => (
-                <FormItem className='space-y-0'>
-                  <FormControl>
-                    <motion.div
-                      initial={{ x: -30, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.3 }}
-                    >
-                      <Input
-                        gradient={gradientColor}
-                        className='bg-cyan-500 text-white shadow-md md:w-72'
-                        placeholder='Password'
-                        type='text'
-                        {...field}
-                      />
-                    </motion.div>
-                  </FormControl>
-                  <FormMessage className='text-xs' />
-                </FormItem>
-              )}
-            />
-            <div className='flex-center'>
-              <motion.button
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1, transition: { delay: 0.3 } }}
-                whileTap={{ scale: 0.8 }}
-                className='bg-blue-400 text-white p-2 rounded-md shadow-md mb-4'
-                type='submit'
-              >
-                Log in
-              </motion.button>
-            </div>
+            {/* fields */}
+            {loginFormFields.map((field) => (
+              <FormRow
+                key={field}
+                form={form}
+                gradientColor={gradientColor}
+                name={field}
+              />
+            ))}
+            {form.formState.errors?.root?.message && (
+              <p className='text-red-500 text-sm'>
+                {form.formState.errors?.root?.message}
+              </p>
+            )}
+            <AuthBtn
+              isPending={isPending}
+              className={{
+                isPending: {
+                  isPendingFalse: 'bg-blue-400',
+                  isPendingTrue: 'bg-gray-400',
+                },
+                general: 'hover:bg-blue-500',
+              }}
+            >
+              Log in
+            </AuthBtn>
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1, transition: { delay: 0.3 } }}

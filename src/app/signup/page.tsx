@@ -1,16 +1,12 @@
 'use client'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+import { AuthBtn } from '@/components/Button'
+import FormRow from '@/components/Form/FormRow'
+import LottiePlayer from '@/components/misc/LottiePlayer'
+import { Form } from '@/components/ui/form'
 import useSignUp from '@/hooks/api/useSignUp'
+import { signUpFormFields } from '@/utils/constants'
 import validateEmail from '@/utils/validateEmail'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Player } from '@lottiefiles/react-lottie-player'
 import { AxiosError } from 'axios'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -43,6 +39,7 @@ const SignUpPage = () => {
     },
   })
 
+  // submit function
   function onSubmit(values: z.infer<typeof formSchema>) {
     mutate(values, {
       onSuccess: () => form.reset(),
@@ -58,7 +55,7 @@ const SignUpPage = () => {
   }
 
   // set gradient based on error
-  const hasError = Object.keys(form.formState.errors).length > 0
+  const hasError = Object.keys(form?.formState?.errors).length > 0
   const gradientColor = hasError ? 'red' : 'blue'
 
   return (
@@ -79,107 +76,40 @@ const SignUpPage = () => {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.5 }}
             >
-              <Player
-                autoplay
-                loop
-                src='https://lottie.host/04e0fdb3-5fb1-4fce-a3ab-f67dfdbd72ec/n1rlN63g4z.json'
+              <LottiePlayer
+                url='https://lottie.host/04e0fdb3-5fb1-4fce-a3ab-f67dfdbd72ec/n1rlN63g4z.json'
                 className='size-48 min-[375px]:size-60'
               />
             </motion.div>
           </div>
           <div className='flex flex-col gap-3'>
-            <FormField
-              control={form.control}
-              name='username'
-              render={({ field }) => (
-                <FormItem className='space-y-0'>
-                  <FormControl>
-                    <motion.div
-                      initial={{ x: -30, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.3 }}
-                    >
-                      <Input
-                        gradient={gradientColor}
-                        className='bg-cyan-500 text-white w-full shadow-md md:w-72'
-                        placeholder='Username'
-                        type='text'
-                        {...field}
-                      />
-                    </motion.div>
-                  </FormControl>
-                  <FormMessage className='text-xs' />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='email'
-              render={({ field }) => (
-                <FormItem className='space-y-0'>
-                  <FormControl>
-                    <motion.div
-                      initial={{ x: 30, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.3 }}
-                    >
-                      <Input
-                        gradient={gradientColor}
-                        className='bg-cyan-500 text-white shadow-md md:w-72'
-                        placeholder='Email'
-                        type='text'
-                        {...field}
-                      />
-                    </motion.div>
-                  </FormControl>
-                  <FormMessage className='text-xs' />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='password'
-              render={({ field }) => (
-                <FormItem className='space-y-0'>
-                  <FormControl>
-                    <motion.div
-                      initial={{ x: -30, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.3 }}
-                    >
-                      <Input
-                        gradient={gradientColor}
-                        className='bg-cyan-500 text-white shadow-md md:w-72'
-                        placeholder='Password'
-                        type='text'
-                        {...field}
-                      />
-                    </motion.div>
-                  </FormControl>
-                  <FormMessage className='text-xs' />
-                </FormItem>
-              )}
-            />
+            {/* fields */}
+            {signUpFormFields.map((field) => (
+              <FormRow
+                key={field}
+                form={form}
+                gradientColor={gradientColor}
+                name={field}
+              />
+            ))}
             {/* error from response */}
             {form.formState.errors?.root?.message && (
               <p className='text-red-500 text-sm'>
                 {form.formState.errors?.root?.message}
               </p>
             )}
-            <div className='flex-center'>
-              <motion.button
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1, transition: { delay: 0.3 } }}
-                whileTap={{ scale: 0.8 }}
-                className={`${
-                  isPending ? 'bg-gray-400' : 'bg-teal-400 '
-                } text-white p-2 rounded-md shadow-md mb-4`}
-                type='submit'
-                disabled={isPending}
-              >
-                Sign Up
-              </motion.button>
-            </div>
+            <AuthBtn
+              isPending={isPending}
+              className={{
+                isPending: {
+                  isPendingFalse: 'bg-teal-400',
+                  isPendingTrue: 'bg-gray-400',
+                },
+                general: 'hover:bg-teal-500',
+              }}
+            >
+              Sign up
+            </AuthBtn>
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1, transition: { delay: 0.3 } }}
