@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 const useSocket = () => {
   const [isConnected, setIsConnected] = useState(socket.connected)
 
+  console.log(isConnected)
   useEffect(() => {
     function onConnect() {
       setIsConnected(true)

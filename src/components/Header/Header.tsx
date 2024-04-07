@@ -1,6 +1,7 @@
 'use client'
 import useSearchUsers from '@/hooks/api/useSearchUsers'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
+import { useDebounce } from '@uidotdev/usehooks'
 import { Plus } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useState } from 'react'
@@ -22,7 +23,9 @@ const NoSSRConnectionNotifier = dynamic(() => import('./ConnectionNotifier'), {
 const Header = () => {
   const { user: { username, friendRequests } = {} } = useAuthContext()
   const [inputValue, setInputValue] = useState('')
-  const { data } = useSearchUsers(inputValue)
+  // this search term is debounced and this works specifically for tanstack query
+  const debouncedSearchTerm = useDebounce(inputValue, 300)
+  const { data } = useSearchUsers(debouncedSearchTerm)
 
   return (
     <>
