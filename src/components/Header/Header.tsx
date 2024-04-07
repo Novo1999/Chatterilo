@@ -1,10 +1,13 @@
 'use client'
+import useSearchUsers from '@/hooks/api/useSearchUsers'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import { Plus } from 'lucide-react'
 import dynamic from 'next/dynamic'
+import { useState } from 'react'
 import { FaUserFriends } from 'react-icons/fa'
 import { GiThreeFriends } from 'react-icons/gi'
 import DropDownProfileMenu from '../DropDownProfileMenu'
+import SearchList from '../SearchList'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
@@ -18,6 +21,8 @@ const NoSSRConnectionNotifier = dynamic(() => import('./ConnectionNotifier'), {
 
 const Header = () => {
   const { user: { username, friendRequests } = {} } = useAuthContext()
+  const [inputValue, setInputValue] = useState('')
+  const { data } = useSearchUsers(inputValue)
 
   return (
     <>
@@ -44,14 +49,16 @@ const Header = () => {
           <div className='ml-4 gap-2 hidden md:flex *:text-white mt-2 *:text-3xl'>
             <FaUserFriends />
             <div className='relative'>
-              <div className='absolute rounded-full size-4 flex justify-center items-center top-4 -right-1 text-xs bg-cyan-500'>
-                {friendRequests?.length}
-              </div>
+              {friendRequests?.received.length! > 0 && (
+                <div className='absolute rounded-full size-4 flex justify-center items-center top-4 -right-1 text-xs bg-cyan-500'>
+                  {friendRequests?.received.length!}
+                </div>
+              )}
               <GiThreeFriends />
             </div>
           </div>
         </div>
-        <div className='flex *:text-white items-center flex-col'>
+        <div className='flex *:text-white items-center relative flex-col'>
           {/* label */}
           <Label className='mb-4 hidden' htmlFor='firstname'>
             Search Users
@@ -63,6 +70,8 @@ const Header = () => {
               className='bg-black text-white w-[200px] min-[375px]:w-[210px] min-[425px]:w-[230px]'
               placeholder='Search...'
               type='text'
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
             />
             <div className='flex-between text-white gap-2'>
               <ShimmerBtn>
@@ -70,6 +79,7 @@ const Header = () => {
               </ShimmerBtn>
             </div>
           </div>
+          <SearchList searchData={data?.data} isOpen={data?.data?.length > 0} />
         </div>
       </div>
     </>

@@ -1,6 +1,6 @@
 import { createContext } from 'react'
 
-interface User {
+export interface User {
   user: {
     friends: any[]
     conversations: any[]
@@ -9,7 +9,10 @@ interface User {
     username: string
     createdAt: string
     __v: number
-    friendRequests: string[]
+    friendRequests: {
+      sent: string[]
+      received: string[]
+    }
   }
 }
 
@@ -22,7 +25,10 @@ const defaultUser: User = {
     username: '',
     createdAt: '',
     __v: 0,
-    friendRequests: [],
+    friendRequests: {
+      sent: [],
+      received: [],
+    },
   },
 }
 
