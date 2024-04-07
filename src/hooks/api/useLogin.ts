@@ -1,6 +1,5 @@
-import { BASE_URL } from '@/utils/constants'
+import customFetch from '@/utils/customFetch'
 import { useMutation } from '@tanstack/react-query'
-import axios from 'axios'
 import { toast } from 'react-hot-toast'
 
 interface values {
@@ -8,9 +7,9 @@ interface values {
   password: string
 }
 
-export const login = async (values: values) => {
+const login = async (values: values) => {
   try {
-    const data = await axios.post(`${BASE_URL}/login`, values)
+    const data = await customFetch.post('/auth/login', values)
     return data
   } catch (error) {
     throw error

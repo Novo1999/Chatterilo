@@ -1,6 +1,6 @@
+import AuthProvider from '@/providers/AuthProvider'
+import ReactQueryProvider from '@/providers/queryClient'
 import { caveat, createMetadata, poppins, sora } from '@/utils/constants'
-
-import ReactQueryProvider from '@/providers'
 import { Toaster } from 'react-hot-toast'
 import './globals.css'
 
@@ -17,7 +17,9 @@ export default function RootLayout({
         className={`${sora.className} ${poppins.variable} ${caveat.variable}`}
       >
         <Toaster position='top-center' />
-        <ReactQueryProvider>{children}</ReactQueryProvider>
+        <ReactQueryProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   )
