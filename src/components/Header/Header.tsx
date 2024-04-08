@@ -1,10 +1,15 @@
 'use client'
 import useSearchUsers from '@/hooks/api/useSearchUsers'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
+import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
+import { socket } from '@/lib/socket'
+import customFetch from '@/utils/customFetch'
 import { useDebounce } from '@uidotdev/usehooks'
-import { Plus } from 'lucide-react'
+import axios from 'axios'
+import { LogOut, Plus } from 'lucide-react'
 import dynamic from 'next/dynamic'
-import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { FaUserFriends } from 'react-icons/fa'
 import { GiThreeFriends } from 'react-icons/gi'
 import DropDownProfileMenu from '../DropDownProfileMenu'
@@ -21,11 +26,42 @@ const NoSSRConnectionNotifier = dynamic(() => import('./ConnectionNotifier'), {
 })
 
 const Header = () => {
-  const { user: { username, friendRequests } = {} } = useAuthContext()
+  const router = useRouter()
+  const { user: { username, friendRequests, _id } = {} } = useAuthContext()
   const [inputValue, setInputValue] = useState('')
   // this search term is debounced and this works specifically for tanstack query
   const debouncedSearchTerm = useDebounce(inputValue, 300)
   const { data } = useSearchUsers(debouncedSearchTerm)
+  const { setConnectedUsers } = useConnectedUserContext()
+  useEffect(() => {
+    if (username !== '') {
+      // connect only if there is a user logged in
+      socket.connect()
+
+      socket.emit('connected-user', {
+        id: _id,
+        name: username,
+      })
+    }
+    socket.on('users', (data) => {
+      console.log(data)
+      setConnectedUsers(data)
+    })
+
+    return () => {
+      socket.disconnect()
+
+      socket.emit('connected-user-dc', {
+        id: _id,
+        name: username,
+      })
+    }
+  }, [username, _id])
+
+  const handleLogOut = async () => {
+    await customFetch.get('/auth/logout')
+    router.push('/login')
+  }
 
   return (
     <>
@@ -50,14 +86,24 @@ const Header = () => {
           </div>
           {/* additional menus */}
           <div className='ml-4 gap-2 hidden md:flex *:text-white mt-2 *:text-3xl'>
-            <FaUserFriends />
-            <div className='relative'>
+            <button>
+              <FaUserFriends />
+            </button>
+            <div className='relative flex items-center gap-2'>
+              {/* friend requests */}
               {friendRequests?.received.length! > 0 && (
-                <div className='absolute rounded-full size-4 flex justify-center items-center top-4 -right-1 text-xs bg-cyan-500'>
+                <div className='absolute rounded-full size-4 flex justify-center items-center top-4 right-7 text-xs bg-cyan-500'>
                   {friendRequests?.received.length!}
                 </div>
               )}
-              <GiThreeFriends />
+              {/* friends */}
+              <button>
+                <GiThreeFriends />
+              </button>
+              {/* log out */}
+              <button onClick={handleLogOut}>
+                <LogOut />
+              </button>
             </div>
           </div>
         </div>

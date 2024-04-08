@@ -1,6 +1,7 @@
 import { User } from '@/context'
 import useSendFriendRequest from '@/hooks/api/useSendFriendRequest'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
+import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
 import useMenuAnimation from '@/hooks/useMenuAnimation'
 import { socket } from '@/lib/socket'
 import { useQueryClient } from '@tanstack/react-query'
@@ -20,23 +21,24 @@ const SearchList = ({
   const { mutate } = useSendFriendRequest()
   const { user: { friendRequests } = {} } = useAuthContext()
   const queryClient = useQueryClient()
+  const { connectedUsers } = useConnectedUserContext()
+
   useEffect(() => {
-    socket.on('friend-request', (data) => {
+    socket.on('received_friend_request', (data) => {
       console.log('Received friend request:', data)
-      mutate(data, {
-        onSuccess: () =>
-          queryClient.invalidateQueries({ queryKey: ['current-user'] }),
-      })
+      queryClient.invalidateQueries({ queryKey: ['current-user'] })
     })
 
     return () => {
-      socket.off('friend-request')
+      socket.off('received_friend_request')
     }
   }, [])
 
   const handleAddFriend = (e: MouseEvent, id: string) => {
     e.preventDefault()
-    socket.emit('friend-request', id)
+    const matchedConnectedUser = connectedUsers.find((user) => user.id === id)
+    socket.emit('friend-request', { id, matchedConnectedUser })
+    mutate(id)
   }
 
   return (

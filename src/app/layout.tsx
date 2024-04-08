@@ -1,4 +1,5 @@
 import AuthProvider from '@/providers/AuthProvider'
+import ConnectedUserProvider from '@/providers/ConnectedUserProvider'
 import ReactQueryProvider from '@/providers/queryClient'
 import { caveat, createMetadata, poppins, sora } from '@/utils/constants'
 import { Toaster } from 'react-hot-toast'
@@ -18,7 +19,9 @@ export default function RootLayout({
       >
         <Toaster position='top-center' />
         <ReactQueryProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <ConnectedUserProvider>{children}</ConnectedUserProvider>
+          </AuthProvider>
         </ReactQueryProvider>
       </body>
     </html>

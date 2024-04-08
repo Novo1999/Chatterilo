@@ -24,9 +24,6 @@ const Chatbox = () => {
 
   const sendMessage = (message: string) => {
     socket.emit('message', message)
-    socket.on('message', (socket) => {
-      console.log(socket)
-    })
   }
 
   const onSubmit: SubmitHandler<MessageInput> = (data) => {

@@ -1,4 +1,4 @@
-import { createContext } from 'react'
+import { createContext, Dispatch, SetStateAction } from 'react'
 
 export interface User {
   user: {
@@ -32,4 +32,22 @@ const defaultUser: User = {
   },
 }
 
+export interface ConnectedUser {
+  id: string
+  name: string
+  socketId: string
+}
+
+export interface ConnectedUsersContext {
+  connectedUsers: ConnectedUser[]
+  setConnectedUsers: Dispatch<SetStateAction<ConnectedUser[]>>
+}
+
+const defaultConnectedUsersContext: ConnectedUsersContext = {
+  connectedUsers: [],
+  setConnectedUsers: () => void 0,
+}
 export const AuthContext = createContext<User>(defaultUser)
+export const ConnectedUserContext = createContext<ConnectedUsersContext>(
+  defaultConnectedUsersContext
+)

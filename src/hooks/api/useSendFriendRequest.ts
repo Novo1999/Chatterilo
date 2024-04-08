@@ -19,9 +19,9 @@ const useSendFriendRequest = () => {
     onSuccess: (data) => {
       console.log(data)
       toast.success(data.data.message)
-      queryClient.invalidateQueries({
-        queryKey: ['current-user'],
-      })
+      // queryClient.invalidateQueries({
+      //   queryKey: ['current-user'],
+      // })
     },
     onError: (data) => {
       console.log(data)
