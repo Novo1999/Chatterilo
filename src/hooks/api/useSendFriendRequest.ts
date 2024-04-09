@@ -5,23 +5,33 @@ import toast from 'react-hot-toast'
 
 const sendFriendRequest = async (id: string) => {
   try {
-    const data = await customFetch.post(`/user/${id}`)
+    const data = await customFetch.post(`/user/send-friend-request/${id}`)
+    return data
+  } catch (error) {
+    throw error
+  }
+}
+const cancelFriendRequest = async (id: string) => {
+  try {
+    const data = await customFetch.delete(`/user/cancel-friend-request/${id}`)
     return data
   } catch (error) {
     throw error
   }
 }
 
-const useSendFriendRequest = () => {
+const useFriendRequest = (functionality: string) => {
   const queryClient = useQueryClient()
   const mutation = useMutation({
-    mutationFn: (id: string) => sendFriendRequest(id),
+    mutationFn: (id: string) =>
+      functionality === 'send'
+        ? sendFriendRequest(id)
+        : cancelFriendRequest(id),
     onSuccess: (data) => {
-      console.log(data)
       toast.success(data.data.message)
-      // queryClient.invalidateQueries({
-      //   queryKey: ['current-user'],
-      // })
+      queryClient.invalidateQueries({
+        queryKey: ['current-user'],
+      })
     },
     onError: (data) => {
       console.log(data)
@@ -30,4 +40,4 @@ const useSendFriendRequest = () => {
   })
   return mutation
 }
-export default useSendFriendRequest
+export default useFriendRequest

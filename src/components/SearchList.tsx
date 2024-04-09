@@ -1,5 +1,5 @@
 import { User } from '@/context'
-import useSendFriendRequest from '@/hooks/api/useSendFriendRequest'
+import useFriendRequest from '@/hooks/api/useSendFriendRequest'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
 import useMenuAnimation from '@/hooks/useMenuAnimation'
@@ -18,33 +18,53 @@ const SearchList = ({
   searchData: User['user'][]
 }) => {
   const scope = useMenuAnimation(isOpen)
-  const { mutate } = useSendFriendRequest()
-  const { user: { friendRequests } = {} } = useAuthContext()
+  const { user: { friendRequests, _id } = {} } = useAuthContext()
+  const { mutateAsync: sendFriendRequestMutate } = useFriendRequest('send')
+  const { mutateAsync: cancelFriendRequestMutate } = useFriendRequest('cancel')
   const queryClient = useQueryClient()
   const { connectedUsers } = useConnectedUserContext()
 
   useEffect(() => {
-    socket.on('received_friend_request', (data) => {
-      console.log('Received friend request:', data)
+    socket.on('sent_friend_request', (id) => {
+      queryClient.invalidateQueries({ queryKey: ['current-user'] })
+    })
+    socket.on('cancel_friend_request', (id) => {
       queryClient.invalidateQueries({ queryKey: ['current-user'] })
     })
 
     return () => {
-      socket.off('received_friend_request')
+      socket.off('sent_friend_request')
+      socket.off('cancel_friend_request')
     }
   }, [])
 
+  // add friend request
   const handleAddFriend = (e: MouseEvent, id: string) => {
+    console.log('add')
     e.preventDefault()
     const matchedConnectedUser = connectedUsers.find((user) => user.id === id)
-    socket.emit('friend-request', { id, matchedConnectedUser })
-    mutate(id)
+    console.log(matchedConnectedUser)
+    sendFriendRequestMutate(id, {
+      onSuccess: () =>
+        socket.emit('send-friend-request', { id, matchedConnectedUser }),
+    })
+  }
+
+  // cancel friend request
+  const handleCancelFriend = (e: MouseEvent, id: string) => {
+    console.log('cancel')
+    e.preventDefault()
+    const matchedConnectedUser = connectedUsers.find((user) => user.id === id)
+    cancelFriendRequestMutate(id, {
+      onSuccess: () =>
+        socket.emit('cancel-friend-request', { id, matchedConnectedUser }),
+    })
   }
 
   return (
     <nav className='menu' ref={scope}>
       <ul
-        className='bg-white text-black p-2 flex flex-col gap-2 w-screen md:w-72 absolute md:right-4 -right-[2px] top-12 text-center'
+        className='bg-white max-h-60 overflow-y-scroll search-menu text-black p-2 flex flex-col gap-2 w-screen md:w-72 absolute md:right-4 -right-[2px] top-12 text-center'
         style={{
           pointerEvents: isOpen ? 'auto' : 'none',
           clipPath: 'inset(10% 50% 90% 50% round 10px)',
@@ -68,13 +88,19 @@ const SearchList = ({
                     <div>{user?.username}</div>
                   </div>
                 </div>
-                <div onClick={(e) => handleAddFriend(e, user?._id)}>
+                <button
+                  onClick={(e) =>
+                    friendRequests?.sent.includes(user?._id)
+                      ? handleCancelFriend(e, user?._id)
+                      : handleAddFriend(e, user?._id)
+                  }
+                >
                   {friendRequests?.sent.includes(user?._id) ? (
                     <CheckCircle />
                   ) : (
                     <IoMdPersonAdd className='text-xl' />
                   )}
-                </div>
+                </button>
               </div>
             </Link>
           </li>

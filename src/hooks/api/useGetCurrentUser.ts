@@ -10,7 +10,6 @@ const getCurrentUser = async () => {
     throw error
   }
 }
-
 export const useGetCurrentUser = () => {
   const query = useQuery({
     queryKey: ['current-user'],
