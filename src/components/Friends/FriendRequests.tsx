@@ -1,20 +1,26 @@
+import useDeclineFriendRequest from '@/hooks/api/useDeclineFriendRequest'
 import useGetFriendRequests from '@/hooks/api/useGetFriendRequests'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useMenuAnimation from '@/hooks/useMenuAnimation'
 import Link from 'next/link'
+import { RxCross2 } from 'react-icons/rx'
 
 const FriendRequests = ({ isOpen }: { isOpen: boolean }) => {
   const scope = useMenuAnimation(isOpen)
   const { user: { friendRequests } = {} } = useAuthContext()
-
+  const { mutate } = useDeclineFriendRequest()
+  // all friend requests list
   const results = useGetFriendRequests(
     friendRequests?.received as string[],
     isOpen
   )
+
+  // mapped to object
   const friendRequestData = results.map((result) => ({
     userData: result.data,
     isLoading: result.isLoading,
   }))
+
   return (
     <nav className='menu font-poppins' ref={scope}>
       <ul
@@ -46,6 +52,13 @@ const FriendRequests = ({ isOpen }: { isOpen: boolean }) => {
                       <div>{friend?.userData?.username}</div>
                     </div>
                   </div>
+                  {/* decline friend request */}
+                  <button
+                    onClick={() => mutate(friend?.userData?._id)}
+                    className='text-xl'
+                  >
+                    <RxCross2 />
+                  </button>
                 </div>
               </Link>
             </li>

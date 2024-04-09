@@ -1,0 +1,1 @@
+- send socket event for decline friend req
