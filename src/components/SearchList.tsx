@@ -5,9 +5,10 @@ import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContex
 import useMenuAnimation from '@/hooks/useMenuAnimation'
 import { socket } from '@/lib/socket'
 import { useQueryClient } from '@tanstack/react-query'
-import { CheckCircle } from 'lucide-react'
+import { CheckCircle, Info } from 'lucide-react'
 import Link from 'next/link'
 import { MouseEvent, useEffect } from 'react'
+import toast from 'react-hot-toast'
 import { IoMdPersonAdd } from 'react-icons/io'
 
 const SearchList = ({
@@ -18,46 +19,51 @@ const SearchList = ({
   searchData: User['user'][]
 }) => {
   const scope = useMenuAnimation(isOpen)
-  const { user: { friendRequests, _id } = {} } = useAuthContext()
+  const { user: { friendRequests, _id, username } = {} } = useAuthContext()
   const { mutateAsync: sendFriendRequestMutate } = useFriendRequest('send')
   const { mutateAsync: cancelFriendRequestMutate } = useFriendRequest('cancel')
   const queryClient = useQueryClient()
   const { connectedUsers } = useConnectedUserContext()
 
   useEffect(() => {
-    socket.on('sent_friend_request', (id) => {
+    socket.on('friend_request', ({ from, requestMethod }) => {
       queryClient.invalidateQueries({ queryKey: ['current-user'] })
-    })
-    socket.on('cancel_friend_request', (id) => {
-      queryClient.invalidateQueries({ queryKey: ['current-user'] })
+      // only show notification if user has sent the friend request and not cancelled
+      if (requestMethod === 'SEND') {
+        toast.success(`${from} sent you a friend request`, { icon: <Info /> })
+      }
     })
 
     return () => {
-      socket.off('sent_friend_request')
-      socket.off('cancel_friend_request')
+      socket.off('friend_request')
     }
   }, [])
 
   // add friend request
   const handleAddFriend = (e: MouseEvent, id: string) => {
-    console.log('add')
     e.preventDefault()
     const matchedConnectedUser = connectedUsers.find((user) => user.id === id)
-    console.log(matchedConnectedUser)
     sendFriendRequestMutate(id, {
+      // emit an event so that can then invalidate the query of the receiver's client
       onSuccess: () =>
-        socket.emit('send-friend-request', { id, matchedConnectedUser }),
+        socket.emit('friend-request', {
+          matchedConnectedUser,
+          from: username,
+          requestMethod: 'SEND',
+        }),
     })
   }
 
   // cancel friend request
   const handleCancelFriend = (e: MouseEvent, id: string) => {
-    console.log('cancel')
     e.preventDefault()
     const matchedConnectedUser = connectedUsers.find((user) => user.id === id)
     cancelFriendRequestMutate(id, {
       onSuccess: () =>
-        socket.emit('cancel-friend-request', { id, matchedConnectedUser }),
+        socket.emit('friend-request', {
+          matchedConnectedUser,
+          requestMethod: 'CANCEL',
+        }),
     })
   }
 

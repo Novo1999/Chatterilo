@@ -1,4 +1,5 @@
 'use client'
+import useGetFriendRequests from '@/hooks/api/useGetFriendRequests'
 import useSearchUsers from '@/hooks/api/useSearchUsers'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
@@ -13,6 +14,7 @@ import { useEffect, useState } from 'react'
 import { FaUserFriends } from 'react-icons/fa'
 import { GiThreeFriends } from 'react-icons/gi'
 import DropDownProfileMenu from '../DropDownProfileMenu'
+import FriendRequests from '../Friends/FriendRequests'
 import SearchList from '../SearchList'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Input } from '../ui/input'
@@ -28,7 +30,9 @@ const NoSSRConnectionNotifier = dynamic(() => import('./ConnectionNotifier'), {
 const Header = () => {
   const router = useRouter()
   const { user: { username, friendRequests, _id } = {} } = useAuthContext()
+
   const [inputValue, setInputValue] = useState('')
+  const [isFriendRequestListOpen, setIsFriendRequestListOpen] = useState(false)
   // this search term is debounced and this works specifically for tanstack query
   const debouncedSearchTerm = useDebounce(inputValue, 300)
   const { data } = useSearchUsers(debouncedSearchTerm)
@@ -44,7 +48,6 @@ const Header = () => {
       })
     }
     socket.on('users', (data) => {
-      console.log(data)
       setConnectedUsers(data)
     })
 
@@ -97,8 +100,13 @@ const Header = () => {
                 </div>
               )}
               {/* friends */}
-              <button>
-                <GiThreeFriends />
+              <button className='relative'>
+                <GiThreeFriends
+                  onClick={() =>
+                    setIsFriendRequestListOpen(!isFriendRequestListOpen)
+                  }
+                />
+                <FriendRequests isOpen={isFriendRequestListOpen} />
               </button>
               {/* log out */}
               <button onClick={handleLogOut}>

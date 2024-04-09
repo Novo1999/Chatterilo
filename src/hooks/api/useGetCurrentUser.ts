@@ -14,6 +14,8 @@ export const useGetCurrentUser = () => {
   const query = useQuery({
     queryKey: ['current-user'],
     queryFn: getCurrentUser,
+    staleTime: 60 * 1000,
+    refetchOnWindowFocus: true,
   })
   return query
 }
