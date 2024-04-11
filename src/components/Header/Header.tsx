@@ -5,7 +5,7 @@ import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContex
 import { socket } from '@/lib/socket'
 import customFetch from '@/utils/customFetch'
 import { useDebounce } from '@uidotdev/usehooks'
-import { LogOut, Plus } from 'lucide-react'
+import { Loader2, LogOut, Plus } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -27,7 +27,11 @@ const NoSSRConnectionNotifier = dynamic(() => import('./ConnectionNotifier'), {
 
 const Header = () => {
   const router = useRouter()
-  const { user: { username, friendRequests, _id } = {} } = useAuthContext()
+  const {
+    user: { username, friendRequests, _id } = {},
+    isLoading,
+    isError,
+  } = useAuthContext()
 
   const [inputValue, setInputValue] = useState('')
   const [isFriendRequestListOpen, setIsFriendRequestListOpen] = useState(false)
@@ -35,6 +39,8 @@ const Header = () => {
   const debouncedSearchTerm = useDebounce(inputValue, 300)
   const { data } = useSearchUsers(debouncedSearchTerm)
   const { setConnectedUsers } = useConnectedUserContext()
+
+  // socket effects
   useEffect(() => {
     if (username !== '') {
       // connect only if there is a user logged in
@@ -59,6 +65,7 @@ const Header = () => {
     }
   }, [username, _id])
 
+  // log out the user
   const handleLogOut = async () => {
     await customFetch.get('/auth/logout')
     router.push('/login')
@@ -79,9 +86,16 @@ const Header = () => {
           </DropDownProfileMenu>
           <div className='ml-4 hidden md:flex bg-[#23262e]  flex-col items-center justify-center overflow-hidden rounded-md'>
             {/* user name */}
-            <h1 className='md:text-xl text-md font-bold text-center text-white relative z-20'>
-              {username}
-            </h1>
+
+            <div className='md:text-xl text-md font-bold text-center text-white relative z-20'>
+              {isLoading ? (
+                <div className='animate-spin'>
+                  <Loader2 />
+                </div>
+              ) : (
+                username
+              )}
+            </div>
             {/* sparkle */}
             <UserNameSparkle />
           </div>
