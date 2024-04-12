@@ -8,10 +8,11 @@ import { useDebounce } from '@uidotdev/usehooks'
 import { Loader2, LogOut, Plus } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FaUserFriends } from 'react-icons/fa'
 import { GiThreeFriends } from 'react-icons/gi'
 import DropDownProfileMenu from '../DropDownProfileMenu'
+import FriendList from '../Friends/FriendList'
 import FriendRequests from '../Friends/FriendRequests'
 import SearchList from '../SearchList'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
@@ -35,17 +36,52 @@ const Header = () => {
 
   const [inputValue, setInputValue] = useState('')
   const [isFriendRequestListOpen, setIsFriendRequestListOpen] = useState(false)
-  // this search term is debounced and this works specifically for tanstack query
+  const [isFriendsListOpen, setIsFriendsListOpen] = useState(false)
   const debouncedSearchTerm = useDebounce(inputValue, 300)
   const { data } = useSearchUsers(debouncedSearchTerm)
   const { setConnectedUsers } = useConnectedUserContext()
+  const friendButtonRef = useRef<HTMLButtonElement>(null)
 
-  // socket effects
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      const target = event.target as Element
+      if (
+        friendButtonRef.current &&
+        !friendButtonRef.current.contains(target as Node) &&
+        !target.classList.contains('friend-requests-btn') &&
+        !target.classList.contains('friends-btn') &&
+        !target.classList.contains('friend-content')
+      ) {
+        setIsFriendRequestListOpen(false)
+        setIsFriendsListOpen(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleOutsideClick)
+
+    return () => {
+      document.removeEventListener('mousedown', handleOutsideClick)
+    }
+  }, [])
+
+  const handleFriendListClick = () => {
+    setIsFriendRequestListOpen(false)
+    setIsFriendsListOpen(!isFriendsListOpen)
+  }
+
+  const handleFriendRequestListClick = () => {
+    setIsFriendsListOpen(false)
+    setIsFriendRequestListOpen(!isFriendRequestListOpen)
+  }
+
+  const handleLogOut = async () => {
+    await customFetch.get('/auth/logout')
+    router.push('/login')
+  }
+
   useEffect(() => {
     if (username !== '') {
-      // connect only if there is a user logged in
       socket.connect()
-
       socket.emit('connected-user', {
         id: _id,
         name: username,
@@ -55,7 +91,6 @@ const Header = () => {
       setConnectedUsers(data)
     })
 
-    // this will emit the id so the connected users get updated as user closes the browser tab
     const handleBeforeUnload = () =>
       socket.emit('connected-user-dc', {
         id: _id,
@@ -66,16 +101,9 @@ const Header = () => {
 
     return () => {
       socket.disconnect()
-
       window.removeEventListener('beforeunload', handleBeforeUnload)
     }
   }, [username, _id])
-
-  // log out the user
-  const handleLogOut = async () => {
-    await customFetch.get('/auth/logout')
-    router.push('/login')
-  }
 
   return (
     <>
@@ -91,8 +119,6 @@ const Header = () => {
             </Avatar>
           </DropDownProfileMenu>
           <div className='ml-4 hidden md:flex bg-[#23262e]  flex-col items-center justify-center overflow-hidden rounded-md'>
-            {/* user name */}
-
             <div className='md:text-xl text-md font-bold text-center text-white relative z-20'>
               {isLoading && !isError ? (
                 <div className='animate-spin'>
@@ -104,10 +130,8 @@ const Header = () => {
                 username
               )}
             </div>
-            {/* sparkle */}
             <UserNameSparkle />
           </div>
-          {/* additional menus */}
           <div className='ml-4 gap-2 hidden md:flex *:text-white mt-2 *:text-3xl'>
             <div className='relative'>
               {friends?.length! > 0 && (
@@ -115,27 +139,33 @@ const Header = () => {
                   {friends?.length}
                 </div>
               )}
-              <button className='relative'>
+              <button
+                ref={friendButtonRef}
+                className='relative friends-btn'
+                onClick={handleFriendListClick}
+              >
                 <FaUserFriends />
+                <div className='friend-content'>
+                  <FriendList isOpen={isFriendsListOpen} />
+                </div>
               </button>
             </div>
             <div className='relative flex items-center gap-2'>
-              {/* friend requests */}
               {friendRequests?.received.length! > 0 && (
                 <div className='absolute rounded-full size-4 flex justify-center items-center top-4 right-7 z-50 text-xs bg-cyan-500'>
                   {friendRequests?.received.length}
                 </div>
               )}
-              {/* friends */}
-              <button className='relative'>
-                <GiThreeFriends
-                  onClick={() =>
-                    setIsFriendRequestListOpen(!isFriendRequestListOpen)
-                  }
-                />
-                <FriendRequests isOpen={isFriendRequestListOpen} />
+              <button
+                ref={friendButtonRef}
+                className='relative friend-requests-btn'
+                onClick={handleFriendRequestListClick}
+              >
+                <GiThreeFriends />
+                <div className='friend-content'>
+                  <FriendRequests isOpen={isFriendRequestListOpen} />
+                </div>
               </button>
-              {/* log out */}
               <button onClick={handleLogOut}>
                 <LogOut />
               </button>
@@ -143,11 +173,6 @@ const Header = () => {
           </div>
         </div>
         <div className='flex *:text-white items-center relative flex-col'>
-          {/* label */}
-          <Label className='mb-4 hidden' htmlFor='firstname'>
-            Search Users
-          </Label>
-          {/* search input */}
           <div className='flex gap-2'>
             <Input
               gradient='blue'

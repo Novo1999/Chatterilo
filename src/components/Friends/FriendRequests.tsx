@@ -4,9 +4,10 @@ import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
 import useMenuAnimation from '@/hooks/useMenuAnimation'
 import { socket } from '@/lib/socket'
-import { Loader } from 'lucide-react'
+import { Loader, Search } from 'lucide-react'
 import Link from 'next/link'
 import { RxCheck, RxCross2 } from 'react-icons/rx'
+import { TbMoodEmpty } from 'react-icons/tb'
 import { Button } from '../ui/button'
 
 const FriendRequests = ({ isOpen }: { isOpen: boolean }) => {
@@ -26,8 +27,6 @@ const FriendRequests = ({ isOpen }: { isOpen: boolean }) => {
     userData: result.data,
     isLoading: result.isLoading,
   }))
-
-  console.log(friendRequestData)
 
   const declineFriendRequest = (id: string) => {
     const userSocketId = connectedUsers.find((user) => user.id === id)?.socketId
@@ -62,10 +61,13 @@ const FriendRequests = ({ isOpen }: { isOpen: boolean }) => {
       >
         <div className='p-bold-20'>Friend Requests</div>
         <li className='hidden'></li>
-        {friendRequestData?.length > 0 &&
+        {friendRequestData?.length > 0 ? (
           friendRequestData?.map((friend) =>
             friend.isLoading ? (
-              <div key={friend?.userData?._id ?? crypto.randomUUID()}>
+              <div
+                className='flex-center'
+                key={friend?.userData?._id ?? crypto.randomUUID()}
+              >
                 <Loader className='animate-spin' />
               </div>
             ) : (
@@ -110,7 +112,19 @@ const FriendRequests = ({ isOpen }: { isOpen: boolean }) => {
                 </Link>
               </li>
             )
-          )}
+          )
+        ) : (
+          <div className='p-4 bg-gray-300 rounded-md min-h-32 border-dotted border-black border-2 flex-col flex-center'>
+            <div className='flex gap-2 flex-center text-xl'>
+              <p>No Requests</p>
+              <TbMoodEmpty />
+            </div>
+            <button className='mt-2 flex gap-2'>
+              <Search />
+              <p>Search People</p>
+            </button>
+          </div>
+        )}
       </ul>{' '}
     </nav>
   )

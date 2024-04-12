@@ -1,7 +1,7 @@
 import customFetch from '@/utils/customFetch'
 import { useQueries } from '@tanstack/react-query'
 
-const getUser = async (id: string) => {
+export const getUser = async (id: string) => {
   try {
     const { data } = await customFetch.get(`/user/users/${id}`)
     return data
