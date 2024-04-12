@@ -1,5 +1,5 @@
 import { User } from '@/context'
-import useFriendRequest from '@/hooks/api/useSendFriendRequest'
+import useFriendRequest from '@/hooks/api/useFriendRequest'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
 import useMenuAnimation from '@/hooks/useMenuAnimation'
@@ -10,6 +10,7 @@ import Link from 'next/link'
 import { MouseEvent, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { IoMdPersonAdd } from 'react-icons/io'
+import { LiaUserFriendsSolid } from 'react-icons/lia'
 
 const SearchList = ({
   isOpen,
@@ -19,7 +20,8 @@ const SearchList = ({
   searchData: User['user'][]
 }) => {
   const scope = useMenuAnimation(isOpen)
-  const { user: { friendRequests, _id, username } = {} } = useAuthContext()
+  const { user: { friendRequests, _id, username, friends } = {} } =
+    useAuthContext()
   const { mutateAsync: sendFriendRequestMutate } = useFriendRequest('send')
   const { mutateAsync: cancelFriendRequestMutate } = useFriendRequest('cancel')
   const queryClient = useQueryClient()
@@ -34,8 +36,13 @@ const SearchList = ({
       }
     })
 
+    socket.on('invalidate', () => {
+      queryClient.invalidateQueries({ queryKey: ['current-user'] })
+    })
+
     return () => {
       socket.off('friend_request')
+      socket.off('invalidate')
     }
   }, [])
 
@@ -85,6 +92,12 @@ const SearchList = ({
             >
               <div className='flex items-center justify-evenly px-2 py-3 w-full'>
                 <div className='flex gap-2 items-center'>
+                  {friends?.includes(user?._id) && (
+                    <div className='relative right-2'>
+                      <LiaUserFriendsSolid />
+                    </div>
+                  )}
+
                   <img
                     className='object-cover w-10 h-10 rounded-full'
                     alt='User avatar'
@@ -95,13 +108,17 @@ const SearchList = ({
                   </div>
                 </div>
                 <button
+                  // check if current user sent request to the user , if sent, they can cancel it otherwise check if they are friends, if friends, then do nothing, else user can add as friend
                   onClick={(e) =>
                     friendRequests?.sent.includes(user?._id)
                       ? handleCancelFriend(e, user?._id)
-                      : handleAddFriend(e, user?._id)
+                      : !friends?.includes(user?._id) &&
+                        handleAddFriend(e, user?._id)
                   }
                 >
-                  {friendRequests?.sent.includes(user?._id) ? (
+                  {/* show the check only when user has sent this user friend request or has them as friend already */}
+                  {friendRequests?.sent.includes(user?._id) ||
+                  friends?.includes(user?._id) ? (
                     <CheckCircle />
                   ) : (
                     <IoMdPersonAdd className='text-xl' />

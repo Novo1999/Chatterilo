@@ -28,7 +28,7 @@ const NoSSRConnectionNotifier = dynamic(() => import('./ConnectionNotifier'), {
 const Header = () => {
   const router = useRouter()
   const {
-    user: { username, friendRequests, _id } = {},
+    user: { username, friendRequests, _id, friends } = {},
     isLoading,
     isError,
   } = useAuthContext()
@@ -55,13 +55,19 @@ const Header = () => {
       setConnectedUsers(data)
     })
 
-    return () => {
-      socket.disconnect()
-
+    // this will emit the id so the connected users get updated as user closes the browser tab
+    const handleBeforeUnload = () =>
       socket.emit('connected-user-dc', {
         id: _id,
         name: username,
       })
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+
+    return () => {
+      socket.disconnect()
+
+      window.removeEventListener('beforeunload', handleBeforeUnload)
     }
   }, [username, _id])
 
@@ -88,10 +94,12 @@ const Header = () => {
             {/* user name */}
 
             <div className='md:text-xl text-md font-bold text-center text-white relative z-20'>
-              {isLoading ? (
+              {isLoading && !isError ? (
                 <div className='animate-spin'>
                   <Loader2 />
                 </div>
+              ) : isError ? (
+                <p className='text-red-500'>ERROR</p>
               ) : (
                 username
               )}
@@ -101,14 +109,21 @@ const Header = () => {
           </div>
           {/* additional menus */}
           <div className='ml-4 gap-2 hidden md:flex *:text-white mt-2 *:text-3xl'>
-            <button>
-              <FaUserFriends />
-            </button>
+            <div className='relative'>
+              {friends?.length! > 0 && (
+                <div className='absolute rounded-full size-4 flex justify-center items-center top-4 -right-1 z-50 text-xs bg-cyan-500'>
+                  {friends?.length}
+                </div>
+              )}
+              <button className='relative'>
+                <FaUserFriends />
+              </button>
+            </div>
             <div className='relative flex items-center gap-2'>
               {/* friend requests */}
               {friendRequests?.received.length! > 0 && (
-                <div className='absolute rounded-full size-4 flex justify-center items-center top-4 right-7 text-xs bg-cyan-500'>
-                  {friendRequests?.received.length!}
+                <div className='absolute rounded-full size-4 flex justify-center items-center top-4 right-7 z-50 text-xs bg-cyan-500'>
+                  {friendRequests?.received.length}
                 </div>
               )}
               {/* friends */}

@@ -14,6 +14,8 @@ export interface User {
       received: string[]
     }
   }
+  isLoading?: boolean
+  isError?: boolean
 }
 
 const defaultUser: User = {
