@@ -1,11 +1,17 @@
 import useGetFriendsList from '@/hooks/api/useGetFriendsList'
+import useUnfriend from '@/hooks/api/useUnfriend'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
+import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
 import useMenuAnimation from '@/hooks/useMenuAnimation'
-import { motion } from 'framer-motion'
+import { socket } from '@/lib/socket'
 import { Loader, MessageCircle, Trash } from 'lucide-react'
 import Link from 'next/link'
+import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { CgClose } from 'react-icons/cg'
+import { TbMoodEmpty } from 'react-icons/tb'
 import { CloseButton } from '../Button'
+import SpringModal from '../misc/SpringModal'
 import { Button } from '../ui/button'
 
 const FriendList = ({
@@ -16,8 +22,23 @@ const FriendList = ({
   handleCloseMenu: () => void
 }) => {
   const scope = useMenuAnimation(isOpen)
-  let { user: { friends } = {} } = useAuthContext()
+  let { user: { friends, username } = {} } = useAuthContext()
   friends = useGetFriendsList(friends, isOpen)
+  const [modalOpen, setModalOpen] = useState(false)
+  const { mutate: unfriendMutate } = useUnfriend()
+  const { connectedUsers } = useConnectedUserContext()
+
+  // unfriend user
+  const handleUnfriend = (id: string) => {
+    const userSocketId = connectedUsers.find((user) => user.id === id)?.socketId
+    unfriendMutate(id, {
+      onSuccess: () => {
+        if (!userSocketId) return
+
+        socket.emit('invalidate-user', { socketId: userSocketId })
+      },
+    })
+  }
 
   return (
     <nav className='font-poppins w-full' ref={scope}>
@@ -34,7 +55,7 @@ const FriendList = ({
           </CloseButton>
         </div>
         <li className='hidden'></li>
-        {friends?.length > 0 &&
+        {friends?.length > 0 ? (
           friends?.map((friend) =>
             friend.isLoading ? (
               <div
@@ -69,8 +90,18 @@ const FriendList = ({
                       >
                         <MessageCircle />
                       </Button>
+                      {createPortal(
+                        <SpringModal
+                          onClick={() => handleUnfriend(friend?.data?._id)}
+                          message='Are you sure?'
+                          modalOpen={modalOpen}
+                          setModalOpen={setModalOpen}
+                        />,
+                        document.body
+                      )}
                       {/* decline friend request */}
                       <Button
+                        onClick={() => setModalOpen(true)}
                         asChild
                         className='text-xl px-2 w-8 bg-red-400 hover:bg-red-500'
                       >
@@ -81,7 +112,15 @@ const FriendList = ({
                 </Link>
               </li>
             )
-          )}
+          )
+        ) : (
+          <div className='p-4 friend-content bg-gray-300 rounded-md min-h-32 border-dotted border-black border-2 flex-col flex-center'>
+            <div className='flex gap-2 flex-center text-md'>
+              <p>No Friends, {username} is lonely</p>
+              <TbMoodEmpty />
+            </div>
+          </div>
+        )}
       </ul>{' '}
     </nav>
   )

@@ -21,7 +21,7 @@ const FriendRequests = ({
 }) => {
   const scope = useMenuAnimation(isOpen)
   const { connectedUsers } = useConnectedUserContext()
-  const { user: { friendRequests } = {} } = useAuthContext()
+  const { user: { friendRequests, username } = {} } = useAuthContext()
   const { mutate: declineMutate } = useManageFriendRequest('DECLINE')
   const { mutate: acceptMutate } = useManageFriendRequest('ACCEPT')
   // all friend requests list
@@ -127,8 +127,8 @@ const FriendRequests = ({
           )
         ) : (
           <div className='p-4 friend-content bg-gray-300 rounded-md min-h-32 border-dotted border-black border-2 flex-col flex-center'>
-            <div className='flex gap-2 flex-center text-xl'>
-              <p>No Requests</p>
+            <div className='flex gap-2 flex-center text-md'>
+              <p>No Friend Request for {username}</p>
               <TbMoodEmpty />
             </div>
           </div>

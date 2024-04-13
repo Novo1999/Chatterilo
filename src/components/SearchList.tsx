@@ -107,7 +107,7 @@ const SearchList = ({
     )
   }
 
-  if (!isLoading && !isError && searchData.length === 0) {
+  if (!isLoading && !isError && searchData?.length === 0) {
     content = (
       <div className='p-4 friend-content bg-gray-300 rounded-md min-h-32 border-dotted border-black border-2 flex-col flex-center'>
         <div className='flex gap-2 flex-center text-xl'>
@@ -118,7 +118,7 @@ const SearchList = ({
     )
   }
 
-  if (!isLoading && !isError && searchData.length > 0) {
+  if (!isLoading && !isError && searchData?.length > 0) {
     content = searchData?.map((user: User['user']) => {
       return (
         <li key={user?._id}>
