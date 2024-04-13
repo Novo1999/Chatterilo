@@ -1,25 +1,38 @@
 import useGetFriendsList from '@/hooks/api/useGetFriendsList'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useMenuAnimation from '@/hooks/useMenuAnimation'
+import { motion } from 'framer-motion'
 import { Loader, MessageCircle, Trash } from 'lucide-react'
 import Link from 'next/link'
+import { CgClose } from 'react-icons/cg'
+import { CloseButton } from '../Button'
 import { Button } from '../ui/button'
 
-const FriendList = ({ isOpen }: { isOpen: boolean }) => {
+const FriendList = ({
+  isOpen,
+  handleCloseMenu,
+}: {
+  isOpen: boolean
+  handleCloseMenu: () => void
+}) => {
   const scope = useMenuAnimation(isOpen)
   let { user: { friends } = {} } = useAuthContext()
   friends = useGetFriendsList(friends, isOpen)
 
   return (
-    <nav className='menu font-poppins w-full' ref={scope}>
+    <nav className='font-poppins w-full' ref={scope}>
       <ul
-        className='bg-white max-h-60 overflow-y-scroll search-menu text-black p-2 flex flex-col gap-2 w-screen md:w-96 text-sm absolute md:-left-20 -right-[2px] top-12 text-center'
+        className='bg-white max-h-60 friend-content overflow-y-scroll search-menu text-black p-2 flex flex-col gap-2 w-screen md:w-96 text-sm absolute md:-left-20 -right-[2px] top-12 text-center'
         style={{
-          pointerEvents: isOpen ? 'auto' : 'none',
           clipPath: 'inset(10% 50% 90% 50% round 10px)',
         }}
       >
-        <div className='p-bold-20'>My Friends</div>
+        <div className='flex-between'>
+          <div className='p-bold-20'>My Friends</div>
+          <CloseButton onClick={handleCloseMenu}>
+            <CgClose />
+          </CloseButton>
+        </div>
         <li className='hidden'></li>
         {friends?.length > 0 &&
           friends?.map((friend) =>
@@ -50,14 +63,18 @@ const FriendList = ({ isOpen }: { isOpen: boolean }) => {
                     <div className='flex gap-2'>
                       {/* message friend */}
                       <Button
+                        asChild
                         variant='ghost'
-                        className='text-xl px-2 bg-green-400 hover:bg-green-500'
+                        className='text-xl w-8 px-2 bg-green-400 hover:bg-green-500'
                       >
                         <MessageCircle />
                       </Button>
                       {/* decline friend request */}
-                      <Button className='text-xl px-2 bg-red-400 hover:bg-red-500'>
-                        <Trash />
+                      <Button
+                        asChild
+                        className='text-xl px-2 w-8 bg-red-400 hover:bg-red-500'
+                      >
+                        <Trash className='text-xl' />
                       </Button>
                     </div>
                   </div>

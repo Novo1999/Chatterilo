@@ -5,19 +5,19 @@ import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContex
 import { socket } from '@/lib/socket'
 import customFetch from '@/utils/customFetch'
 import { useDebounce } from '@uidotdev/usehooks'
-import { Loader2, LogOut, Plus } from 'lucide-react'
+import { Loader2, LogOut } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaUserFriends } from 'react-icons/fa'
 import { GiThreeFriends } from 'react-icons/gi'
+import { RxCross1 } from 'react-icons/rx'
 import DropDownProfileMenu from '../DropDownProfileMenu'
 import FriendList from '../Friends/FriendList'
 import FriendRequests from '../Friends/FriendRequests'
 import SearchList from '../SearchList'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Input } from '../ui/input'
-import { Label } from '../ui/label'
 import ShimmerBtn from '../ui/shimmer-btn'
 import UserNameSparkle from '../UserNameSparkle'
 
@@ -40,29 +40,6 @@ const Header = () => {
   const debouncedSearchTerm = useDebounce(inputValue, 300)
   const { data } = useSearchUsers(debouncedSearchTerm)
   const { setConnectedUsers } = useConnectedUserContext()
-  const friendButtonRef = useRef<HTMLButtonElement>(null)
-
-  useEffect(() => {
-    const handleOutsideClick = (event: MouseEvent) => {
-      const target = event.target as Element
-      if (
-        friendButtonRef.current &&
-        !friendButtonRef.current.contains(target as Node) &&
-        !target.classList.contains('friend-requests-btn') &&
-        !target.classList.contains('friends-btn') &&
-        !target.classList.contains('friend-content')
-      ) {
-        setIsFriendRequestListOpen(false)
-        setIsFriendsListOpen(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleOutsideClick)
-
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick)
-    }
-  }, [])
 
   const handleFriendListClick = () => {
     setIsFriendRequestListOpen(false)
@@ -72,6 +49,15 @@ const Header = () => {
   const handleFriendRequestListClick = () => {
     setIsFriendsListOpen(false)
     setIsFriendRequestListOpen(!isFriendRequestListOpen)
+  }
+
+  const handleCloseMenu = () => {
+    if (isFriendsListOpen) {
+      setIsFriendsListOpen(false)
+    }
+    if (isFriendRequestListOpen) {
+      setIsFriendRequestListOpen(false)
+    }
   }
 
   const handleLogOut = async () => {
@@ -118,7 +104,7 @@ const Header = () => {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </DropDownProfileMenu>
-          <div className='ml-4 hidden md:flex bg-[#23262e]  flex-col items-center justify-center overflow-hidden rounded-md'>
+          <div className='ml-4 hidden md:flex bg-[#23262e] flex-col items-center justify-center overflow-hidden rounded-md'>
             <div className='md:text-xl text-md font-bold text-center text-white relative z-20'>
               {isLoading && !isError ? (
                 <div className='animate-spin'>
@@ -140,15 +126,15 @@ const Header = () => {
                 </div>
               )}
               <button
-                ref={friendButtonRef}
                 className='relative friends-btn'
                 onClick={handleFriendListClick}
               >
                 <FaUserFriends />
-                <div className='friend-content'>
-                  <FriendList isOpen={isFriendsListOpen} />
-                </div>
               </button>
+              <FriendList
+                handleCloseMenu={handleCloseMenu}
+                isOpen={isFriendsListOpen}
+              />
             </div>
             <div className='relative flex items-center gap-2'>
               {friendRequests?.received.length! > 0 && (
@@ -157,15 +143,15 @@ const Header = () => {
                 </div>
               )}
               <button
-                ref={friendButtonRef}
                 className='relative friend-requests-btn'
                 onClick={handleFriendRequestListClick}
               >
                 <GiThreeFriends />
-                <div className='friend-content'>
-                  <FriendRequests isOpen={isFriendRequestListOpen} />
-                </div>
               </button>
+              <FriendRequests
+                handleCloseMenu={handleCloseMenu}
+                isOpen={isFriendRequestListOpen}
+              />
               <button onClick={handleLogOut}>
                 <LogOut />
               </button>
@@ -182,13 +168,16 @@ const Header = () => {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
             />
-            <div className='flex-between text-white gap-2'>
-              <ShimmerBtn>
-                <Plus />
+            <div
+              onClick={() => setInputValue('')}
+              className='flex-between gap-2'
+            >
+              <ShimmerBtn open={inputValue.length > 0}>
+                <RxCross1 className='font-bold text-xl text-white' />
               </ShimmerBtn>
             </div>
           </div>
-          <SearchList searchData={data?.data} isOpen={data?.data?.length > 0} />
+          <SearchList inputValue={inputValue} isOpen={inputValue.length > 0} />
         </div>
       </div>
     </>

@@ -6,11 +6,19 @@ import useMenuAnimation from '@/hooks/useMenuAnimation'
 import { socket } from '@/lib/socket'
 import { Loader, Search } from 'lucide-react'
 import Link from 'next/link'
+import { CgClose } from 'react-icons/cg'
 import { RxCheck, RxCross2 } from 'react-icons/rx'
 import { TbMoodEmpty } from 'react-icons/tb'
+import { CloseButton } from '../Button'
 import { Button } from '../ui/button'
 
-const FriendRequests = ({ isOpen }: { isOpen: boolean }) => {
+const FriendRequests = ({
+  isOpen,
+  handleCloseMenu,
+}: {
+  isOpen: boolean
+  handleCloseMenu: () => void
+}) => {
   const scope = useMenuAnimation(isOpen)
   const { connectedUsers } = useConnectedUserContext()
   const { user: { friendRequests } = {} } = useAuthContext()
@@ -51,15 +59,19 @@ const FriendRequests = ({ isOpen }: { isOpen: boolean }) => {
   }
 
   return (
-    <nav className='menu font-poppins w-full' ref={scope}>
+    <nav className='menu font-poppins friend-content w-full' ref={scope}>
       <ul
-        className='bg-white max-h-60 overflow-y-scroll search-menu text-black p-2 flex flex-col gap-2 w-screen md:w-96 text-sm absolute md:-left-20 -right-[2px] top-12 text-center'
+        className='bg-white max-h-60 friend-content overflow-y-scroll search-menu text-black p-2 flex flex-col gap-2 w-screen md:w-96 text-sm absolute md:-left-20 -right-[2px] top-12 text-center'
         style={{
-          pointerEvents: isOpen ? 'auto' : 'none',
           clipPath: 'inset(10% 50% 90% 50% round 10px)',
         }}
       >
-        <div className='p-bold-20'>Friend Requests</div>
+        <div className='flex-between'>
+          <div className='p-bold-20'>Friend Requests</div>
+          <CloseButton onClick={handleCloseMenu}>
+            <CgClose />
+          </CloseButton>
+        </div>
         <li className='hidden'></li>
         {friendRequestData?.length > 0 ? (
           friendRequestData?.map((friend) =>
@@ -114,15 +126,11 @@ const FriendRequests = ({ isOpen }: { isOpen: boolean }) => {
             )
           )
         ) : (
-          <div className='p-4 bg-gray-300 rounded-md min-h-32 border-dotted border-black border-2 flex-col flex-center'>
+          <div className='p-4 friend-content bg-gray-300 rounded-md min-h-32 border-dotted border-black border-2 flex-col flex-center'>
             <div className='flex gap-2 flex-center text-xl'>
               <p>No Requests</p>
               <TbMoodEmpty />
             </div>
-            <button className='mt-2 flex gap-2'>
-              <Search />
-              <p>Search People</p>
-            </button>
           </div>
         )}
       </ul>{' '}

@@ -1,4 +1,7 @@
+import { cn } from '@/lib/utils'
 import { motion } from 'framer-motion'
+import { ReactNode } from 'react'
+import { Button } from '../ui/button'
 
 interface AuthBtnProps {
   isPending: boolean
@@ -35,5 +38,32 @@ export const AuthBtn = ({
         {children}
       </motion.button>
     </div>
+  )
+}
+
+export const CloseButton = ({
+  children,
+  onClick,
+  className,
+}: {
+  children: ReactNode
+  className?: string
+  onClick?: () => void
+}) => {
+  return (
+    <Button
+      onClick={onClick}
+      className={`w-fit ${cn(className)} cursor-pointer`}
+      asChild
+      variant='destructive'
+    >
+      <motion.div
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+      >
+        <p className='text-xl'>{children}</p>
+      </motion.div>
+    </Button>
   )
 }
