@@ -11,7 +11,15 @@ import { CgProfile } from 'react-icons/cg'
 import { FaUserFriends } from 'react-icons/fa'
 import { GiThreeFriends } from 'react-icons/gi'
 
-const DropDownProfileMenu = ({ children }: { children: ReactNode }) => {
+const DropDownProfileMenu = ({
+  children,
+  handleFriendListClick,
+  handleFriendRequestListClick,
+}: {
+  children: ReactNode
+  handleFriendRequestListClick: () => void
+  handleFriendListClick: () => void
+}) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className='cursor-pointer md:cursor-default'>
@@ -24,11 +32,17 @@ const DropDownProfileMenu = ({ children }: { children: ReactNode }) => {
           <CgProfile />
           Profile
         </DropdownMenuItem>
-        <DropdownMenuItem className='flex gap-2'>
+        <DropdownMenuItem
+          onClick={handleFriendRequestListClick}
+          className='flex gap-2'
+        >
           <FaUserFriends />
           Friend requests
         </DropdownMenuItem>
-        <DropdownMenuItem className='flex gap-2'>
+        <DropdownMenuItem
+          onClick={handleFriendListClick}
+          className='flex gap-2'
+        >
           <GiThreeFriends />
           Friends
         </DropdownMenuItem>

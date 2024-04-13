@@ -16,6 +16,7 @@ export const useGetCurrentUser = () => {
     queryFn: getCurrentUser,
     staleTime: 60 * 1000,
     refetchOnWindowFocus: true,
+    refetchInterval: 5000,
   })
   return query
 }

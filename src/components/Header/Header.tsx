@@ -1,14 +1,13 @@
 'use client'
-import useSearchUsers from '@/hooks/api/useSearchUsers'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
 import { socket } from '@/lib/socket'
 import customFetch from '@/utils/customFetch'
-import { useDebounce } from '@uidotdev/usehooks'
 import { Loader2, LogOut } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { FaUserFriends } from 'react-icons/fa'
 import { GiThreeFriends } from 'react-icons/gi'
 import { RxCross1 } from 'react-icons/rx'
@@ -37,8 +36,6 @@ const Header = () => {
   const [inputValue, setInputValue] = useState('')
   const [isFriendRequestListOpen, setIsFriendRequestListOpen] = useState(false)
   const [isFriendsListOpen, setIsFriendsListOpen] = useState(false)
-  const debouncedSearchTerm = useDebounce(inputValue, 300)
-  const { data } = useSearchUsers(debouncedSearchTerm)
   const { setConnectedUsers } = useConnectedUserContext()
 
   const handleFriendListClick = () => {
@@ -77,6 +74,7 @@ const Header = () => {
       setConnectedUsers(data)
     })
 
+    // when user closes tab emit this event to disconnect from the socket
     const handleBeforeUnload = () =>
       socket.emit('connected-user-dc', {
         id: _id,
@@ -98,7 +96,10 @@ const Header = () => {
       </div>
       <div className='flex-between justify-center pt-4'>
         <div className='block md:flex'>
-          <DropDownProfileMenu>
+          <DropDownProfileMenu
+            handleFriendListClick={handleFriendListClick}
+            handleFriendRequestListClick={handleFriendRequestListClick}
+          >
             <Avatar>
               <AvatarImage src='https://github.com/shadcn.png' />
               <AvatarFallback>CN</AvatarFallback>
@@ -131,10 +132,13 @@ const Header = () => {
               >
                 <FaUserFriends />
               </button>
-              <FriendList
-                handleCloseMenu={handleCloseMenu}
-                isOpen={isFriendsListOpen}
-              />
+              {createPortal(
+                <FriendList
+                  handleCloseMenu={handleCloseMenu}
+                  isOpen={isFriendsListOpen}
+                />,
+                document.body
+              )}
             </div>
             <div className='relative flex items-center gap-2'>
               {friendRequests?.received.length! > 0 && (
@@ -148,10 +152,13 @@ const Header = () => {
               >
                 <GiThreeFriends />
               </button>
-              <FriendRequests
-                handleCloseMenu={handleCloseMenu}
-                isOpen={isFriendRequestListOpen}
-              />
+              {createPortal(
+                <FriendRequests
+                  handleCloseMenu={handleCloseMenu}
+                  isOpen={isFriendRequestListOpen}
+                />,
+                document.body
+              )}
               <button onClick={handleLogOut}>
                 <LogOut />
               </button>

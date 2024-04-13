@@ -43,7 +43,7 @@ const FriendList = ({
   return (
     <nav className='font-poppins w-full' ref={scope}>
       <ul
-        className='bg-white max-h-60 friend-content overflow-y-scroll search-menu text-black p-2 flex flex-col gap-2 w-screen md:w-96 text-sm absolute md:-left-20 -right-[2px] top-12 text-center'
+        className='bg-white max-h-60 friend-content overflow-y-scroll search-menu text-black p-2 flex flex-col gap-2 w-screen md:w-96 text-sm absolute md:left-20 top-24 text-center'
         style={{
           clipPath: 'inset(10% 50% 90% 50% round 10px)',
         }}

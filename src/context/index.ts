@@ -1,4 +1,10 @@
-import { createContext, Dispatch, SetStateAction } from 'react'
+import { Action, State } from '@/providers/MessagesProvider'
+import {
+  createContext,
+  Dispatch,
+  DispatchWithoutAction,
+  SetStateAction,
+} from 'react'
 
 export interface User {
   user: {
@@ -52,4 +58,8 @@ const defaultConnectedUsersContext: ConnectedUsersContext = {
 export const AuthContext = createContext<User>(defaultUser)
 export const ConnectedUserContext = createContext<ConnectedUsersContext>(
   defaultConnectedUsersContext
+)
+export const MessagesContext = createContext<State | null>(null)
+export const MessagesDispatchContext = createContext<Dispatch<Action> | null>(
+  null
 )

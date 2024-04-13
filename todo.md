@@ -1,6 +1,7 @@
 <!-- - send socket event for decline friend req -->
 
-- unfriend
+<!-- - unfriend -->
+
 - when user is added, update the messages list
 - text chat functionality
 - voice chat, video chat

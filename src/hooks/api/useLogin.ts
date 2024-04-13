@@ -1,5 +1,5 @@
 import customFetch from '@/utils/customFetch'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-hot-toast'
 
 interface values {
@@ -17,6 +17,7 @@ const login = async (values: values) => {
 }
 
 export const useLogin = () => {
+  const queryClient = useQueryClient()
   let toastPromise
   const mutation = useMutation({
     mutationFn: (values: values) => {
@@ -29,6 +30,8 @@ export const useLogin = () => {
       })
       return toastPromise
     },
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['current-user'] }),
   })
 
   return mutation

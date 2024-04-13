@@ -32,3 +32,9 @@ export const createMetadata = () => metadata
 
 export const signUpFormFields = ['username', 'email', 'password']
 export const loginFormFields = ['email', 'password']
+
+// MESSAGES ACTIONS
+export const LOAD_MESSAGE_USERS_LIST = 'LOAD_MESSAGE_USERS_LIST'
+export const OPEN_SINGLE_CHAT = 'OPEN_SINGLE_CHAT'
+export const DELETE_CHAT = 'DELETE_CHAT'
+export const SEND_MESSAGE = 'SEND_MESSAGE'
