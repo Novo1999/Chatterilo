@@ -7,21 +7,24 @@ import { Loader2, LogOut } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { createPortal } from 'react-dom'
 import { FaUserFriends } from 'react-icons/fa'
 import { GiThreeFriends } from 'react-icons/gi'
 import { RxCross1 } from 'react-icons/rx'
 import DropDownProfileMenu from '../DropDownProfileMenu'
-import FriendList from '../Friends/FriendList'
-import FriendRequests from '../Friends/FriendRequests'
 import SearchList from '../SearchList'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Input } from '../ui/input'
 import ShimmerBtn from '../ui/shimmer-btn'
 import UserNameSparkle from '../UserNameSparkle'
 
-// causes hydration error so make this a non ssr
+// causes hydration error so make these a non ssr
 const NoSSRConnectionNotifier = dynamic(() => import('./ConnectionNotifier'), {
+  ssr: false,
+})
+const NoSSRFriendRequests = dynamic(() => import('../Friends/FriendRequests'), {
+  ssr: false,
+})
+const NoSSRFriendList = dynamic(() => import('../Friends/FriendList'), {
   ssr: false,
 })
 
@@ -132,13 +135,11 @@ const Header = () => {
               >
                 <FaUserFriends />
               </button>
-              {createPortal(
-                <FriendList
-                  handleCloseMenu={handleCloseMenu}
-                  isOpen={isFriendsListOpen}
-                />,
-                document.body
-              )}
+
+              <NoSSRFriendList
+                handleCloseMenu={handleCloseMenu}
+                isOpen={isFriendsListOpen}
+              />
             </div>
             <div className='relative flex items-center gap-2'>
               {friendRequests?.received.length! > 0 && (
@@ -152,13 +153,14 @@ const Header = () => {
               >
                 <GiThreeFriends />
               </button>
-              {createPortal(
-                <FriendRequests
-                  handleCloseMenu={handleCloseMenu}
-                  isOpen={isFriendRequestListOpen}
-                />,
-                document.body
-              )}
+              <NoSSRFriendRequests
+                handleCloseMenu={handleCloseMenu}
+                isOpen={isFriendRequestListOpen}
+              />
+              {/* <FriendRequests
+                handleCloseMenu={handleCloseMenu}
+                isOpen={isFriendRequestListOpen}
+              /> */}
               <button onClick={handleLogOut}>
                 <LogOut />
               </button>

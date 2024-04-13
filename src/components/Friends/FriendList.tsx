@@ -40,7 +40,7 @@ const FriendList = ({
     })
   }
 
-  return (
+  const content = (
     <nav className='font-poppins w-full' ref={scope}>
       <ul
         className='bg-white max-h-60 friend-content overflow-y-scroll search-menu text-black p-2 flex flex-col gap-2 w-screen md:w-96 text-sm absolute md:left-20 top-24 text-center'
@@ -67,7 +67,7 @@ const FriendList = ({
             ) : (
               <li key={friend?.data?._id ?? crypto.randomUUID()}>
                 <Link
-                  href='/'
+                  href={`/`}
                   className='flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800'
                 >
                   <div className='flex items-center justify-between px-2 py-3 w-full'>
@@ -78,7 +78,17 @@ const FriendList = ({
                         src='https://images.unsplash.com/photo-1477118476589-bff2c5c4cfbb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=200&q=200'
                       />
                       <div className='mx-3'>
-                        <div>{friend?.data?.username}</div>
+                        <div className='flex gap-2 items-center'>
+                          <p>{friend?.data?.username}</p>
+                          {/* active or inactive */}
+                          {connectedUsers
+                            .map((user) => user.id)
+                            .includes(friend?.data?._id) ? (
+                            <div className='rounded-full bg-green-500 size-3'></div>
+                          ) : (
+                            <div className='rounded-full bg-gray-500 size-3'></div>
+                          )}
+                        </div>
                       </div>
                     </div>
                     <div className='flex gap-2'>
@@ -124,5 +134,11 @@ const FriendList = ({
       </ul>{' '}
     </nav>
   )
+
+  if (typeof window === 'object') {
+    return createPortal(content, document.body)
+  }
+
+  return null
 }
 export default FriendList

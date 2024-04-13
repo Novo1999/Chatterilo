@@ -4,8 +4,9 @@ import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
 import useMenuAnimation from '@/hooks/useMenuAnimation'
 import { socket } from '@/lib/socket'
-import { Loader, Search } from 'lucide-react'
+import { Loader } from 'lucide-react'
 import Link from 'next/link'
+import { createPortal } from 'react-dom'
 import { CgClose } from 'react-icons/cg'
 import { RxCheck, RxCross2 } from 'react-icons/rx'
 import { TbMoodEmpty } from 'react-icons/tb'
@@ -58,7 +59,7 @@ const FriendRequests = ({
     })
   }
 
-  return (
+  const content = (
     <nav className='menu font-poppins friend-content w-full' ref={scope}>
       <ul
         className='bg-white max-h-60 friend-content overflow-y-scroll search-menu text-black p-2 flex flex-col gap-2 w-screen md:w-96 text-sm absolute md:left-20 top-24 text-center'
@@ -136,5 +137,11 @@ const FriendRequests = ({
       </ul>{' '}
     </nav>
   )
+
+  if (typeof window === 'object') {
+    return createPortal(content, document.body)
+  }
+
+  return null
 }
 export default FriendRequests
