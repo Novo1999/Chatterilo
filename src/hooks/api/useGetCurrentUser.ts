@@ -1,5 +1,6 @@
 import customFetch from '@/utils/customFetch'
 import { useQuery } from '@tanstack/react-query'
+import { usePathname } from 'next/navigation'
 
 const getCurrentUser = async () => {
   try {
@@ -11,12 +12,15 @@ const getCurrentUser = async () => {
   }
 }
 export const useGetCurrentUser = () => {
+  const pathname = usePathname()
+
   const query = useQuery({
     queryKey: ['current-user'],
     queryFn: getCurrentUser,
     staleTime: 60 * 1000,
     refetchOnWindowFocus: true,
-    refetchInterval: 5000,
+    // refetchInterval: 5000,
+    enabled: pathname !== '/login' && pathname !== '/signup',
   })
   return query
 }

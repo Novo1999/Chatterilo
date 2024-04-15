@@ -1,7 +1,12 @@
+import useAddToConversation from '@/hooks/api/useAddToConversation'
 import useGetFriendsList from '@/hooks/api/useGetFriendsList'
 import useUnfriend from '@/hooks/api/useUnfriend'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
+import {
+  useMessagesContext,
+  useMessagesDispatchContext,
+} from '@/hooks/contextHooks/useMessagesContext'
 import useMenuAnimation from '@/hooks/useMenuAnimation'
 import { socket } from '@/lib/socket'
 import { Loader, MessageCircle, Trash } from 'lucide-react'
@@ -23,10 +28,15 @@ const FriendList = ({
 }) => {
   const scope = useMenuAnimation(isOpen)
   let { user: { friends, username } = {} } = useAuthContext()
+  console.log('🚀 ~ friends:', friends)
   friends = useGetFriendsList(friends, isOpen)
   const [modalOpen, setModalOpen] = useState(false)
   const { mutate: unfriendMutate } = useUnfriend()
   const { connectedUsers } = useConnectedUserContext()
+  const { mutate: addToMessagesMutate } = useAddToConversation()
+  const dispatch = useMessagesDispatchContext()
+  const messagesState = useMessagesContext()
+  console.log('🚀 ~ messagesState:', messagesState)
 
   // unfriend user
   const handleUnfriend = (id: string) => {
@@ -38,6 +48,10 @@ const FriendList = ({
         socket.emit('invalidate-user', { socketId: userSocketId })
       },
     })
+  }
+
+  const handleAddToConversation = (id: string) => {
+    addToMessagesMutate(id)
   }
 
   const content = (
@@ -56,72 +70,71 @@ const FriendList = ({
         </div>
         <li className='hidden'></li>
         {friends?.length > 0 ? (
-          friends?.map((friend) =>
-            friend.isLoading ? (
-              <div
-                className='flex-center'
-                key={friend?.data?._id ?? crypto.randomUUID()}
-              >
-                <Loader className='animate-spin' />
-              </div>
-            ) : (
-              <li key={friend?.data?._id ?? crypto.randomUUID()}>
-                <Link
-                  href={`/`}
-                  className='flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800'
-                >
-                  <div className='flex items-center justify-between px-2 py-3 w-full'>
-                    <div className='flex gap-2 items-center'>
-                      <img
-                        className='object-cover w-10 h-10 rounded-full'
-                        alt='User avatar'
-                        src='https://images.unsplash.com/photo-1477118476589-bff2c5c4cfbb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=200&q=200'
-                      />
-                      <div className='mx-3'>
-                        <div className='flex gap-2 items-center'>
-                          <p>{friend?.data?.username}</p>
-                          {/* active or inactive */}
-                          {connectedUsers
-                            .map((user) => user.id)
-                            .includes(friend?.data?._id) ? (
-                            <div className='rounded-full bg-green-500 size-3'></div>
-                          ) : (
-                            <div className='rounded-full bg-gray-500 size-3'></div>
-                          )}
+          friends?.map(
+            ({ data: { _id = '', username = '' } = {}, isLoading } = {}) =>
+              isLoading ? (
+                <div className='flex-center' key={_id ?? crypto.randomUUID()}>
+                  <Loader className='animate-spin' />
+                </div>
+              ) : (
+                <li key={_id ?? crypto.randomUUID()}>
+                  <Link
+                    href={`/`}
+                    className='flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800'
+                  >
+                    <div className='flex items-center justify-between px-2 py-3 w-full'>
+                      <div className='flex gap-2 items-center'>
+                        <img
+                          className='object-cover w-10 h-10 rounded-full'
+                          alt='User avatar'
+                          src='https://images.unsplash.com/photo-1477118476589-bff2c5c4cfbb?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=200&q=200'
+                        />
+                        <div className='mx-3'>
+                          <div className='flex gap-2 items-center'>
+                            <p>{username}</p>
+                            {/* active or inactive */}
+                            {connectedUsers
+                              .map((user) => user.id)
+                              .includes(_id) ? (
+                              <div className='rounded-full bg-green-500 size-3'></div>
+                            ) : (
+                              <div className='rounded-full bg-gray-500 size-3'></div>
+                            )}
+                          </div>
                         </div>
                       </div>
+                      <div className='flex gap-2'>
+                        {/* message friend */}
+                        <Button
+                          onClick={() => handleAddToConversation(_id)}
+                          asChild
+                          variant='ghost'
+                          className='text-xl w-8 px-2 bg-green-400 hover:bg-green-500'
+                        >
+                          <MessageCircle />
+                        </Button>
+                        {createPortal(
+                          <SpringModal
+                            onClick={() => handleUnfriend(_id)}
+                            message='Are you sure?'
+                            modalOpen={modalOpen}
+                            setModalOpen={setModalOpen}
+                          />,
+                          document.body
+                        )}
+                        {/* decline friend request */}
+                        <Button
+                          onClick={() => setModalOpen(true)}
+                          asChild
+                          className='text-xl px-2 w-8 bg-red-400 hover:bg-red-500'
+                        >
+                          <Trash className='text-xl' />
+                        </Button>
+                      </div>
                     </div>
-                    <div className='flex gap-2'>
-                      {/* message friend */}
-                      <Button
-                        asChild
-                        variant='ghost'
-                        className='text-xl w-8 px-2 bg-green-400 hover:bg-green-500'
-                      >
-                        <MessageCircle />
-                      </Button>
-                      {createPortal(
-                        <SpringModal
-                          onClick={() => handleUnfriend(friend?.data?._id)}
-                          message='Are you sure?'
-                          modalOpen={modalOpen}
-                          setModalOpen={setModalOpen}
-                        />,
-                        document.body
-                      )}
-                      {/* decline friend request */}
-                      <Button
-                        onClick={() => setModalOpen(true)}
-                        asChild
-                        className='text-xl px-2 w-8 bg-red-400 hover:bg-red-500'
-                      >
-                        <Trash className='text-xl' />
-                      </Button>
-                    </div>
-                  </div>
-                </Link>
-              </li>
-            )
+                  </Link>
+                </li>
+              )
           )
         ) : (
           <div className='p-4 friend-content bg-gray-300 rounded-md min-h-32 border-dotted border-black border-2 flex-col flex-center'>
