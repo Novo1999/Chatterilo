@@ -28,7 +28,6 @@ const FriendList = ({
 }) => {
   const scope = useMenuAnimation(isOpen)
   let { user: { friends, username } = {} } = useAuthContext()
-  console.log('🚀 ~ friends:', friends)
   friends = useGetFriendsList(friends, isOpen)
   const [modalOpen, setModalOpen] = useState(false)
   const { mutate: unfriendMutate } = useUnfriend()
@@ -36,7 +35,6 @@ const FriendList = ({
   const { mutate: addToMessagesMutate } = useAddToConversation()
   const dispatch = useMessagesDispatchContext()
   const messagesState = useMessagesContext()
-  console.log('🚀 ~ messagesState:', messagesState)
 
   // unfriend user
   const handleUnfriend = (id: string) => {
@@ -53,8 +51,7 @@ const FriendList = ({
   const handleAddToConversation = (id: string) => {
     addToMessagesMutate(id)
   }
-
-  const content = (
+  const portalContent = (
     <nav className='font-poppins w-full' ref={scope}>
       <ul
         className='bg-white max-h-60 friend-content overflow-y-scroll search-menu text-black p-2 flex flex-col gap-2 w-screen md:w-96 text-sm absolute md:left-20 top-24 text-center'
@@ -69,15 +66,29 @@ const FriendList = ({
           </CloseButton>
         </div>
         <li className='hidden'></li>
-        {friends?.length > 0 ? (
-          friends?.map(
-            ({ data: { _id = '', username = '' } = {}, isLoading } = {}) =>
-              isLoading ? (
-                <div className='flex-center' key={_id ?? crypto.randomUUID()}>
+        {friends?.length > 0 && isOpen ? (
+          friends?.map(({ data, isLoading, isError }) => {
+            let content = null
+            if (!isLoading && isError) {
+              content = (
+                <div
+                  key={crypto.randomUUID()}
+                  className='text-red-500 min-h-32 flex-center text-xl'
+                >
+                  ERROR
+                </div>
+              )
+            }
+            if (isLoading && !isError) {
+              content = (
+                <div className='flex-center' key={crypto.randomUUID()}>
                   <Loader className='animate-spin' />
                 </div>
-              ) : (
-                <li key={_id ?? crypto.randomUUID()}>
+              )
+            }
+            if (!isLoading && !isError && data._id) {
+              content = (
+                <li key={data?._id}>
                   <Link
                     href={`/`}
                     className='flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800'
@@ -91,11 +102,11 @@ const FriendList = ({
                         />
                         <div className='mx-3'>
                           <div className='flex gap-2 items-center'>
-                            <p>{username}</p>
+                            <p>{data?.username}</p>
                             {/* active or inactive */}
                             {connectedUsers
                               .map((user) => user.id)
-                              .includes(_id) ? (
+                              .includes(data?._id) ? (
                               <div className='rounded-full bg-green-500 size-3'></div>
                             ) : (
                               <div className='rounded-full bg-gray-500 size-3'></div>
@@ -106,7 +117,7 @@ const FriendList = ({
                       <div className='flex gap-2'>
                         {/* message friend */}
                         <Button
-                          onClick={() => handleAddToConversation(_id)}
+                          onClick={() => handleAddToConversation(data?._id)}
                           asChild
                           variant='ghost'
                           className='text-xl w-8 px-2 bg-green-400 hover:bg-green-500'
@@ -115,7 +126,7 @@ const FriendList = ({
                         </Button>
                         {createPortal(
                           <SpringModal
-                            onClick={() => handleUnfriend(_id)}
+                            onClick={() => handleUnfriend(data?._id)}
                             message='Are you sure?'
                             modalOpen={modalOpen}
                             setModalOpen={setModalOpen}
@@ -135,7 +146,9 @@ const FriendList = ({
                   </Link>
                 </li>
               )
-          )
+            }
+            return content
+          })
         ) : (
           <div className='p-4 friend-content bg-gray-300 rounded-md min-h-32 border-dotted border-black border-2 flex-col flex-center'>
             <div className='flex gap-2 flex-center text-md'>
@@ -144,12 +157,12 @@ const FriendList = ({
             </div>
           </div>
         )}
-      </ul>{' '}
+      </ul>
     </nav>
   )
 
   if (typeof window === 'object') {
-    return createPortal(content, document.body)
+    return createPortal(portalContent, document.body)
   }
 
   return null

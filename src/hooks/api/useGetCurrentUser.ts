@@ -7,7 +7,6 @@ const getCurrentUser = async () => {
     const data = await customFetch.get('/auth/current-user')
     return data
   } catch (error) {
-    console.log(error)
     throw error
   }
 }

@@ -34,7 +34,6 @@ const useFriendRequest = (functionality: string) => {
       })
     },
     onError: (data) => {
-      console.log(data)
       if (data instanceof AxiosError) toast.error(data?.response?.data?.error)
     },
   })

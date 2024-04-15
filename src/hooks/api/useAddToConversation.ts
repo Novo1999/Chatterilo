@@ -21,7 +21,6 @@ const useAddToConversation = () => {
     mutationFn: (id: string) => addToConversation(id),
 
     onSuccess: (data, id) => {
-      console.log('🚀 ~ useAddToConversation ~ data:', data)
       createConversationMutate(id)
       queryClient.invalidateQueries({ queryKey: ['current-user'] })
     },
