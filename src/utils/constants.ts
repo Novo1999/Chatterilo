@@ -34,7 +34,6 @@ export const signUpFormFields = ['username', 'email', 'password']
 export const loginFormFields = ['email', 'password']
 
 // MESSAGES ACTIONS
-export const LOAD_MESSAGE_USERS_LIST = 'LOAD_MESSAGE_USERS_LIST'
 export const CURRENT_CHAT = 'CURRENT_CHAT'
 export const DELETE_CHAT = 'DELETE_CHAT'
 export const SEND_MESSAGE = 'SEND_MESSAGE'

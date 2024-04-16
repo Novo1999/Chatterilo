@@ -2,7 +2,8 @@
 
 <!-- - unfriend -->
 
-- when user is added, update the messages list
+<!-- - when user is added, update the messages list -->
+
 - text chat functionality
 - voice chat, video chat
 - emojis

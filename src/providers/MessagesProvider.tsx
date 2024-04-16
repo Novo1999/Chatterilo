@@ -1,6 +1,6 @@
 'use client'
 import { MessagesContext, MessagesDispatchContext } from '@/context'
-import { CURRENT_CHAT, LOAD_MESSAGE_USERS_LIST } from '@/utils/constants'
+import { CURRENT_CHAT } from '@/utils/constants'
 import { ReactNode, useReducer } from 'react'
 
 export interface State {
@@ -30,6 +30,8 @@ const reducer = (state: State, action: Action): State => {
 
 const MessagesProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
+  console.log('🚀 ~ MessagesProvider ~ state:', state)
+
   return (
     <MessagesContext.Provider value={state}>
       <MessagesDispatchContext.Provider value={dispatch}>

@@ -8,7 +8,7 @@ import { CURRENT_CHAT } from '@/utils/constants'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 
-interface Conversation {
+export interface Conversation {
   messages: any[]
   currentUserId: string
   recipientUserId: string

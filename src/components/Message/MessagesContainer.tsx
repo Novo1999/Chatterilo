@@ -1,6 +1,6 @@
 import Message from './Message'
 
-const MessagesContainer = () => {
+const MessagesContainer = ({ messages }: { messages: string[] }) => {
   return (
     <div className='flex-1 text-gray-200 text-sm space-y-4 mt-4 max-h-[640px] message-container mb-3 overflow-scroll'>
       <Message position='left' />

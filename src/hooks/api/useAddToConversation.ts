@@ -30,8 +30,10 @@ const useAddToConversation = () => {
   const mutation = useMutation({
     mutationFn: ({ recipientId, conversationId }: ConversationObj) =>
       addToConversation({ recipientId, conversationId }),
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ['current-user'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['current-user'] })
+      queryClient.invalidateQueries({ queryKey: ['conversations'] })
+    },
   })
 
   return mutation
