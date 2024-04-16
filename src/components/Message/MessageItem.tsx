@@ -20,8 +20,6 @@ const MessageItem = ({ conversation }: { conversation: Conversation }) => {
 
   const state = useMessagesContext()
 
-  console.log(state)
-
   const dispatch = useMessagesDispatchContext()
 
   const {
@@ -31,6 +29,7 @@ const MessageItem = ({ conversation }: { conversation: Conversation }) => {
     _id: conversationId,
   } = conversation
   const { data: recipient } = useGetUser(recipientUserId)
+  console.log('🚀 ~ MessageItem ~ recipient:', recipient)
 
   const handleSelectChat = (id: string) => {
     dispatch({ type: CURRENT_CHAT, payload: id })

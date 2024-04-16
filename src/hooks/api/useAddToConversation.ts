@@ -1,11 +1,23 @@
 import customFetch from '@/utils/customFetch'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-export const addToConversation = async (id: string) => {
+export interface ConversationObj {
+  recipientId: string
+  conversationId: string
+}
+
+export const addToConversation = async ({
+  recipientId,
+  conversationId,
+}: ConversationObj) => {
   try {
-    const { data } = await customFetch.patch(
-      `/friend/add-to-conversation/${id}`
-    )
+    const { data } = await customFetch({
+      method: 'patch',
+      url: `/friend/add-to-conversation/${conversationId}`,
+      data: {
+        recipientId,
+      },
+    })
     return data
   } catch (error) {
     throw error
@@ -13,8 +25,13 @@ export const addToConversation = async (id: string) => {
 }
 
 const useAddToConversation = () => {
+  const queryClient = useQueryClient()
+
   const mutation = useMutation({
-    mutationFn: (id: string) => addToConversation(id),
+    mutationFn: ({ recipientId, conversationId }: ConversationObj) =>
+      addToConversation({ recipientId, conversationId }),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ['current-user'] }),
   })
 
   return mutation

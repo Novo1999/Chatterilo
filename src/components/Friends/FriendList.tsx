@@ -10,6 +10,7 @@ import {
 } from '@/hooks/contextHooks/useMessagesContext'
 import useMenuAnimation from '@/hooks/useMenuAnimation'
 import { socket } from '@/lib/socket'
+import { motion } from 'framer-motion'
 import { Loader, MessageCircle, Trash } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -28,7 +29,7 @@ const FriendList = ({
   handleCloseMenu: () => void
 }) => {
   const scope = useMenuAnimation(isOpen)
-  let { user: { friends, username } = {} } = useAuthContext()
+  let { user: { friends, username, conversations } = {} } = useAuthContext()
   friends = useGetFriendsList(friends, isOpen)
   const [modalOpen, setModalOpen] = useState(false)
   const { mutate: unfriendMutate } = useUnfriend()
@@ -49,7 +50,7 @@ const FriendList = ({
     })
   }
 
-  const handleAddToConversation = (id: string) => {
+  const handleCreateConversation = (id: string) => {
     createConversationMutate(id)
   }
   const portalContent = (
@@ -117,14 +118,24 @@ const FriendList = ({
                       </div>
                       <div className='flex gap-2'>
                         {/* message friend */}
-                        <Button
-                          onClick={() => handleAddToConversation(data?._id)}
-                          asChild
-                          variant='ghost'
-                          className='text-xl w-8 px-2 bg-green-400 hover:bg-green-500'
+                        <motion.div
+                          initial={{ opacity: 1 }}
+                          animate={
+                            conversations?.includes(data._id) && {
+                              opacity: 0,
+                              scale: 0,
+                            }
+                          }
                         >
-                          <MessageCircle />
-                        </Button>
+                          <Button
+                            onClick={() => handleCreateConversation(data?._id)}
+                            asChild
+                            variant='ghost'
+                            className='text-xl w-8 px-2 bg-green-400 hover:bg-green-500'
+                          >
+                            <MessageCircle />
+                          </Button>
+                        </motion.div>
                         {createPortal(
                           <SpringModal
                             onClick={() => handleUnfriend(data?._id)}
