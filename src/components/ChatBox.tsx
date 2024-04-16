@@ -3,6 +3,7 @@ import { socket } from '@/lib/socket'
 import {
   ArrowLeft,
   Info,
+  Loader,
   Paperclip,
   PhoneCall,
   Send,
@@ -11,7 +12,12 @@ import {
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import MessagesContainer from './MessagesContainer'
+
+import useGetConversation from '@/hooks/api/useGetConversation'
+import { useMessagesContext } from '@/hooks/contextHooks/useMessagesContext'
+import { BiError } from 'react-icons/bi'
+import MessageError from './Message/Message-Error'
+import MessagesContainer from './Message/MessagesContainer'
 import { Input } from './ui/input'
 
 type MessageInput = {
@@ -21,6 +27,10 @@ type MessageInput = {
 const Chatbox = () => {
   const pathname = usePathname()
   const { register, handleSubmit, resetField } = useForm<MessageInput>()
+  const { currentConversationId } = useMessagesContext()
+  const { data, isLoading, isError, error } = useGetConversation(
+    currentConversationId
+  )
 
   const sendMessage = (message: string) => {
     socket.emit('message', message)
@@ -29,6 +39,27 @@ const Chatbox = () => {
   const onSubmit: SubmitHandler<MessageInput> = (data) => {
     sendMessage(data.message)
     resetField('message')
+  }
+
+  let content = null
+
+  if (!isLoading && isError) {
+    content = (
+      <div>
+        <BiError />
+      </div>
+    )
+  }
+
+  if (isLoading && !isError) {
+    content = (
+      <div className='flex-center'>
+        <Loader className='animate-spin' />
+      </div>
+    )
+  }
+
+  if (!isLoading && !isError && data?.messages.length === 0) {
   }
 
   return (

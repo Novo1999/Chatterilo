@@ -1,6 +1,5 @@
 import customFetch from '@/utils/customFetch'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import useCreateConversation from './useCreateConversation'
+import { useMutation } from '@tanstack/react-query'
 
 export const addToConversation = async (id: string) => {
   try {
@@ -14,16 +13,8 @@ export const addToConversation = async (id: string) => {
 }
 
 const useAddToConversation = () => {
-  const queryClient = useQueryClient()
-  const { mutate: createConversationMutate } = useCreateConversation()
-
   const mutation = useMutation({
     mutationFn: (id: string) => addToConversation(id),
-
-    onSuccess: (data, id) => {
-      createConversationMutate(id)
-      queryClient.invalidateQueries({ queryKey: ['current-user'] })
-    },
   })
 
   return mutation

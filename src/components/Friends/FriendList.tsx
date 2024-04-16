@@ -1,4 +1,5 @@
 import useAddToConversation from '@/hooks/api/useAddToConversation'
+import useCreateConversation from '@/hooks/api/useCreateConversation'
 import useGetFriendsList from '@/hooks/api/useGetFriendsList'
 import useUnfriend from '@/hooks/api/useUnfriend'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
@@ -32,7 +33,7 @@ const FriendList = ({
   const [modalOpen, setModalOpen] = useState(false)
   const { mutate: unfriendMutate } = useUnfriend()
   const { connectedUsers } = useConnectedUserContext()
-  const { mutate: addToMessagesMutate } = useAddToConversation()
+  const { mutate: createConversationMutate } = useCreateConversation()
   const dispatch = useMessagesDispatchContext()
   const messagesState = useMessagesContext()
 
@@ -49,7 +50,7 @@ const FriendList = ({
   }
 
   const handleAddToConversation = (id: string) => {
-    addToMessagesMutate(id)
+    createConversationMutate(id)
   }
   const portalContent = (
     <nav className='font-poppins w-full' ref={scope}>

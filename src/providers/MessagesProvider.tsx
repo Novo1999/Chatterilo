@@ -1,10 +1,10 @@
 'use client'
 import { MessagesContext, MessagesDispatchContext } from '@/context'
-import { LOAD_MESSAGE_USERS_LIST } from '@/utils/constants'
+import { CURRENT_CHAT, LOAD_MESSAGE_USERS_LIST } from '@/utils/constants'
 import { ReactNode, useReducer } from 'react'
 
 export interface State {
-  messageUsersList: any[]
+  currentConversationId: string
 }
 
 export interface Action {
@@ -13,15 +13,15 @@ export interface Action {
 }
 
 const initialState = {
-  messageUsersList: [],
+  currentConversationId: '',
 }
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case LOAD_MESSAGE_USERS_LIST:
+    case CURRENT_CHAT:
       return {
         ...state,
-        messageUsersList: [...state.messageUsersList, action.payload],
+        currentConversationId: action.payload,
       }
     default:
       return state

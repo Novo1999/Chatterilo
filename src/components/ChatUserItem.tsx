@@ -2,7 +2,6 @@
 import useGetConversations from '@/hooks/api/useGetConversations'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import { Loader2 } from 'lucide-react'
-import Image from 'next/image'
 import MessageItem from './Message/MessageItem'
 
 const ChatUserItem = () => {
