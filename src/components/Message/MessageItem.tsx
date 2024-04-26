@@ -7,6 +7,7 @@ import {
 import { CURRENT_CHAT } from '@/utils/constants'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 export interface Conversation {
   messages: any[]
@@ -18,7 +19,10 @@ export interface Conversation {
 const MessageItem = ({ conversation }: { conversation: Conversation }) => {
   const { connectedUsers } = useConnectedUserContext()
 
-  const state = useMessagesContext()
+  const searchParams = useSearchParams()
+
+  const { replace } = useRouter()
+  const pathname = usePathname()
 
   const dispatch = useMessagesDispatchContext()
 
@@ -29,10 +33,13 @@ const MessageItem = ({ conversation }: { conversation: Conversation }) => {
     _id: conversationId,
   } = conversation
   const { data: recipient } = useGetUser(recipientUserId)
-  console.log('🚀 ~ MessageItem ~ recipient:', recipient)
 
   const handleSelectChat = (id: string) => {
     dispatch({ type: CURRENT_CHAT, payload: id })
+    const params = new URLSearchParams(searchParams)
+    params.set('recipient', recipient?.data.username)
+    params.set('id', conversationId)
+    replace(`${pathname}?${params.toString()}`)
   }
 
   return (

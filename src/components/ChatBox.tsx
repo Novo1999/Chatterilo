@@ -1,4 +1,8 @@
 'use client'
+import useGetConversation from '@/hooks/api/useGetConversation'
+import useGetUser from '@/hooks/api/useGetUser'
+import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
+import { useMessagesContext } from '@/hooks/contextHooks/useMessagesContext'
 import { socket } from '@/lib/socket'
 import {
   ArrowLeft,
@@ -10,13 +14,8 @@ import {
   VideoIcon,
 } from 'lucide-react'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { SubmitHandler, useForm } from 'react-hook-form'
-
-import useGetConversation from '@/hooks/api/useGetConversation'
-import useGetUser from '@/hooks/api/useGetUser'
-import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
-import { useMessagesContext } from '@/hooks/contextHooks/useMessagesContext'
 import MessageError from './Message/Message-Error'
 import MessagesContainer from './Message/MessagesContainer'
 import { Input } from './ui/input'
@@ -27,11 +26,15 @@ type MessageInput = {
 
 const Chatbox = () => {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const recipientName = searchParams.get('recipient')
+  const conversationIdFromParam = searchParams.get('id')
   const { register, handleSubmit, resetField } = useForm<MessageInput>()
   const { currentConversationId } = useMessagesContext()
-  const { data, isLoading, isError, error } = useGetConversation(
-    currentConversationId
+  const { data, isLoading, isError } = useGetConversation(
+    conversationIdFromParam ?? currentConversationId
   )
+  const hasNoConversationId = !conversationIdFromParam && !currentConversationId
   const { connectedUsers } = useConnectedUserContext()
   const { data: recipient } = useGetUser(data?.recipientUserId)
 
@@ -64,6 +67,14 @@ const Chatbox = () => {
     )
   }
 
+  if (hasNoConversationId) {
+    content = (
+      <div className='h-[90vh] text-white'>
+        Start messaging by selecting from the left
+      </div>
+    )
+  }
+
   if (!isLoading && !isError && data?._id) {
     content = (
       <>
@@ -80,7 +91,7 @@ const Chatbox = () => {
             />
             <div className='flex flex-col justify-center relative'>
               <h1 className='font-bold whitespace-break-spaces'>
-                {recipient?.data?.username}
+                {recipientName}
               </h1>
               {/* online status */}
               <div className='flex gap-2 items-center'>

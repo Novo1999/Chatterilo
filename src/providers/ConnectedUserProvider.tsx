@@ -4,7 +4,6 @@ import { ReactNode, useState } from 'react'
 
 const ConnectedUserProvider = ({ children }: { children: ReactNode }) => {
   const [connectedUsers, setConnectedUsers] = useState<ConnectedUser[]>([])
-  console.log(connectedUsers)
   return (
     <ConnectedUserContext.Provider
       value={{ connectedUsers, setConnectedUsers }}

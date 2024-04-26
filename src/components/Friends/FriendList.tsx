@@ -1,4 +1,3 @@
-import useAddToConversation from '@/hooks/api/useAddToConversation'
 import useCreateConversation from '@/hooks/api/useCreateConversation'
 import useGetFriendsList from '@/hooks/api/useGetFriendsList'
 import useUnfriend from '@/hooks/api/useUnfriend'

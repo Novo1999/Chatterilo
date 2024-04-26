@@ -4,7 +4,6 @@ import { useQueries, useQuery } from '@tanstack/react-query'
 const getConversations = async () => {
   try {
     const { data } = await customFetch.get(`/conversation/all`)
-    console.log(data)
     return data
   } catch (error) {
     throw error

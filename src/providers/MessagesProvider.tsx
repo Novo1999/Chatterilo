@@ -30,7 +30,6 @@ const reducer = (state: State, action: Action): State => {
 
 const MessagesProvider = ({ children }: { children: ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
-  console.log('🚀 ~ MessagesProvider ~ state:', state)
 
   return (
     <MessagesContext.Provider value={state}>
