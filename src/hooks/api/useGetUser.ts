@@ -11,6 +11,10 @@ const getUser = async (id: string) => {
 }
 
 const useGetUser = (id: string) =>
-  useQuery({ queryKey: ['user', id], queryFn: () => getUser(id) })
+  useQuery({
+    queryKey: ['user', id],
+    queryFn: () => getUser(id),
+    enabled: !!id,
+  })
 
 export default useGetUser

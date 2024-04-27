@@ -31,13 +31,16 @@ const Chatbox = () => {
   const conversationIdFromParam = searchParams.get('id')
   const { register, handleSubmit, resetField } = useForm<MessageInput>()
   const { currentConversationId } = useMessagesContext()
+  console.log('🚀 ~ Chatbox ~ currentConversationId:', currentConversationId)
   const { data, isLoading, isError } = useGetConversation(
     conversationIdFromParam ?? currentConversationId
   )
+
   const hasNoConversationId = !conversationIdFromParam && !currentConversationId
   const { connectedUsers } = useConnectedUserContext()
   const { data: recipient } = useGetUser(data?.recipientUserId)
 
+  // send message function
   const sendMessage = (message: string) => {
     socket.emit('message', message)
   }
@@ -47,6 +50,7 @@ const Chatbox = () => {
     resetField('message')
   }
 
+  // content
   let content = null
 
   if (!isLoading && isError) {
