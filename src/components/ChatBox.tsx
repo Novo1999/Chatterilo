@@ -242,9 +242,9 @@ const Chatbox = () => {
 
   return (
     <div
-      className={`w-80 sm:max-h-[420px] xl:max-h-full min-[375px]:w-96 min-[425px]:w-[35rem] bg-[#2F4858] ${
+      className={`sm:max-h-[420px] xl:max-h-full w-full bg-[#2F4858] ${
         pathname.startsWith('/messages') ? 'flex' : 'hidden'
-      } sm:w-[25rem] lg:w-[37rem] md:w-[28rem] xl:w-full md:flex flex-col justify-between ml-2 rounded-md shadow-slate-400 p-4 shadow-sm`}
+      }  md:flex flex-col justify-between ml-2 rounded-md shadow-slate-400 p-4 shadow-sm`}
     >
       {content}
     </div>

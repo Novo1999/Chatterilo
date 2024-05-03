@@ -169,7 +169,7 @@ const SearchList = ({
   return (
     <nav className='menu' ref={scope}>
       <ul
-        className='bg-white max-h-60 overflow-y-scroll search-menu text-black p-2 flex flex-col gap-2 w-screen md:w-72 absolute md:right-4 -right-[2px] top-12 text-center'
+        className='bg-[#DAF7DC] max-h-60 overflow-y-scroll search-menu text-black p-2 flex flex-col gap-2 w-screen md:w-72 absolute md:right-4 -right-[2px] top-12 text-center'
         style={{
           pointerEvents: isOpen ? 'auto' : 'none',
           clipPath: 'inset(10% 50% 90% 50% round 10px)',
