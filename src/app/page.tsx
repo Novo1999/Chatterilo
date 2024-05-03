@@ -5,7 +5,7 @@ import MessagesProvider from '@/providers/MessagesProvider'
 
 export default function Home() {
   return (
-    <main className='bg-[#23262e] min-h-screen pl-3 pr-1 pt-3'>
+    <main className='min-h-screen'>
       <MessagesProvider>
         <Header />
       </MessagesProvider>

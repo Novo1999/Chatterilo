@@ -93,7 +93,7 @@ const Header = () => {
   }, [username, _id])
 
   return (
-    <>
+    <section className='bg-[#336699] p-2 shadow-lg'>
       <div className='h-6'>
         <NoSSRConnectionNotifier />
       </div>
@@ -108,7 +108,7 @@ const Header = () => {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </DropDownProfileMenu>
-          <div className='ml-4 hidden md:flex bg-[#23262e] flex-col items-center justify-center overflow-hidden rounded-md'>
+          <div className='ml-4 hidden md:flex flex-col items-center justify-center overflow-hidden rounded-md'>
             <div className='md:text-xl text-md font-bold text-center text-white relative z-20'>
               {isLoading && !isError ? (
                 <div className='animate-spin'>
@@ -189,7 +189,7 @@ const Header = () => {
           <SearchList inputValue={inputValue} isOpen={inputValue.length > 0} />
         </div>
       </div>
-    </>
+    </section>
   )
 }
 export default Header

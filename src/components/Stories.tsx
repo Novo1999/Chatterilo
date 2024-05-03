@@ -13,7 +13,7 @@ const names = [
 
 const Stories = () => {
   return (
-    <section className='mt-4 text-white'>
+    <section className='text-slate-800 p-2 bg-[#86BBD8]'>
       <h1 className='p-bold-20'>Stories</h1>
       <div className='flex flex-row gap-4 story-section overflow-scroll mt-2'>
         {names.map((name, index) => (

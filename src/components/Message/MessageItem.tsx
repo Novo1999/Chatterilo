@@ -49,7 +49,7 @@ const MessageItem = ({ conversation }: { conversation: Conversation }) => {
       animate={{ opacity: 1, x: 0 }}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.95 }}
-      className='grid grid-cols-[50px_160px_50px] min-[375px]:grid-cols-[50px_215px_40px] min-[425px]:grid-cols-[50px_265px_50px] md:grid-cols-[50px_170px_50px] lg:grid-cols-[50px_250px_50px] gap-4 xl:grid-cols-[50px_250px_50px] *:text-gray-200 cursor-pointer hover:bg-slate-700 py-4 rounded-md border border-white border-opacity-50  shadow-md'
+      className='grid grid-cols-[50px_160px_50px] min-[375px]:grid-cols-[50px_215px_40px] min-[425px]:grid-cols-[50px_265px_50px] md:grid-cols-[50px_170px_50px] lg:grid-cols-[50px_250px_50px] gap-4 xl:grid-cols-[50px_250px_50px] *:text-gray-200 cursor-pointer hover:bg-slate-700 py-4 rounded-md border border-white border-opacity-50 shadow-md'
     >
       <div className='relative'>
         <Image
