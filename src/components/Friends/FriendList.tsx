@@ -20,13 +20,7 @@ import { CloseButton } from '../Button'
 import SpringModal from '../misc/SpringModal'
 import { Button } from '../ui/button'
 
-const FriendList = ({
-  isOpen,
-  handleCloseMenu,
-}: {
-  isOpen: boolean
-  handleCloseMenu: () => void
-}) => {
+const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
   const scope = useMenuAnimation(isOpen)
   let { user: { friends, username, conversations } = {} } = useAuthContext()
   friends = useGetFriendsList(friends, isOpen)
@@ -82,7 +76,7 @@ const FriendList = ({
             }
             if (isLoading && !isError) {
               content = (
-                <div className='flex-center' key={crypto.randomUUID()}>
+                <div className='flex-center h-60' key={crypto.randomUUID()}>
                   <Loader className='animate-spin' />
                 </div>
               )

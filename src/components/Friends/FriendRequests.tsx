@@ -13,13 +13,7 @@ import { TbMoodEmpty } from 'react-icons/tb'
 import { CloseButton } from '../Button'
 import { Button } from '../ui/button'
 
-const FriendRequests = ({
-  isOpen,
-  handleCloseMenu,
-}: {
-  isOpen: boolean
-  handleCloseMenu: () => void
-}) => {
+const FriendRequests = ({ isOpen, handleCloseMenu }: IFriend) => {
   const scope = useMenuAnimation(isOpen)
   const { connectedUsers } = useConnectedUserContext()
   const { user: { friendRequests, username } = {} } = useAuthContext()

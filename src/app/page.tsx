@@ -1,4 +1,4 @@
-import ChatUsers from '@/components/ChatUsers'
+import ChatUsers from '@/components/Chat/ChatUsers'
 import Header from '@/components/Header/Header'
 import Stories from '@/components/Stories'
 import MessagesProvider from '@/providers/MessagesProvider'
