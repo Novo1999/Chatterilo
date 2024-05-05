@@ -1,25 +1,6 @@
-import { Action, State } from '@/providers/MessagesProvider'
-import { createContext, Dispatch, SetStateAction } from 'react'
+import { createContext, Dispatch } from 'react'
 
-export interface User {
-  user: {
-    friends: any[]
-    conversations: any[]
-    _id: string
-    email: string
-    username: string
-    createdAt: string
-    __v: number
-    friendRequests: {
-      sent: string[]
-      received: string[]
-    }
-  }
-  isLoading?: boolean
-  isError?: boolean
-}
-
-const defaultUser: User = {
+const defaultUser: IUser = {
   user: {
     friends: [],
     conversations: [],
@@ -35,26 +16,15 @@ const defaultUser: User = {
   },
 }
 
-export interface ConnectedUser {
-  id: string
-  name: string
-  socketId: string
-}
-
-export interface ConnectedUsersContext {
-  connectedUsers: ConnectedUser[]
-  setConnectedUsers: Dispatch<SetStateAction<ConnectedUser[]>>
-}
-
-const defaultConnectedUsersContext: ConnectedUsersContext = {
+const defaultConnectedUsersContext: IConnectedUsersContext = {
   connectedUsers: [],
   setConnectedUsers: () => void 0,
 }
-export const AuthContext = createContext<User>(defaultUser)
-export const ConnectedUserContext = createContext<ConnectedUsersContext>(
+export const AuthContext = createContext<IUser>(defaultUser)
+export const ConnectedUserContext = createContext<IConnectedUsersContext>(
   defaultConnectedUsersContext
 )
-export const MessagesContext = createContext<State | null>(null)
-export const MessagesDispatchContext = createContext<Dispatch<Action> | null>(
+export const MessagesContext = createContext<IMessageState | null>(null)
+export const MessagesDispatchContext = createContext<Dispatch<IAction> | null>(
   null
 )

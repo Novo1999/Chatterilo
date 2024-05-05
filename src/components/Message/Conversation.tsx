@@ -1,6 +1,6 @@
 import Message from './Message'
 
-const MessagesContainer = ({ messages }: { messages: string[] }) => {
+const Conversation = ({ messages }: { messages: string[] }) => {
   let content = null
 
   if (messages.length > 0) {
@@ -27,4 +27,4 @@ const MessagesContainer = ({ messages }: { messages: string[] }) => {
     </section>
   )
 }
-export default MessagesContainer
+export default Conversation

@@ -11,7 +11,6 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 const useChatBox = () => {
   const { userId: conversationIdFromParam } = useParams()
 
-  console.log(conversationIdFromParam)
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const recipientName = searchParams.get('recipient')
@@ -26,7 +25,6 @@ const useChatBox = () => {
       (conversationIdFromParam as string)
   )
 
-  console.log(data)
   const { user } = useAuthContext()
   const [typerId, setTyperId] = useState('')
   const hasNoConversationId =
@@ -100,17 +98,12 @@ const useChatBox = () => {
 
   useEffect(() => {
     socket.connect()
-    socket.on('new_message', (data) => {
-      console.log('🚀 ~ socket.on ~ new_message:', data)
-    })
 
     socket.on('typing', (data) => {
-      console.log('🚀 ~ socket.on ~ typing:', data)
       setTyperId(data.senderId)
     })
 
     socket.on('not_typing', (data) => {
-      console.log('🚀 ~ socket.on ~ not_typing:', data)
       setTyperId('')
     })
   }, [])

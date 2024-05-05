@@ -49,19 +49,24 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
   const portalContent = (
     <nav className='font-poppins w-full' ref={scope}>
       <ul
-        className='bg-white max-h-60 friend-content overflow-y-scroll search-menu text-black p-2 flex flex-col gap-2 w-screen md:w-96 text-sm absolute md:left-20 top-24 text-center'
+        className='bg-white max-h-60 min-h-52 friend-content overflow-y-scroll search-menu text-black p-2 flex flex-col gap-2 w-screen md:w-96 text-sm absolute md:left-20 top-24 text-center'
         style={{
           clipPath: 'inset(10% 50% 90% 50% round 10px)',
         }}
       >
         <div className='flex-between'>
-          <div className='p-bold-20'>My Friends</div>
+          <div className='p-bold-20'>
+            My Friends{' '}
+            <span className='text-xs relative bottom-0.5'>
+              ({friends?.length})
+            </span>
+          </div>
           <CloseButton onClick={handleCloseMenu}>
             <CgClose />
           </CloseButton>
         </div>
         <li className='hidden'></li>
-        {friends?.length > 0 && isOpen ? (
+        {friends?.length > 0 ? (
           friends?.map(({ data, isLoading, isError }) => {
             let content = null
             if (!isLoading && isError) {
@@ -81,12 +86,12 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
                 </div>
               )
             }
-            if (!isLoading && !isError && data._id) {
+            if (!isLoading && !isError && data?._id) {
               content = (
                 <li key={data?._id}>
                   <Link
                     href={`/`}
-                    className='flex w-full max-w-sm overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800'
+                    className='flex w-full max-w-sm m-auto overflow-hidden bg-white rounded-lg shadow-md dark:bg-gray-800'
                   >
                     <div className='flex items-center justify-between px-2 py-3 w-full'>
                       <div className='flex gap-2 items-center'>

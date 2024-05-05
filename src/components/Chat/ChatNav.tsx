@@ -1,6 +1,7 @@
 import useChatBox from '@/hooks/useChatBox'
 import { ArrowLeft, Info, PhoneCall, VideoIcon } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const ChatNav = ({ recipientName }: { recipientName: string }) => {
   const { connectedUsers, recipient } = useChatBox()
@@ -9,7 +10,9 @@ const ChatNav = ({ recipientName }: { recipientName: string }) => {
     <nav className='flex-between text-gray-200 text-xs'>
       {/* nav left */}
       <div className='flex gap-2 items-center'>
-        <ArrowLeft className='block md:hidden' />
+        <Link href='/'>
+          <ArrowLeft className='block md:hidden' />
+        </Link>
         <Image
           width={300}
           height={300}

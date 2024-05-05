@@ -37,3 +37,4 @@ export const loginFormFields = ['email', 'password']
 export const CURRENT_CHAT = 'CURRENT_CHAT'
 export const DELETE_CHAT = 'DELETE_CHAT'
 export const SEND_MESSAGE = 'SEND_MESSAGE'
+export const PUSH_NEW_MESSAGE = 'PUSH_NEW_MESSAGE'

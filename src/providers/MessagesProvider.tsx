@@ -1,27 +1,27 @@
 'use client'
 import { MessagesContext, MessagesDispatchContext } from '@/context'
-import { CURRENT_CHAT } from '@/utils/constants'
+import { CURRENT_CHAT, PUSH_NEW_MESSAGE } from '@/utils/constants'
 import { ReactNode, useReducer } from 'react'
 
-export interface State {
-  currentConversationId: string
-}
-
-export interface Action {
-  type: string
-  payload: any
-}
-
-const initialState = {
+export const initialState = {
   currentConversationId: '',
 }
 
-const reducer = (state: State, action: Action): State => {
+const reducer = (state: IMessageState, action: IAction): IMessageState => {
   switch (action.type) {
     case CURRENT_CHAT:
       return {
         ...state,
         currentConversationId: action.payload,
+      }
+    case PUSH_NEW_MESSAGE:
+      return {
+        ...state,
+        currentConversation: {
+          currentConversationId: state.currentConversationId,
+          conversationMessages:
+            state.currentConversation.conversationMessages.push(action.payload),
+        },
       }
     default:
       return state
@@ -40,3 +40,17 @@ const MessagesProvider = ({ children }: { children: ReactNode }) => {
   )
 }
 export default MessagesProvider
+
+/*
+
+{
+  conversationId: "SOME_ID",
+  conversationMsgs: [
+    {
+      id: random_id,
+      message: MSG
+    }
+  ]
+}
+
+*/
