@@ -1,13 +1,7 @@
 'use client'
-import useAuthContext from '@/hooks/contextHooks/useAuthContext'
-import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
 import useHeader from '@/hooks/useHeader'
-import { socket } from '@/lib/socket'
-import customFetch from '@/utils/customFetch'
 import { Loader2, LogOut } from 'lucide-react'
 import dynamic from 'next/dynamic'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
 import { FaUserFriends } from 'react-icons/fa'
 import { GiThreeFriends } from 'react-icons/gi'
 import { RxCross1 } from 'react-icons/rx'
@@ -111,10 +105,6 @@ const Header = () => {
                 handleCloseMenu={handleCloseMenu}
                 isOpen={isFriendRequestListOpen}
               />
-              {/* <FriendRequests
-                handleCloseMenu={handleCloseMenu}
-                isOpen={isFriendRequestListOpen}
-              /> */}
               <button onClick={handleLogOut}>
                 <LogOut />
               </button>

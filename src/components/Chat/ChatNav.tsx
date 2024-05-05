@@ -2,8 +2,8 @@ import useChatBox from '@/hooks/useChatBox'
 import { ArrowLeft, Info, PhoneCall, VideoIcon } from 'lucide-react'
 import Image from 'next/image'
 
-const ChatNav = () => {
-  const { recipientName, connectedUsers, recipient } = useChatBox()
+const ChatNav = ({ recipientName }: { recipientName: string }) => {
+  const { connectedUsers, recipient } = useChatBox()
 
   return (
     <nav className='flex-between text-gray-200 text-xs'>

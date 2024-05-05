@@ -14,9 +14,12 @@ const Chatbox = () => {
     hasNoConversationId,
     recipient,
     typerId,
-
     pathname,
   } = useChatBox()
+
+  console.log(recipient)
+
+  const recipientName = recipient?.data?.username
 
   // content
   let content = null
@@ -48,7 +51,7 @@ const Chatbox = () => {
   if (!isLoading && !isError && data?._id) {
     content = (
       <>
-        <ChatNav />
+        <ChatNav recipientName={recipientName} />
         {/* message content */}
 
         <MessagesContainer messages={data?.messages} />

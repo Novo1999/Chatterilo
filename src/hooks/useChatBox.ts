@@ -4,32 +4,35 @@ import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
 import { useMessagesContext } from '@/hooks/contextHooks/useMessagesContext'
 import { socket } from '@/lib/socket'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { useParams, usePathname, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 
 const useChatBox = () => {
+  const { userId: conversationIdFromParam } = useParams()
+
+  console.log(conversationIdFromParam)
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const recipientName = searchParams.get('recipient')
-  const conversationIdFromParam = searchParams.get('id')
+  const conversationIdFromSearchParams = searchParams.get('id')
   const { register, handleSubmit, resetField } = useForm<{
     message: string
   }>()
   const { currentConversationId } = useMessagesContext()
   const { data, isLoading, isError } = useGetConversation(
-    conversationIdFromParam ?? currentConversationId
+    conversationIdFromSearchParams ||
+      currentConversationId ||
+      (conversationIdFromParam as string)
   )
+
+  console.log(data)
   const { user } = useAuthContext()
   const [typerId, setTyperId] = useState('')
-  const hasNoConversationId = !conversationIdFromParam && !currentConversationId
+  const hasNoConversationId =
+    !conversationIdFromSearchParams && !currentConversationId
   const { connectedUsers } = useConnectedUserContext()
   const { data: recipient } = useGetUser(data?.recipientUserId)
-
-  console.log(
-    '🚀 ~ Chatbox ~ conversationIdFromParam:',
-    conversationIdFromParam
-  )
 
   // send message function
   const sendMessage = ({
@@ -62,7 +65,7 @@ const useChatBox = () => {
   }> = (data) => {
     sendMessage({
       senderId: user._id,
-      conversationId: conversationIdFromParam ?? currentConversationId,
+      conversationId: conversationIdFromSearchParams ?? currentConversationId,
       message: data.message,
       recipientUserId: recipient?.data._id,
     })
@@ -82,7 +85,7 @@ const useChatBox = () => {
       matchedConnectedUser,
       senderId: user._id,
       recipientUserId: recipient?.data._id,
-      conversationId: conversationIdFromParam ?? currentConversationId,
+      conversationId: conversationIdFromSearchParams ?? currentConversationId,
     })
 
     timeOutId = setTimeout(() => {
@@ -90,7 +93,7 @@ const useChatBox = () => {
         matchedConnectedUser,
         senderId: user._id,
         recipientUserId: recipient?.data._id,
-        conversationId: conversationIdFromParam ?? currentConversationId,
+        conversationId: conversationIdFromSearchParams ?? currentConversationId,
       })
     }, 1500)
   }

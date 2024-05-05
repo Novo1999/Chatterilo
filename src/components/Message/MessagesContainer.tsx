@@ -22,7 +22,7 @@ const MessagesContainer = ({ messages }: { messages: string[] }) => {
     )
 
   return (
-    <section className='text-gray-200 text-sm space-y-4 mt-4 message-container mb-3 overflow-scroll'>
+    <section className='text-gray-200 h-5/6 text-sm space-y-4 mt-4 message-container mb-3 overflow-scroll'>
       {content}
     </section>
   )

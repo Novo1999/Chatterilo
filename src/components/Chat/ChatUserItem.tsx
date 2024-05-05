@@ -2,7 +2,7 @@
 import useGetConversations from '@/hooks/api/useGetConversations'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import { Loader2 } from 'lucide-react'
-import MessageItem, { Conversation } from '../Message/MessageItem'
+import MessageItem from '../Message/MessageItem'
 
 const ChatUserItem = () => {
   const { user: { conversations } = {} } = useAuthContext()
@@ -25,7 +25,7 @@ const ChatUserItem = () => {
     )
   }
   if (!isLoading && !isError && data.length > 0) {
-    content = data.map((item: Conversation) => (
+    content = data.map((item: IConversation) => (
       <MessageItem key={item._id} conversation={item} />
     ))
   }
