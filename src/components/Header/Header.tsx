@@ -1,6 +1,7 @@
 'use client'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
+import useHeader from '@/hooks/useHeader'
 import { socket } from '@/lib/socket'
 import customFetch from '@/utils/customFetch'
 import { Loader2, LogOut } from 'lucide-react'
@@ -29,68 +30,21 @@ const NoSSRFriendList = dynamic(() => import('../Friends/FriendList'), {
 })
 
 const Header = () => {
-  const router = useRouter()
   const {
-    user: { username, friendRequests, _id, friends } = {},
+    handleFriendListClick,
+    handleFriendRequestListClick,
     isLoading,
     isError,
-  } = useAuthContext()
-
-  const [inputValue, setInputValue] = useState('')
-  const [isFriendRequestListOpen, setIsFriendRequestListOpen] = useState(false)
-  const [isFriendsListOpen, setIsFriendsListOpen] = useState(false)
-  const { setConnectedUsers } = useConnectedUserContext()
-
-  const handleFriendListClick = () => {
-    setIsFriendRequestListOpen(false)
-    setIsFriendsListOpen(!isFriendsListOpen)
-  }
-
-  const handleFriendRequestListClick = () => {
-    setIsFriendsListOpen(false)
-    setIsFriendRequestListOpen(!isFriendRequestListOpen)
-  }
-
-  const handleCloseMenu = () => {
-    if (isFriendsListOpen) {
-      setIsFriendsListOpen(false)
-    }
-    if (isFriendRequestListOpen) {
-      setIsFriendRequestListOpen(false)
-    }
-  }
-
-  const handleLogOut = async () => {
-    await customFetch.get('/auth/logout')
-    router.push('/login')
-  }
-
-  useEffect(() => {
-    if (username !== '') {
-      socket.connect()
-      socket.emit('connected-user', {
-        id: _id,
-        name: username,
-      })
-    }
-    socket.on('users', (data) => {
-      setConnectedUsers(data)
-    })
-
-    // when user closes tab emit this event to disconnect from the socket
-    const handleBeforeUnload = () =>
-      socket.emit('connected-user-dc', {
-        id: _id,
-        name: username,
-      })
-
-    window.addEventListener('beforeunload', handleBeforeUnload)
-
-    return () => {
-      socket.disconnect()
-      window.removeEventListener('beforeunload', handleBeforeUnload)
-    }
-  }, [username, _id])
+    username,
+    friends,
+    friendRequests,
+    handleCloseMenu,
+    handleLogOut,
+    inputValue,
+    setInputValue,
+    isFriendsListOpen,
+    isFriendRequestListOpen,
+  } = useHeader()
 
   return (
     <section className='bg-[#336699] p-2 shadow-lg'>

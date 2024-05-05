@@ -1,13 +1,8 @@
 import customFetch from '@/utils/customFetch'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-hot-toast'
 
-interface values {
-  email: string
-  password: string
-}
-
-const login = async (values: values) => {
+const login = async (values: IAuthInput) => {
   try {
     const data = await customFetch.post('/auth/login', values)
     return data
@@ -20,7 +15,7 @@ export const useLogin = () => {
   const queryClient = useQueryClient()
   let toastPromise
   const mutation = useMutation({
-    mutationFn: (values: values) => {
+    mutationFn: (values: IAuthInput) => {
       toastPromise = login(values)
       // show loading, success message and error message
       toast.promise(toastPromise, {

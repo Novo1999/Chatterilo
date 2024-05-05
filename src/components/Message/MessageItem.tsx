@@ -1,9 +1,6 @@
 import useGetUser from '@/hooks/api/useGetUser'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
-import {
-  useMessagesContext,
-  useMessagesDispatchContext,
-} from '@/hooks/contextHooks/useMessagesContext'
+import { useMessagesDispatchContext } from '@/hooks/contextHooks/useMessagesContext'
 import { CURRENT_CHAT } from '@/utils/constants'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
@@ -49,19 +46,19 @@ const MessageItem = ({ conversation }: { conversation: Conversation }) => {
       animate={{ opacity: 1, x: 0 }}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.95 }}
-      className='grid grid-cols-[50px_150px_50px] px-1 min-[375px]:grid-cols-[50px_205px_40px] min-[425px]:grid-cols-[50px_255px_50px] md:grid-cols-[50px_150px_52px] lg:grid-cols-[50px_250px_50px] gap-4 xl:grid-cols-[50px_240px_50px] *:text-gray-200 cursor-pointer hover:bg-slate-700 py-4 rounded-md border border-white border-opacity-50 shadow-md'
+      className='flex justify-between items-center px-2 gap-2 *:text-gray-200 cursor-pointer hover:bg-slate-700 py-4 rounded-md border border-white border-opacity-50 shadow-md'
     >
       <div className='relative'>
         <Image
           src='https://i.pravatar.cc/300'
           width={300}
           height={300}
-          className='size-12 rounded-full'
+          className='w-12 rounded-full'
           alt='avatar'
         />
         {/* shows if user is online */}
         {connectedUsers.map((user) => user.id).includes(recipientUserId) ? (
-          <div className='rounded-full bg-green-500 size-3 absolute top-10 right-0'></div>
+          <div className='rounded-full bg-green-500 size-3 absolute top-8 right-0'></div>
         ) : (
           <div className='rounded-full bg-gray-500 size-3 absolute top-10 right-0'></div>
         )}
