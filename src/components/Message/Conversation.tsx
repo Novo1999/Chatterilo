@@ -1,9 +1,11 @@
+import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import Message from './Message'
 
-const Conversation = ({ messages }: { messages: string[] }) => {
+const Conversation = ({ messages }: { messages: any }) => {
+  const { user } = useAuthContext()
   let content = null
 
-  if (messages.length > 0) {
+  if (messages.length === 0) {
     content = (
       <div className='h-60'>
         <p>No Messages</p>
@@ -12,12 +14,16 @@ const Conversation = ({ messages }: { messages: string[] }) => {
   } else
     content = (
       <div className='h-96 space-y-4'>
-        <Message position='left' />
-        <Message position='right' />
-        <Message position='left' />
-        <Message position='right' />
-        <Message position='right' />
-        <Message position='right' />
+        {messages.map((item, index) => {
+          return (
+            <Message
+              key={index}
+              position={item.from !== user._id ? 'right' : 'left'}
+            >
+              {item.message}
+            </Message>
+          )
+        })}
       </div>
     )
 

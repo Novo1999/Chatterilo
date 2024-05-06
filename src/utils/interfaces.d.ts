@@ -45,19 +45,18 @@ interface IConnectedUsersContext {
   setConnectedUsers: Dispatch<SetStateAction<IConnectedUser[]>>
 }
 
+interface IMessage {
+  id: string
+  content: string
+  timestamp: string
+  reaction?: string
+  sender: string
+}
+
 interface IMessageState {
-  currentConversationId: string
   currentConversation: {
     currentConversationId: string
-    conversationMessages: [
-      {
-        id: string
-        content: string
-        timestamp: string
-        reaction?: string
-        sender: string
-      }
-    ]
+    conversationMessages: IMessage[]
   }
 }
 

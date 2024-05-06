@@ -3,8 +3,11 @@ import { MessagesContext, MessagesDispatchContext } from '@/context'
 import { CURRENT_CHAT, PUSH_NEW_MESSAGE } from '@/utils/constants'
 import { ReactNode, useReducer } from 'react'
 
-export const initialState = {
-  currentConversationId: '',
+export const initialState: IMessageState = {
+  currentConversation: {
+    currentConversationId: '',
+    conversationMessages: [],
+  },
 }
 
 const reducer = (state: IMessageState, action: IAction): IMessageState => {
@@ -12,15 +15,21 @@ const reducer = (state: IMessageState, action: IAction): IMessageState => {
     case CURRENT_CHAT:
       return {
         ...state,
-        currentConversationId: action.payload,
+        currentConversation: {
+          conversationMessages: [],
+          currentConversationId: action.payload,
+        },
       }
     case PUSH_NEW_MESSAGE:
       return {
         ...state,
         currentConversation: {
-          currentConversationId: state.currentConversationId,
-          conversationMessages:
-            state.currentConversation.conversationMessages.push(action.payload),
+          currentConversationId:
+            state.currentConversation.currentConversationId,
+          conversationMessages: [
+            ...state.currentConversation.conversationMessages,
+            action.payload,
+          ],
         },
       }
     default:
@@ -40,17 +49,3 @@ const MessagesProvider = ({ children }: { children: ReactNode }) => {
   )
 }
 export default MessagesProvider
-
-/*
-
-{
-  conversationId: "SOME_ID",
-  conversationMsgs: [
-    {
-      id: random_id,
-      message: MSG
-    }
-  ]
-}
-
-*/

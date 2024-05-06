@@ -4,16 +4,15 @@ interface MessageProp {
   position: string
 }
 
-const MessageText = () => {
+const MessageText = ({ children }) => {
   return (
     <p className='bg-green-400 p-2 lg:p-3 max-w-48 xl:max-w-96 md:max-w-60 rounded-xl text-slate-800'>
-      Omg, this is a message! Omg, this is a message! Omg, this is a message!
-      Omg, this is a message! Omg, this is a message! Omg, this is a message!
+      {children}
     </p>
   )
 }
 
-const Message = ({ position }: MessageProp) => {
+const Message = ({ position, children }: MessageProp) => {
   // if position left
   if (position === 'left') {
     return (
@@ -25,13 +24,13 @@ const Message = ({ position }: MessageProp) => {
           alt='avatar'
           className='size-10 rounded-full'
         />
-        <MessageText />
+        <MessageText>{children}</MessageText>
       </div>
     )
   } else {
     return (
       <div className='flex items-start justify-end gap-3'>
-        <MessageText />
+        <MessageText>{children}</MessageText>
         <Image
           src='https://i.pravatar.cc/300'
           width={300}

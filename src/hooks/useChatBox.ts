@@ -2,8 +2,12 @@ import useGetConversation from '@/hooks/api/useGetConversation'
 import useGetUser from '@/hooks/api/useGetUser'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
-import { useMessagesContext } from '@/hooks/contextHooks/useMessagesContext'
+import {
+  useMessagesContext,
+  useMessagesDispatchContext,
+} from '@/hooks/contextHooks/useMessagesContext'
 import { socket } from '@/lib/socket'
+import { PUSH_NEW_MESSAGE } from '@/utils/constants'
 import { useParams, usePathname, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -11,14 +15,19 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 const useChatBox = () => {
   const { userId: conversationIdFromParam } = useParams()
 
+  const dispatch = useMessagesDispatchContext()
+
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const recipientName = searchParams.get('recipient')
   const conversationIdFromSearchParams = searchParams.get('id')
+
   const { register, handleSubmit, resetField } = useForm<{
     message: string
   }>()
-  const { currentConversationId } = useMessagesContext()
+  const {
+    currentConversation: { currentConversationId },
+  } = useMessagesContext()
   const { data, isLoading, isError } = useGetConversation(
     conversationIdFromSearchParams ||
       currentConversationId ||
@@ -26,7 +35,9 @@ const useChatBox = () => {
   )
 
   const { user } = useAuthContext()
+  // set who is typing
   const [typerId, setTyperId] = useState('')
+  // check if param has conversation
   const hasNoConversationId =
     !conversationIdFromSearchParams && !currentConversationId
   const { connectedUsers } = useConnectedUserContext()
@@ -47,6 +58,11 @@ const useChatBox = () => {
     const matchedConnectedUser = connectedUsers.find(
       (user) => user.id === recipientUserId
     )
+
+    dispatch({
+      type: PUSH_NEW_MESSAGE,
+      payload: { from: user._id, message: message },
+    })
 
     socket.emit('message', {
       matchedConnectedUser,

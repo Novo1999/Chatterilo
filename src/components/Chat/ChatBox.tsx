@@ -1,6 +1,13 @@
 'use client'
+import {
+  useMessagesContext,
+  useMessagesDispatchContext,
+} from '@/hooks/contextHooks/useMessagesContext'
 import useChatBox from '@/hooks/useChatBox'
+import { socket } from '@/lib/socket'
+import { PUSH_NEW_MESSAGE } from '@/utils/constants'
 import { Loader } from 'lucide-react'
+import { useEffect } from 'react'
 import Conversation from '../Message/Conversation'
 import MessageError from '../Message/Message-Error'
 import ChatInput from './ChatInput'
@@ -18,6 +25,18 @@ const Chatbox = () => {
   } = useChatBox()
 
   const recipientName = recipient?.data?.username
+
+  const { currentConversation } = useMessagesContext()
+
+  console.log(currentConversation)
+
+  const dispatch = useMessagesDispatchContext()
+
+  useEffect(() => {
+    socket.on('new_message', (message) => {
+      dispatch({ type: PUSH_NEW_MESSAGE, payload: message })
+    })
+  }, [])
 
   // content
   let content = null
@@ -52,7 +71,7 @@ const Chatbox = () => {
         <ChatNav recipientName={recipientName} />
         {/* message content */}
 
-        <Conversation messages={data?.messages} />
+        <Conversation messages={currentConversation.conversationMessages} />
 
         {typerId === recipient?.data._id && (
           <p className='text-white text-xs'>typing...</p>
