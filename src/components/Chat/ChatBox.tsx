@@ -7,6 +7,7 @@ import useChatBox from '@/hooks/useChatBox'
 import { socket } from '@/lib/socket'
 import { PUSH_NEW_MESSAGE } from '@/utils/constants'
 import { Loader } from 'lucide-react'
+import { useParams } from 'next/navigation'
 import { useEffect } from 'react'
 import Conversation from '../Message/Conversation'
 import MessageError from '../Message/Message-Error'
@@ -26,12 +27,15 @@ const Chatbox = () => {
 
   const recipientName = recipient?.data?.username
 
+  const { userId } = useParams()
+
   const { currentConversation } = useMessagesContext()
 
   console.log(currentConversation)
 
   const dispatch = useMessagesDispatchContext()
 
+  // push new message to the state when new message comes from the other client
   useEffect(() => {
     socket.on('new_message', (message) => {
       dispatch({ type: PUSH_NEW_MESSAGE, payload: message })
@@ -57,9 +61,9 @@ const Chatbox = () => {
     content = <div className='text-xl flex-center text-white'>NO DATA</div>
   }
 
-  if (hasNoConversationId) {
+  if (hasNoConversationId && !userId) {
     content = (
-      <div className='text-white'>
+      <div className='text-white p-4'>
         Start messaging by selecting from the left
       </div>
     )
@@ -69,7 +73,6 @@ const Chatbox = () => {
     content = (
       <>
         <ChatNav recipientName={recipientName} />
-        {/* message content */}
 
         <Conversation messages={currentConversation.conversationMessages} />
 
@@ -85,9 +88,11 @@ const Chatbox = () => {
 
   return (
     <div
-      className={`w-full bg-[#2F4858] ${
+      className={`w-full bg-[#15616D]  ${
         pathname.startsWith('/messages') ? 'flex' : 'hidden'
-      }  md:flex flex-col justify-between ml-2 rounded-b-md shadow-slate-400 p-4 shadow-sm`}
+      }  md:flex flex-col justify-between ${
+        !userId ? 'ml-2' : ''
+      } rounded-b-md shadow-slate-400 py-4 shadow-sm`}
     >
       {content}
     </div>

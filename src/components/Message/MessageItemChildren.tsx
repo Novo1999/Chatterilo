@@ -56,7 +56,7 @@ const MessageItemChildren = ({
         </div>
       </div>
       <div className='text-xs font-thin'>
-        <p className='text-blue-200'>4:03pm</p>
+        <p className='text-slate-800 italic font-semibold'>4:03pm</p>
       </div>
     </>
   )

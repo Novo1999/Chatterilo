@@ -34,14 +34,14 @@ const MessageItem = ({ conversation }: { conversation: IConversation }) => {
     >
       {/* takes to the message page when user is on mobile */}
       <Link
-        className='flex sm:hidden justify-between items-center px-2 gap-2 *:text-gray-200 cursor-pointer hover:bg-slate-700 py-4 rounded-md border border-white border-opacity-50 shadow-md'
+        className='flex sm:hidden justify-between items-center px-2 gap-2 bg-[#FFECD1] *:text-gray-800 cursor-pointer hover:bg-[#d5c5ae] py-4 rounded-md border border-white border-opacity-50 shadow-md'
         href={`messages/${conversationId}`}
       >
         <MessageItemChildren conversation={conversation} />
       </Link>
       <div
         onClick={() => handleSelectChat(conversationId)}
-        className='hidden sm:flex justify-between items-center px-2 gap-2 *:text-gray-200 cursor-pointer hover:bg-slate-700 py-4 rounded-md border border-white border-opacity-50 shadow-md'
+        className='hidden sm:flex justify-between items-center px-2 gap-2 bg-[#FFECD1] *:text-gray-800 cursor-pointer hover:bg-[#d5c5ae] py-4 rounded-md border border-white border-opacity-50 shadow-md'
       >
         <MessageItemChildren conversation={conversation} />
       </div>

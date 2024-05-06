@@ -7,7 +7,7 @@ const ChatNav = ({ recipientName }: { recipientName: string }) => {
   const { connectedUsers, recipient } = useChatBox()
 
   return (
-    <nav className='flex-between text-gray-200 text-xs'>
+    <nav className='flex-between text-gray-200 px-4 text-xs'>
       {/* nav left */}
       <div className='flex gap-2 items-center'>
         <Link href='/'>
@@ -17,7 +17,7 @@ const ChatNav = ({ recipientName }: { recipientName: string }) => {
           width={300}
           height={300}
           alt='avatar'
-          className='size-12 rounded-full'
+          className='w-12 rounded-full'
           src='https://i.pravatar.cc/300'
         />
         <div className='flex flex-col justify-center relative'>

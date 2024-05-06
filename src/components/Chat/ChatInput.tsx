@@ -6,7 +6,7 @@ const ChatInput = () => {
   const { handleSubmit, onSubmit, register, emitUserTyping } = useChatBox()
 
   return (
-    <div className='flex items-center gap-2'>
+    <div className='flex items-center gap-2 px-4'>
       <div className='text-white'>
         <Paperclip />{' '}
       </div>
@@ -15,7 +15,7 @@ const ChatInput = () => {
           <Input
             purpose='type-message'
             gradient='purple'
-            className='bg-[#DAF7DC] w-full'
+            className='bg-[#FFECD1] w-full'
             placeholder='Write your message...'
             type='text'
             onKeyDown={emitUserTyping}

@@ -8,6 +8,7 @@ import {
 } from '@/hooks/contextHooks/useMessagesContext'
 import { socket } from '@/lib/socket'
 import { PUSH_NEW_MESSAGE } from '@/utils/constants'
+import moment from 'moment'
 import { useParams, usePathname, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -25,9 +26,11 @@ const useChatBox = () => {
   const { register, handleSubmit, resetField } = useForm<{
     message: string
   }>()
+
   const {
     currentConversation: { currentConversationId },
   } = useMessagesContext()
+
   const { data, isLoading, isError } = useGetConversation(
     conversationIdFromSearchParams ||
       currentConversationId ||
@@ -61,7 +64,11 @@ const useChatBox = () => {
 
     dispatch({
       type: PUSH_NEW_MESSAGE,
-      payload: { from: user._id, message: message },
+      payload: {
+        sender: user._id,
+        content: message,
+        timestamp: moment().format('YYYY-MM-DD hh:mm A'),
+      },
     })
 
     socket.emit('message', {

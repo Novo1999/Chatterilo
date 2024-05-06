@@ -1,43 +1,50 @@
+import moment from 'moment'
 import Image from 'next/image'
+import { ReactNode } from 'react'
+import MessageText from './MessageText'
 
-interface MessageProp {
-  position: string
-}
+const Message = ({ position, message }: MessageProp) => {
+  const { content, timestamp } = message
+  const isToday = moment().isSame(timestamp.split(' ')[0], 'day')
+  const formattedTimestamp = isToday
+    ? `${timestamp.split(' ')[1]} ${timestamp.split(' ')[2]}`
+    : timestamp.split(' ')[0]
 
-const MessageText = ({ children }) => {
-  return (
-    <p className='bg-green-400 p-2 lg:p-3 max-w-48 xl:max-w-96 md:max-w-60 rounded-xl text-slate-800'>
-      {children}
-    </p>
-  )
-}
+  console.log(timestamp)
 
-const Message = ({ position, children }: MessageProp) => {
+  console.log(isToday)
+
   // if position left
   if (position === 'left') {
     return (
-      <div className='flex items-start gap-3'>
-        <Image
-          src='https://i.pravatar.cc/300'
-          width={300}
-          height={300}
-          alt='avatar'
-          className='size-10 rounded-full'
-        />
-        <MessageText>{children}</MessageText>
+      <div className='flex items-start flex-col'>
+        <div className='flex gap-2'>
+          <Image
+            src='https://i.pravatar.cc/300'
+            width={300}
+            height={300}
+            alt='avatar'
+            className='size-10 rounded-full'
+          />
+          <MessageText>{content}</MessageText>
+        </div>
+        <p className='text-[8px] italic opacity-80'>{formattedTimestamp}</p>
       </div>
     )
   } else {
     return (
-      <div className='flex items-start justify-end gap-3'>
-        <MessageText>{children}</MessageText>
-        <Image
-          src='https://i.pravatar.cc/300'
-          width={300}
-          height={300}
-          alt='avatar'
-          className='size-10 rounded-full'
-        />
+      <div className='flex flex-col items-end justify-end'>
+        <div className='flex gap-2'>
+          <MessageText>{content}</MessageText>
+          <Image
+            src='https://i.pravatar.cc/300'
+            width={300}
+            height={300}
+            alt='avatar'
+            className='size-10 rounded-full'
+          />
+        </div>
+        <p className='text-[8px] italic opacity-80'>{formattedTimestamp}</p>
       </div>
     )
   }

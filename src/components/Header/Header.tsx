@@ -41,7 +41,7 @@ const Header = () => {
   } = useHeader()
 
   return (
-    <section className='bg-[#336699] p-2 shadow-lg rounded-md'>
+    <section className='bg-[#15616D] p-2 shadow-lg rounded-t-md'>
       <div className='h-6'>
         <NoSSRConnectionNotifier />
       </div>

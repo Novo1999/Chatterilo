@@ -64,3 +64,8 @@ interface IAction {
   type: string
   payload: any
 }
+
+interface MessageProp {
+  position: string
+  message: IMessage
+}

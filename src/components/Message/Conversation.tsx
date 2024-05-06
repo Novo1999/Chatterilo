@@ -1,7 +1,7 @@
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import Message from './Message'
 
-const Conversation = ({ messages }: { messages: any }) => {
+const Conversation = ({ messages }: { messages: IMessage[] }) => {
   const { user } = useAuthContext()
   let content = null
 
@@ -18,17 +18,16 @@ const Conversation = ({ messages }: { messages: any }) => {
           return (
             <Message
               key={index}
-              position={item.from !== user._id ? 'right' : 'left'}
-            >
-              {item.message}
-            </Message>
+              position={item.sender !== user._id ? 'right' : 'left'}
+              message={item}
+            />
           )
         })}
       </div>
     )
 
   return (
-    <section className='text-gray-200 h-5/6 text-sm space-y-4 mt-4 message-container mb-3 overflow-scroll'>
+    <section className='text-gray-200 p-4 h-5/6 bg-[#78290F] text-sm space-y-4 mt-4 message-container mb-3 overflow-scroll'>
       {content}
     </section>
   )
