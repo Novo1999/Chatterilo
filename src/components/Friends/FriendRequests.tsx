@@ -62,7 +62,9 @@ const FriendRequests = ({ isOpen, handleCloseMenu }: IFriend) => {
         }}
       >
         <div className='flex-between'>
-          <div className='p-bold-20'>Friend Requests</div>
+          <div className='italic text-blue-600'>
+            Friend Requests({friendRequestData?.length})
+          </div>
           <CloseButton onClick={handleCloseMenu}>
             <CgClose />
           </CloseButton>
@@ -121,7 +123,7 @@ const FriendRequests = ({ isOpen, handleCloseMenu }: IFriend) => {
             )
           )
         ) : (
-          <div className='p-4 friend-content bg-gray-300 rounded-md min-h-32 border-dotted border-black border-2 flex-col flex-center'>
+          <div className='p-4 friend-content bg-gray-300 rounded-md min-h-32 border-black border-2 flex-col flex-center'>
             <div className='flex gap-2 flex-center text-md'>
               <p>No Friend Request for {username}</p>
               <TbMoodEmpty />

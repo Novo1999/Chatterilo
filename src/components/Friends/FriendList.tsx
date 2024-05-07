@@ -55,7 +55,7 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
         }}
       >
         <div className='flex-between'>
-          <div className='p-bold-20'>
+          <div className='italic text-blue-600'>
             My Friends{' '}
             <span className='text-xs relative bottom-0.5'>
               ({friends?.length})

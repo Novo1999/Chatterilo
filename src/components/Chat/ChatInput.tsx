@@ -15,7 +15,7 @@ const ChatInput = () => {
           <Input
             purpose='type-message'
             gradient='purple'
-            className='bg-[#2E4756] w-full'
+            className='bg-[#2E4756] w-full text-white'
             placeholder='Write your message...'
             type='text'
             onKeyDown={emitUserTyping}
