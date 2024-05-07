@@ -88,7 +88,7 @@ const Chatbox = () => {
 
   return (
     <div
-      className={`w-full bg-[#15616D]  ${
+      className={`w-full bg-[#16262E]  ${
         pathname.startsWith('/messages') ? 'flex' : 'hidden'
       }  md:flex flex-col justify-between ${
         !userId ? 'ml-2' : ''

@@ -41,7 +41,7 @@ const Header = () => {
   } = useHeader()
 
   return (
-    <section className='bg-[#15616D] p-2 shadow-lg rounded-t-md'>
+    <section className='bg-[#16262E] p-2 shadow-lg rounded-t-md'>
       <div className='h-6'>
         <NoSSRConnectionNotifier />
       </div>
@@ -115,7 +115,7 @@ const Header = () => {
           <div className='flex gap-2'>
             <Input
               gradient='blue'
-              className='bg-black text-white w-[200px] min-[375px]:w-[210px] min-[425px]:w-[230px]'
+              className='bg-[#2E4756] text-white w-[200px] min-[375px]:w-[210px] min-[425px]:w-[230px]'
               placeholder='Search...'
               type='text'
               value={inputValue}

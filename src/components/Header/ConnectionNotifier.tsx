@@ -9,9 +9,9 @@ const ConnectionNotifier = () => {
       variant='secondary'
       className={`${
         isConnected
-          ? 'bg-teal-400 hover:bg-teal-400'
+          ? 'bg-[#54C6EB] hover:bg-[#54C6EB]'
           : 'bg-red-400 hover:bg-red-400'
-      } cursor-default `}
+      } cursor-default shadow-md`}
     >
       {isConnected ? 'Connected' : 'Disconnected'}
     </Badge>

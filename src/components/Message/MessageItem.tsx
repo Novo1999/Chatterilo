@@ -27,21 +27,26 @@ const MessageItem = ({ conversation }: { conversation: IConversation }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: -300 }}
-      animate={{ opacity: 1, x: 0 }}
-      whileHover={{ scale: 1.02 }}
+      initial={{ opacity: 1, x: -300 }}
+      animate={{ opacity: 1, backgroundColor: '#16262E', x: 0 }}
+      whileHover={{
+        scale: 1.02,
+        backgroundColor: '#243137',
+        transition: { duration: 0.3 },
+      }}
       whileTap={{ scale: 0.95 }}
+      className='rounded-md'
     >
       {/* takes to the message page when user is on mobile */}
       <Link
-        className='flex sm:hidden justify-between items-center px-2 gap-2 bg-[#FFECD1] *:text-gray-800 cursor-pointer hover:bg-[#d5c5ae] py-4 rounded-md border border-white border-opacity-50 shadow-md'
+        className='flex sm:hidden justify-between items-center px-2 gap-2 *:text-gray-100 cursor-pointer py-4 rounded-md border border-white border-opacity-50 shadow-md'
         href={`messages/${conversationId}`}
       >
         <MessageItemChildren conversation={conversation} />
       </Link>
       <div
         onClick={() => handleSelectChat(conversationId)}
-        className='hidden sm:flex justify-between items-center px-2 gap-2 bg-[#FFECD1] *:text-gray-800 cursor-pointer hover:bg-[#d5c5ae] py-4 rounded-md border border-white border-opacity-50 shadow-md'
+        className='hidden sm:flex justify-between items-center px-2 gap-2 *:text-gray-100 cursor-pointer py-4 rounded-md border border-white border-opacity-50 shadow-md'
       >
         <MessageItemChildren conversation={conversation} />
       </div>

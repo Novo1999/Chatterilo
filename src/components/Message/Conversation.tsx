@@ -27,7 +27,7 @@ const Conversation = ({ messages }: { messages: IMessage[] }) => {
     )
 
   return (
-    <section className='text-gray-200 p-4 h-5/6 bg-[#78290F] text-sm space-y-4 mt-4 message-container mb-3 overflow-scroll'>
+    <section className='text-gray-200 p-4 h-5/6 bg-[#2E4756] text-sm space-y-4 mt-4 message-container mb-3 overflow-scroll'>
       {content}
     </section>
   )

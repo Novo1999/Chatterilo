@@ -31,7 +31,7 @@ const MessageItemChildren = ({
       </div>
       <div className='text-xs'>
         <p className='font-bold'>{recipient?.data.username}</p>
-        <div className='*:text-gray-400'>
+        <div className='*:text-gray-100'>
           <p className='block min-[375px]:hidden'>
             {`${
               messages.length > 0
@@ -56,7 +56,7 @@ const MessageItemChildren = ({
         </div>
       </div>
       <div className='text-xs font-thin'>
-        <p className='text-slate-800 italic font-semibold'>4:03pm</p>
+        <p className='text-slate-100 italic font-light'>4:03pm</p>
       </div>
     </>
   )
