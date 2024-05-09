@@ -69,3 +69,20 @@ interface MessageProp {
   position: string
   message: IMessage
 }
+
+interface ISendMessage {
+  message: string
+  recipientUserId: string
+  conversationId: string
+  senderId: string
+}
+
+interface IConversationObj {
+  recipientId: string
+  conversationId: string
+}
+
+interface ISaveMessage {
+  conversationId: string
+  messageObj: IMessage
+}

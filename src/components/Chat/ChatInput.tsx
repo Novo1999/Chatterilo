@@ -6,7 +6,7 @@ const ChatInput = () => {
   const { handleSubmit, onSubmit, register, emitUserTyping } = useChatBox()
 
   return (
-    <div className='flex items-center gap-2 px-4'>
+    <div className='flex items-center gap-2 px-4 chat-input'>
       <div className='text-white'>
         <Paperclip />{' '}
       </div>
@@ -21,7 +21,7 @@ const ChatInput = () => {
             onKeyDown={emitUserTyping}
             {...register('message', { required: true })}
           />
-          <button className='text-slate-800 absolute right-4 bottom-2'>
+          <button className='text-slate-800 absolute right-4 bottom-2 send-btn'>
             <Send />
           </button>
         </form>

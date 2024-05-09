@@ -154,7 +154,7 @@
 .story-section::-webkit-scrollbar,
 .chat-users::-webkit-scrollbar,
 .message-container::-webkit-scrollbar {
-  width: 0;
+  display: none;
 }
 
 .search-menu::-webkit-scrollbar {

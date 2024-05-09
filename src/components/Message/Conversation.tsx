@@ -13,7 +13,7 @@ const Conversation = ({ messages }: { messages: IMessage[] }) => {
     )
   } else
     content = (
-      <div className='h-96 space-y-4'>
+      <div className='space-y-4'>
         {messages.map((item, index) => {
           return (
             <Message

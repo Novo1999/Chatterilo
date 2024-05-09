@@ -43,9 +43,11 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
     })
   }
 
+  // creates a new conversation
   const handleCreateConversation = (id: string) => {
     createConversationMutate(id)
   }
+
   const portalContent = (
     <nav className='font-poppins w-full' ref={scope}>
       <ul

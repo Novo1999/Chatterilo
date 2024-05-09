@@ -69,6 +69,7 @@ const Chatbox = () => {
     )
   }
 
+  // main content
   if (!isLoading && !isError && data?._id) {
     content = (
       <>
@@ -77,7 +78,9 @@ const Chatbox = () => {
         <Conversation messages={currentConversation.conversationMessages} />
 
         {typerId === recipient?.data._id && (
-          <p className='text-white text-xs'>typing...</p>
+          <p className='text-white text-xs  ml-12 relative bottom-1'>
+            typing...
+          </p>
         )}
 
         {/* bottom input and button */}
@@ -88,7 +91,7 @@ const Chatbox = () => {
 
   return (
     <div
-      className={`w-full bg-[#16262E]  ${
+      className={`w-full bg-[#16262E] ${
         pathname.startsWith('/messages') ? 'flex' : 'hidden'
       }  md:flex flex-col justify-between ${
         !userId ? 'ml-2' : ''

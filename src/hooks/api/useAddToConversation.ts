@@ -1,15 +1,10 @@
 import customFetch from '@/utils/customFetch'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-export interface ConversationObj {
-  recipientId: string
-  conversationId: string
-}
-
-export const addToConversation = async ({
+const addToConversation = async ({
   recipientId,
   conversationId,
-}: ConversationObj) => {
+}: IConversationObj) => {
   try {
     const { data } = await customFetch({
       method: 'patch',
@@ -28,7 +23,7 @@ const useAddToConversation = () => {
   const queryClient = useQueryClient()
 
   const mutation = useMutation({
-    mutationFn: ({ recipientId, conversationId }: ConversationObj) =>
+    mutationFn: ({ recipientId, conversationId }: IConversationObj) =>
       addToConversation({ recipientId, conversationId }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['current-user'] })

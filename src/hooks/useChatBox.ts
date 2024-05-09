@@ -52,12 +52,7 @@ const useChatBox = () => {
     recipientUserId,
     senderId,
     conversationId,
-  }: {
-    message: string
-    recipientUserId: string
-    conversationId: string
-    senderId: string
-  }) => {
+  }: ISendMessage) => {
     const matchedConnectedUser = connectedUsers.find(
       (user) => user.id === recipientUserId
     )
@@ -80,33 +75,45 @@ const useChatBox = () => {
     })
   }
 
+  // matched connected user
+  let timeOutId: NodeJS.Timeout
+  const recipientUserId = recipient?.data._id
+  const matchedConnectedUser = connectedUsers.find(
+    (user) => user.id === recipientUserId
+  )
+
+  const conversationId = conversationIdFromSearchParams ?? currentConversationId
+
   // send message form submit
   const onSubmit: SubmitHandler<{
     message: string
   }> = (data) => {
     sendMessage({
       senderId: user._id,
-      conversationId: conversationIdFromSearchParams ?? currentConversationId,
+      conversationId: conversationId,
       message: data.message,
       recipientUserId: recipient?.data._id,
     })
     resetField('message')
+    clearTimeout(timeOutId)
+    // when user sends the message, he is not typing at that moment, so send this event
+    socket.emit('user_not_typing', {
+      matchedConnectedUser,
+      senderId: user._id,
+      recipientUserId: recipient?.data._id,
+      conversationId: conversationId,
+    })
   }
 
   // send event of user typing
-  let timeOutId: NodeJS.Timeout
   const emitUserTyping = () => {
     clearTimeout(timeOutId)
-    const recipientUserId = recipient?.data._id
-    const matchedConnectedUser = connectedUsers.find(
-      (user) => user.id === recipientUserId
-    )
 
     socket.emit('user_typing', {
       matchedConnectedUser,
       senderId: user._id,
       recipientUserId: recipient?.data._id,
-      conversationId: conversationIdFromSearchParams ?? currentConversationId,
+      conversationId: conversationId,
     })
 
     timeOutId = setTimeout(() => {
@@ -114,14 +121,12 @@ const useChatBox = () => {
         matchedConnectedUser,
         senderId: user._id,
         recipientUserId: recipient?.data._id,
-        conversationId: conversationIdFromSearchParams ?? currentConversationId,
+        conversationId: conversationId,
       })
     }, 1500)
   }
 
   useEffect(() => {
-    socket.connect()
-
     socket.on('typing', (data) => {
       setTyperId(data.senderId)
     })

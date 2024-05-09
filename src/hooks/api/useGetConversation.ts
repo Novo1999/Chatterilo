@@ -1,20 +1,20 @@
 import customFetch from '@/utils/customFetch'
 import { useQuery } from '@tanstack/react-query'
 
-export const getConversation = async (id: string) => {
+const getConversation = async (conversationId: string) => {
   try {
-    const { data } = await customFetch.get(`/conversation/${id}`)
+    const { data } = await customFetch.get(`/conversation/${conversationId}`)
     return data
   } catch (error) {
     throw error
   }
 }
 
-const useGetConversation = (id: string) => {
+const useGetConversation = (conversationId: string) => {
   const query = useQuery({
-    queryKey: ['conversation', id],
-    queryFn: () => getConversation(id),
-    enabled: !!id,
+    queryKey: ['conversation', conversationId],
+    queryFn: () => getConversation(conversationId),
+    enabled: !!conversationId,
   })
 
   return query
