@@ -2,7 +2,7 @@ import useGetUser from '@/hooks/api/useGetUser'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
 import Image from 'next/image'
 
-const MessageItemChildren = ({
+const ConversationItemChildren = ({
   conversation,
 }: {
   conversation: IConversation
@@ -61,4 +61,4 @@ const MessageItemChildren = ({
     </>
   )
 }
-export default MessageItemChildren
+export default ConversationItemChildren

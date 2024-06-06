@@ -21,7 +21,7 @@ const ChatInput = () => {
             onKeyDown={emitUserTyping}
             {...register('message', { required: true })}
           />
-          <button className='text-slate-800 absolute right-4 bottom-2 send-btn'>
+          <button className='text-white absolute right-4 bottom-2 send-btn'>
             <Send />
           </button>
         </form>

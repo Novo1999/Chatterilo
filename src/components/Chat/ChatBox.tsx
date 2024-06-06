@@ -9,10 +9,10 @@ import { PUSH_NEW_MESSAGE } from '@/utils/constants'
 import { Loader } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import { useEffect } from 'react'
-import Conversation from '../Message/Conversation'
 import MessageError from '../Message/Message-Error'
 import ChatInput from './ChatInput'
 import ChatNav from './ChatNav'
+import Conversation from './Conversation'
 
 const Chatbox = () => {
   const {
@@ -30,8 +30,6 @@ const Chatbox = () => {
   const { userId } = useParams()
 
   const { currentConversation } = useMessagesContext()
-
-  console.log(currentConversation)
 
   const dispatch = useMessagesDispatchContext()
 

@@ -10,10 +10,6 @@ const Message = ({ position, message }: MessageProp) => {
     ? `${timestamp.split(' ')[1]} ${timestamp.split(' ')[2]}`
     : timestamp.split(' ')[0]
 
-  console.log(timestamp)
-
-  console.log(isToday)
-
   // if position left
   if (position === 'left') {
     return (

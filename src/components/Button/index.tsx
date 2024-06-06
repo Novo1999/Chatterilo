@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils'
 import { motion } from 'framer-motion'
 import { ReactNode } from 'react'
+import Loader from '../misc/Loader'
 import { Button } from '../ui/button'
 
 interface AuthBtnProps {
@@ -35,7 +36,7 @@ export const AuthBtn = ({
         type='submit'
         disabled={isPending}
       >
-        {children}
+        {isPending ? <Loader /> : children}
       </motion.button>
     </div>
   )

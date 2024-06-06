@@ -1,5 +1,5 @@
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
-import Message from './Message'
+import Message from '../Message/Message'
 
 const Conversation = ({ messages }: { messages: IMessage[] }) => {
   const { user } = useAuthContext()
