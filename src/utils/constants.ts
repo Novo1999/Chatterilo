@@ -1,8 +1,9 @@
 import type { Metadata } from 'next'
 import { Caveat, Poppins, Sora } from 'next/font/google'
 
-export const BASE_URL = `${process.env.BASE_URL}/api`
+export const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api`
 
+console.log('🚀 ~ BASE_URL:', BASE_URL)
 export const sora = Sora({
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700', '800'],
