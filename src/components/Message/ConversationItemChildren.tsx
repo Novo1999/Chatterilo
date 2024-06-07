@@ -34,21 +34,21 @@ const ConversationItemChildren = ({
         <div className='*:text-gray-100'>
           <p className='block min-[375px]:hidden'>
             {`${
-              messages.length > 0
+              messages?.length > 0
                 ? messages[messages.length - 1].content.slice(1, 40)
                 : `Start a conversation with ${recipient?.data.username}`
             }...`}
           </p>
           <p className='hidden min-[375px]:block min-[425px]:hidden'>
             {`${
-              messages.length > 0
+              messages?.length > 0
                 ? messages[messages.length - 1].content.slice(1, 50)
                 : `Start a conversation with ${recipient?.data.username}`
             }...`}
           </p>
           <p className='hidden min-[425px]:block'>
             {`${
-              messages.length > 0
+              messages?.length > 0
                 ? messages[messages.length - 1].content.slice(1, 80)
                 : `Start a conversation with ${recipient?.data.username}`
             }...`}

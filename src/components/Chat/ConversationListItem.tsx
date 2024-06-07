@@ -11,6 +11,7 @@ const ConversationListItem = ({
 }: {
   conversation: IConversation
 }) => {
+  console.log('🚀 ~ conversation:', conversation)
   const searchParams = useSearchParams()
 
   const { replace } = useRouter()
@@ -21,6 +22,7 @@ const ConversationListItem = ({
   const { messages, recipientUserId, _id: conversationId } = conversation
   console.log('🚀 ~ conversation:', conversation)
   const { data: recipient } = useGetUser(recipientUserId)
+  console.log('🚀 ~ recipient:', recipient)
 
   const handleSelectChat = (id: string) => {
     // dispatch current chat with id as payload
@@ -49,13 +51,13 @@ const ConversationListItem = ({
         className='flex sm:hidden justify-between items-center px-2 gap-2 *:text-gray-100 cursor-pointer py-4 rounded-md border border-white border-opacity-50 shadow-md'
         href={`messages/${conversationId}`}
       >
-        {/* <ConversationItemChildren conversation={conversation} /> */}
+        <ConversationItemChildren conversation={conversation} />
       </Link>
       <div
         onClick={() => handleSelectChat(conversationId)}
         className='hidden sm:flex justify-between items-center px-2 gap-2 *:text-gray-100 cursor-pointer py-4 rounded-md border border-white border-opacity-50 shadow-md'
       >
-        {/* <ConversationItemChildren conversation={conversation} /> */}
+        <ConversationItemChildren conversation={conversation} />
       </div>
     </motion.div>
   )
