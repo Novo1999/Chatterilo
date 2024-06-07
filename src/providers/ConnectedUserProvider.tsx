@@ -1,9 +1,9 @@
 'use client'
-import { ConnectedUser, ConnectedUserContext } from '@/context'
+import { ConnectedUserContext } from '@/context'
 import { ReactNode, useState } from 'react'
 
 const ConnectedUserProvider = ({ children }: { children: ReactNode }) => {
-  const [connectedUsers, setConnectedUsers] = useState<ConnectedUser[]>([])
+  const [connectedUsers, setConnectedUsers] = useState<IConnectedUser[]>([])
   return (
     <ConnectedUserContext.Provider
       value={{ connectedUsers, setConnectedUsers }}

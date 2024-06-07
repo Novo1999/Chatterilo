@@ -1,4 +1,3 @@
-import { User } from '@/context'
 import useFriendRequest from '@/hooks/api/useFriendRequest'
 import useSearchUsers from '@/hooks/api/useSearchUsers'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
@@ -119,7 +118,7 @@ const SearchList = ({
   }
 
   if (!isLoading && !isError && searchData?.length > 0) {
-    content = searchData?.map((user: User['user']) => {
+    content = searchData?.map((user: IUser['user']) => {
       return (
         <li key={user?._id}>
           <Link
