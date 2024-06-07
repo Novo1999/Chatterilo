@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client'
 
-const URL = 'http://localhost:8080'
+const URL = process.env.BASE_URL
 
 export const socket = io(URL as string, { autoConnect: false })
