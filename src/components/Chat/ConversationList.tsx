@@ -25,8 +25,8 @@ const ConversationList = () => {
     )
   }
   if (!isLoading && !isError && data.length > 0) {
-    content = data.map((item: IConversation) => (
-      <ConversationListItem key={item._id} conversation={item} />
+    content = data.map((conv: IConversation) => (
+      <ConversationListItem key={conv._id} conversation={conv} />
     ))
   }
   if (!isLoading && !isError && data.length === 0) {

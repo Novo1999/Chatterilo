@@ -13,9 +13,10 @@ interface FormRowProps {
   form: any
   gradientColor: string
   name: string
+  type: string
 }
 
-const FormRow = ({ form, gradientColor, name }: FormRowProps) => {
+const FormRow = ({ form, gradientColor, name, type }: FormRowProps) => {
   const x = getValueOfX(name)
 
   return (
@@ -34,7 +35,7 @@ const FormRow = ({ form, gradientColor, name }: FormRowProps) => {
                 gradient={gradientColor}
                 className='bg-cyan-500 text-white w-full shadow-md md:w-72'
                 placeholder={name[0].toUpperCase() + name.slice(1)}
-                type='text'
+                type={type}
                 {...field}
               />
             </motion.div>

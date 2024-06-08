@@ -10,7 +10,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { AxiosError } from 'axios'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { z } from 'zod'
 
 const formSchema = z.object({
@@ -29,6 +31,7 @@ const formSchema = z.object({
 })
 
 const SignUpForm = () => {
+  const router = useRouter()
   const { mutate, isPending } = useSignUp()
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,7 +45,11 @@ const SignUpForm = () => {
   // submit function
   function onSubmit(values: z.infer<typeof formSchema>) {
     mutate(values, {
-      onSuccess: () => form.reset(),
+      onSuccess: () => {
+        form.reset()
+        toast.success('Account created, now sign in please')
+        router.push('/login')
+      },
       onError: (error) => {
         if (error instanceof AxiosError) {
           form.setError('root', {
@@ -85,6 +92,7 @@ const SignUpForm = () => {
           {/* fields */}
           {signUpFormFields.map((field) => (
             <FormRow
+              type={field === 'password' ? 'password' : 'text'}
               key={field}
               form={form}
               gradientColor={gradientColor}

@@ -28,8 +28,6 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
   const { mutate: unfriendMutate } = useUnfriend()
   const { connectedUsers } = useConnectedUserContext()
   const { mutate: createConversationMutate } = useCreateConversation()
-  const dispatch = useMessagesDispatchContext()
-  const messagesState = useMessagesContext()
 
   // unfriend user
   const handleUnfriend = (id: string) => {

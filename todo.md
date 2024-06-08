@@ -12,3 +12,6 @@
 - send other files
 - profile page
 - stories of users
+- notifications
+
+<!-- ekta user message send korle oita db er message e giye save hobe, ebong, user er conversation model e populate hobe oi message ta, conversation model e ekta object id add hobe and oi id diye tule anbe message from message db -->
