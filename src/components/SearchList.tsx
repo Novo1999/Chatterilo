@@ -117,8 +117,14 @@ const SearchList = ({
     )
   }
 
+  console.log(friends)
+
   if (!isLoading && !isError && searchData?.length > 0) {
     content = searchData?.map((user: IUser['user']) => {
+      const isFriend = friends?.map((friend) => friend._id).includes(user?._id)
+      const hasFriendRequest =
+        friendRequests?.sent.includes(user?._id) ||
+        friendRequests?.received.includes(user?._id)
       return (
         <li key={user?._id}>
           <Link
@@ -139,19 +145,15 @@ const SearchList = ({
               <button
                 // check if current user sent request to the user , if sent, they can cancel it otherwise check if they are friends, if friends, then do nothing, else user can add as friend
                 onClick={(e) =>
-                  friendRequests?.sent.includes(user?._id) ||
-                  friendRequests?.received.includes(user?._id)
+                  hasFriendRequest
                     ? handleCancelFriend(e, user?._id)
-                    : !friends
-                        ?.map((friend) => friend.id)
-                        .includes(user?._id) && handleAddFriend(e, user?._id)
+                    : !isFriend && handleAddFriend(e, user?._id)
                 }
               >
                 {/* show the check only when user has sent this user friend request or has them as friend already */}
-                {friendRequests?.sent.includes(user?._id) ||
-                friendRequests?.received.includes(user?._id) ? (
+                {hasFriendRequest ? (
                   <CheckCircle />
-                ) : !friends?.map((friend) => friend.id).includes(user?._id) ? (
+                ) : !isFriend ? (
                   <IoMdPersonAdd className='text-xl' />
                 ) : (
                   <div className='relative right-2 text-3xl'>

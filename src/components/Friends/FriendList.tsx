@@ -63,6 +63,10 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
         <li className='hidden'></li>
         {friends?.length! > 0 ? (
           friends?.map((friend) => {
+            const friendIsInConversation =
+              conversations?.findIndex(
+                ({ recipientUser }) => friend._id === recipientUser
+              ) === -1
             return (
               <li key={friend?._id}>
                 <Link
@@ -83,9 +87,9 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
                           {connectedUsers
                             .map((user) => user.id)
                             .includes(friend?._id) ? (
-                            <div className='rounded-full bg-green-500 size-3'></div>
+                            <div className='rounded-full bg-green-500 size-3' />
                           ) : (
-                            <div className='rounded-full bg-gray-500 size-3'></div>
+                            <div className='rounded-full bg-gray-500 size-3' />
                           )}
                         </div>
                       </div>
@@ -101,14 +105,19 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
                           }
                         }
                       >
-                        <Button
-                          onClick={() => handleCreateConversation(friend?._id)}
-                          asChild
-                          variant='ghost'
-                          className='text-xl w-8 px-2 bg-green-400 hover:bg-green-500'
-                        >
-                          <MessageCircle />
-                        </Button>
+                        {/* message the user */}
+                        {friendIsInConversation && (
+                          <Button
+                            onClick={() =>
+                              handleCreateConversation(friend?._id)
+                            }
+                            asChild
+                            variant='ghost'
+                            className='text-xl w-8 px-2 bg-green-400 hover:bg-green-500'
+                          >
+                            <MessageCircle />
+                          </Button>
+                        )}
                       </motion.div>
                       {createPortal(
                         <SpringModal
@@ -119,7 +128,7 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
                         />,
                         document.body
                       )}
-                      {/* decline friend request */}
+                      {/* unfriend */}
                       <Button
                         onClick={() => setModalOpen(true)}
                         asChild

@@ -16,11 +16,10 @@ const useCreateConversation = () => {
 
   const mutation = useMutation({
     mutationFn: (id: string) => createConversation(id),
-    onSuccess: (data) => {
-      console.log('🚀 ~ useCreateConversation ~ data:', data)
+    onSuccess: (conversation) => {
       addToConversationMutate({
-        recipientId: data.recipientUser,
-        conversationId: data._id,
+        recipientId: conversation.recipientUser,
+        conversationId: conversation._id,
       })
     },
   })

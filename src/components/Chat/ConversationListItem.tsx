@@ -20,7 +20,7 @@ const ConversationListItem = ({
 
   const { messages, recipientUser, _id: conversationId } = conversation
 
-  const { data: recipient } = useGetUser(recipientUser)
+  const { data: recipient } = useGetUser(recipientUser._id)
 
   const handleSelectChat = (id: string) => {
     // dispatch current chat with id as payload
@@ -49,13 +49,13 @@ const ConversationListItem = ({
         className='flex sm:hidden justify-between items-center px-2 gap-2 *:text-gray-100 cursor-pointer py-4 rounded-md border border-white border-opacity-50 shadow-md'
         href={`messages/${conversationId}`}
       >
-        <ConversationItemChildren conversationId={conversation._id} />
+        <ConversationItemChildren conversation={conversation} />
       </Link>
       <div
         onClick={() => handleSelectChat(conversationId)}
         className='hidden sm:flex justify-between items-center px-2 gap-2 *:text-gray-100 cursor-pointer py-4 rounded-md border border-white border-opacity-50 shadow-md'
       >
-        <ConversationItemChildren conversationId={conversation._id} />
+        <ConversationItemChildren conversation={conversation} />
       </div>
     </motion.div>
   )
