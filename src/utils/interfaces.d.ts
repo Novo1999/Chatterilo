@@ -11,7 +11,7 @@ interface IAuthInput {
 interface IConversation {
   messages: any[]
   currentUserId: string
-  recipientUserId: string
+  recipientUser: string
   _id: string
   recipientName?: string
 }

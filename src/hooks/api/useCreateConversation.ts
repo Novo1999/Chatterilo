@@ -17,8 +17,9 @@ const useCreateConversation = () => {
   const mutation = useMutation({
     mutationFn: (id: string) => createConversation(id),
     onSuccess: (data) => {
+      console.log('🚀 ~ useCreateConversation ~ data:', data)
       addToConversationMutate({
-        recipientId: data.recipientUserId,
+        recipientId: data.recipientUser,
         conversationId: data._id,
       })
     },

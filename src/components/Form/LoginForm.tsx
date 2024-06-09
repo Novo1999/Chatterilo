@@ -82,6 +82,7 @@ const LoginForm = () => {
           {/* fields */}
           {loginFormFields.map((field) => (
             <FormRow
+              type={field}
               key={field}
               form={form}
               gradientColor={gradientColor}

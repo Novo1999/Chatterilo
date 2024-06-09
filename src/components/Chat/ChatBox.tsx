@@ -18,14 +18,13 @@ const Chatbox = () => {
   const {
     isLoading,
     isError,
-    data,
+    conversation,
     hasNoConversationId,
     recipient,
+    recipientName,
     typerId,
     pathname,
   } = useChatBox()
-
-  const recipientName = recipient?.data?.username
 
   const { userId } = useParams()
 
@@ -55,8 +54,10 @@ const Chatbox = () => {
     )
   }
 
-  if (!isLoading && !isError && !data?._id) {
-    content = <div className='text-xl flex-center text-white'>NO DATA</div>
+  if (!isLoading && !isError && !conversation?._id) {
+    content = (
+      <div className='text-xl flex-center text-white'>NO CONVERSATION</div>
+    )
   }
 
   if (hasNoConversationId && !userId) {
@@ -68,14 +69,14 @@ const Chatbox = () => {
   }
 
   // main content
-  if (!isLoading && !isError && data?._id) {
+  if (!isLoading && !isError && conversation?._id) {
     content = (
       <>
-        <ChatNav recipientName={recipientName} />
+        <ChatNav recipientName={recipientName as string} />
 
         <Conversation messages={currentConversation.conversationMessages} />
 
-        {typerId === recipient?.data._id && (
+        {typerId === recipient?.data?._id && (
           <p className='text-white text-xs  ml-12 relative bottom-1'>
             typing...
           </p>

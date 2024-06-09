@@ -18,8 +18,9 @@ const ConversationListItem = ({
 
   const dispatch = useMessagesDispatchContext()
 
-  const { messages, recipientUserId, _id: conversationId } = conversation
-  const { data: recipient } = useGetUser(recipientUserId)
+  const { messages, recipientUser, _id: conversationId } = conversation
+
+  const { data: recipient } = useGetUser(recipientUser)
 
   const handleSelectChat = (id: string) => {
     // dispatch current chat with id as payload

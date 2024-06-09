@@ -71,8 +71,10 @@ const FriendRequests = ({ isOpen, handleCloseMenu }: IFriend) => {
         </div>
         <li className='hidden'></li>
         {friendRequestData?.length > 0 ? (
-          friendRequestData?.map((friend) =>
-            friend.isLoading ? (
+          friendRequestData?.map((friend) => {
+            console.log(friend)
+
+            return friend.isLoading ? (
               <div
                 className='flex-center'
                 key={friend?.userData?._id ?? crypto.randomUUID()}
@@ -121,7 +123,7 @@ const FriendRequests = ({ isOpen, handleCloseMenu }: IFriend) => {
                 </Link>
               </li>
             )
-          )
+          })
         ) : (
           <div className='p-4 friend-content bg-gray-300 rounded-md min-h-32 border-black border-2 flex-col flex-center'>
             <div className='flex gap-2 flex-center text-md'>

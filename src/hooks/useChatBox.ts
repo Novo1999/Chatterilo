@@ -31,7 +31,11 @@ const useChatBox = () => {
     currentConversation: { currentConversationId },
   } = useMessagesContext()
 
-  const { data, isLoading, isError } = useGetConversation(
+  const {
+    data: conversation,
+    isLoading,
+    isError,
+  } = useGetConversation(
     conversationIdFromSearchParams ||
       currentConversationId ||
       (conversationIdFromParam as string)
@@ -44,7 +48,8 @@ const useChatBox = () => {
   const hasNoConversationId =
     !conversationIdFromSearchParams && !currentConversationId
   const { connectedUsers } = useConnectedUserContext()
-  const { data: recipient } = useGetUser(data?.recipientUserId)
+  const { data: recipient } = useGetUser(conversation?.recipientUser?._id)
+  console.log('🚀 ~ useChatBox ~ recipient:', recipient)
 
   // send message function
   const sendMessage = ({
@@ -139,7 +144,7 @@ const useChatBox = () => {
   return {
     isLoading,
     isError,
-    data,
+    conversation,
     hasNoConversationId,
     recipientName,
     connectedUsers,
