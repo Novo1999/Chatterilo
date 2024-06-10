@@ -57,6 +57,8 @@ interface IMessageState {
   currentConversation: {
     currentConversationId: string
     conversationMessages: IMessage[]
+    currentUser?: IUser['user']
+    recipientUser?: IUser['user']
   }
 }
 

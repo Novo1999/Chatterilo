@@ -7,6 +7,8 @@ export const initialState: IMessageState = {
   currentConversation: {
     currentConversationId: '',
     conversationMessages: [],
+    currentUser: {} as IUser['user'],
+    recipientUser: {} as IUser['user'],
   },
 }
 
@@ -17,7 +19,9 @@ const reducer = (state: IMessageState, action: IAction): IMessageState => {
         ...state,
         currentConversation: {
           conversationMessages: [],
-          currentConversationId: action.payload,
+          currentConversationId: action.payload.conversationId,
+          currentUser: action.payload.currentUser,
+          recipientUser: action.payload.recipientUser,
         },
       }
     case PUSH_NEW_MESSAGE:

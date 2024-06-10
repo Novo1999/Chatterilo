@@ -20,7 +20,6 @@ const Chatbox = () => {
     isError,
     conversation,
     hasNoConversationId,
-    recipient,
     recipientName,
     typerId,
     pathname,
@@ -76,7 +75,7 @@ const Chatbox = () => {
 
         <Conversation messages={currentConversation.conversationMessages} />
 
-        {typerId === recipient?.data?._id && (
+        {typerId === currentConversation?.recipientUser?._id && (
           <p className='text-white text-xs  ml-12 relative bottom-1'>
             typing...
           </p>

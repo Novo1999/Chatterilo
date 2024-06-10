@@ -1,4 +1,5 @@
 import useGetUser from '@/hooks/api/useGetUser'
+import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import { useMessagesDispatchContext } from '@/hooks/contextHooks/useMessagesContext'
 import { CURRENT_CHAT } from '@/utils/constants'
 import { motion } from 'framer-motion'
@@ -13,21 +14,39 @@ const ConversationListItem = ({
 }) => {
   const searchParams = useSearchParams()
 
+  const { user: { friendRequests, _id: userId, username, friends } = {} } =
+    useAuthContext()
+
+  const {
+    messages,
+    recipientUser,
+    currentUser,
+    _id: conversationId,
+  } = conversation
+  console.log('🚀 ~ conversation:', conversation)
+  console.log(userId, recipientUser._id)
   const { replace } = useRouter()
   const pathname = usePathname()
 
   const dispatch = useMessagesDispatchContext()
 
-  const { messages, recipientUser, _id: conversationId } = conversation
-
-  const { data: recipient } = useGetUser(recipientUser._id)
-
   const handleSelectChat = (id: string) => {
     // dispatch current chat with id as payload
-    dispatch({ type: CURRENT_CHAT, payload: id })
+    dispatch({
+      type: CURRENT_CHAT,
+      payload: {
+        conversationId,
+        currentUser,
+        recipientUser,
+      },
+    })
     const params = new URLSearchParams(searchParams)
     // set recipient and conversationId as search params
-    params.set('recipient', recipient?.data.username)
+    if (currentUser._id === userId) {
+      params.set('recipient', recipientUser?.username)
+    } else {
+      params.set('recipient', currentUser?.username)
+    }
     params.set('id', conversationId)
     replace(`${pathname}?${params.toString()}`)
   }

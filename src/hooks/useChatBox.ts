@@ -28,7 +28,7 @@ const useChatBox = () => {
   }>()
 
   const {
-    currentConversation: { currentConversationId },
+    currentConversation: { currentConversationId, currentUser, recipientUser },
   } = useMessagesContext()
 
   const {
@@ -48,8 +48,6 @@ const useChatBox = () => {
   const hasNoConversationId =
     !conversationIdFromSearchParams && !currentConversationId
   const { connectedUsers } = useConnectedUserContext()
-  const { data: recipient } = useGetUser(conversation?.recipientUser?._id)
-  console.log('🚀 ~ useChatBox ~ recipient:', recipient)
 
   // send message function
   const sendMessage = ({
@@ -59,7 +57,7 @@ const useChatBox = () => {
     conversationId,
   }: ISendMessage) => {
     const matchedConnectedUser = connectedUsers.find(
-      (user) => user.id === recipientUserId
+      (user) => user.id === recipientUser?._id
     )
 
     dispatch({
@@ -82,9 +80,9 @@ const useChatBox = () => {
 
   // matched connected user
   let timeOutId: NodeJS.Timeout
-  const recipientUserId = recipient?.data._id
+  const recipientUserId = recipientUser?._id!
   const matchedConnectedUser = connectedUsers.find(
-    (user) => user.id === recipientUserId
+    (user) => user.id === currentUser?._id
   )
 
   const conversationId = conversationIdFromSearchParams ?? currentConversationId
@@ -97,16 +95,16 @@ const useChatBox = () => {
       senderId: user._id,
       conversationId: conversationId,
       message: data.message,
-      recipientUserId: recipient?.data._id,
+      recipientUserId,
     })
     resetField('message')
     clearTimeout(timeOutId)
-    // when user sends the message, he is not typing at that moment, so send this event
+    // when user sends the message, they are not typing at that moment, so send this event
     socket.emit('user_not_typing', {
       matchedConnectedUser,
       senderId: user._id,
-      recipientUserId: recipient?.data._id,
-      conversationId: conversationId,
+      recipientUserId,
+      conversationId,
     })
   }
 
@@ -117,16 +115,16 @@ const useChatBox = () => {
     socket.emit('user_typing', {
       matchedConnectedUser,
       senderId: user._id,
-      recipientUserId: recipient?.data._id,
-      conversationId: conversationId,
+      recipientUserId,
+      conversationId,
     })
 
     timeOutId = setTimeout(() => {
       socket.emit('user_not_typing', {
         matchedConnectedUser,
         senderId: user._id,
-        recipientUserId: recipient?.data._id,
-        conversationId: conversationId,
+        recipientUserId,
+        conversationId,
       })
     }, 1500)
   }
@@ -148,7 +146,6 @@ const useChatBox = () => {
     hasNoConversationId,
     recipientName,
     connectedUsers,
-    recipient,
     typerId,
     handleSubmit,
     onSubmit,

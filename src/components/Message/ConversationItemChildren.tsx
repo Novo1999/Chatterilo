@@ -1,3 +1,4 @@
+import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
 import Image from 'next/image'
 
@@ -7,8 +8,9 @@ const ConversationItemChildren = ({
   conversation: IConversation
 }) => {
   const { connectedUsers } = useConnectedUserContext()
+  const { user } = useAuthContext()
 
-  const { messages, recipientUser } = conversation
+  const { messages, recipientUser, currentUser } = conversation
   console.log('🚀 ~ messages:', messages)
   const hasMessage = messages?.length > 0
 
@@ -22,11 +24,13 @@ const ConversationItemChildren = ({
         return lastMessage
       }
     } else {
-      return `Start a conversation with ${recipientUser?.username}`
+      return `Start a conversation with ${
+        user?._id === conversation.currentUser?._id
+          ? recipientUser?.username
+          : conversation?.currentUser?.username
+      }`
     }
   }
-
-  console.log('🚀 ~ messages:', messages)
 
   return (
     <>
@@ -47,7 +51,11 @@ const ConversationItemChildren = ({
           )}
         </div>
         <div className='text-xs'>
-          <p className='font-bold'>{recipientUser?.username}</p>
+          <p className='font-bold'>
+            {user?._id === conversation.currentUser?._id
+              ? recipientUser?.username
+              : conversation?.currentUser?.username}
+          </p>
           <div className='*:text-gray-100'>
             <p className='block min-[375px]:hidden'>{getSlicedMessage(20)}</p>
             <p className='hidden min-[375px]:block min-[425px]:hidden'>
