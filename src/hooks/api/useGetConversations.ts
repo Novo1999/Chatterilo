@@ -1,5 +1,5 @@
 import customFetch from '@/utils/customFetch'
-import { useQueries, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 
 const getConversations = async () => {
   try {

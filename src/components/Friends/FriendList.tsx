@@ -63,10 +63,16 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
         <li className='hidden'></li>
         {friends?.length! > 0 ? (
           friends?.map((friend) => {
-            const friendIsInConversation =
-              conversations?.findIndex(
-                ({ recipientUser }) => friend._id === recipientUser
-              ) === -1
+            console.log('🚀 ~ friends?.map ~ friend:', friend)
+            const friendIsInConversation = conversations
+              ?.map((conv) => conv.recipientUser)
+              ?.includes(friend._id)
+
+            console.log(
+              '🚀 ~ friends?.map ~ friendIsInConversation:',
+              friendIsInConversation
+            )
+
             return (
               <li key={friend?._id}>
                 <Link
@@ -106,7 +112,7 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
                         }
                       >
                         {/* message the user */}
-                        {friendIsInConversation && (
+                        {!friendIsInConversation && (
                           <Button
                             onClick={() =>
                               handleCreateConversation(friend?._id)

@@ -1,13 +1,10 @@
 'use client'
 import useGetConversations from '@/hooks/api/useGetConversations'
-import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import { Loader2 } from 'lucide-react'
 import ConversationListItem from './ConversationListItem'
 
 const ConversationList = () => {
-  const { user: { conversations } = {} } = useAuthContext()
   const { data, isLoading, isError, error } = useGetConversations()
-  console.log('🚀 ~ ConversationList ~ data:', data)
 
   let content = null
 
