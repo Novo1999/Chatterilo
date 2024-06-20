@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils'
 import { ReactNode } from 'react'
 
 const ErrorResponse = ({
@@ -13,7 +14,7 @@ const ErrorResponse = ({
       role='alert'
     >
       <strong className='font-bold text-red-500'>Error: </strong>
-      <span className={`block sm:inline ${className}`}>{children}</span>
+      <span className={`block sm:inline ${cn(className)}`}>{children}</span>
     </div>
   )
 }

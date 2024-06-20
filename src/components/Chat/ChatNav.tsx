@@ -1,12 +1,8 @@
-import useChatBox from '@/hooks/useChatBox'
 import { ArrowLeft, Info, PhoneCall, VideoIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 const ChatNav = ({ recipientName }: { recipientName: string }) => {
-  const { connectedUsers, recipientUser } = useChatBox()
-  console.log('🚀 ~ ChatNav ~ recipientUser:', recipientUser)
-
   return (
     <nav className='flex-between text-gray-200 px-4 text-xs'>
       {/* nav left */}
@@ -25,7 +21,7 @@ const ChatNav = ({ recipientName }: { recipientName: string }) => {
           <h1 className='font-bold whitespace-break-spaces'>{recipientName}</h1>
           {/* online status */}
           <div className='flex gap-2 items-center'>
-            {connectedUsers
+            {/* {connectedUsers
               .map((user) => user.id)
               .includes(recipientUser?._id as string) ? (
               <div className='rounded-full bg-green-500 size-3'></div>
@@ -38,7 +34,7 @@ const ChatNav = ({ recipientName }: { recipientName: string }) => {
               <p className='font-thin relative'>Online</p>
             ) : (
               <p className='font-thin relative'>Offline</p>
-            )}
+            )} */}
           </div>
         </div>
       </div>

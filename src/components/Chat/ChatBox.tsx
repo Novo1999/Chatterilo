@@ -1,43 +1,12 @@
 'use client'
-import {
-  useMessagesContext,
-  useMessagesDispatchContext,
-} from '@/hooks/contextHooks/useMessagesContext'
-import useChatBox from '@/hooks/useChatBox'
-import { socket } from '@/lib/socket'
-import { PUSH_NEW_MESSAGE } from '@/utils/constants'
+
 import { Loader } from 'lucide-react'
-import { useParams } from 'next/navigation'
-import { useEffect } from 'react'
 import MessageError from '../Message/Message-Error'
 import ChatInput from './ChatInput'
 import ChatNav from './ChatNav'
 import Conversation from './Conversation'
 
 const Chatbox = () => {
-  const {
-    isLoading,
-    isError,
-    conversation,
-    hasNoConversationId,
-    recipientName,
-    typerId,
-    pathname,
-  } = useChatBox()
-
-  const { userId } = useParams()
-
-  const { currentConversation } = useMessagesContext()
-
-  const dispatch = useMessagesDispatchContext()
-
-  // push new message to the state when new message comes from the other client
-  useEffect(() => {
-    socket.on('new_message', (message) => {
-      dispatch({ type: PUSH_NEW_MESSAGE, payload: message })
-    })
-  }, [])
-
   // content
   let content = null
 

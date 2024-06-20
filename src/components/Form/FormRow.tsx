@@ -7,7 +7,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { getValueOfX } from '@/utils/setValueofX'
 import { motion } from 'framer-motion'
-import { UseFormReturn } from 'react-hook-form'
 
 interface FormRowProps {
   form: any

@@ -1,11 +1,8 @@
 'use client'
-import useGetConversations from '@/hooks/api/useGetConversations'
 import { Loader2 } from 'lucide-react'
 import ConversationListItem from './ConversationListItem'
 
 const ConversationList = () => {
-  const { data, isLoading, isError, error } = useGetConversations()
-
   let content = null
 
   if (isLoading && !isError) {

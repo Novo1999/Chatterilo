@@ -1,17 +1,14 @@
-import useChatBox from '@/hooks/useChatBox'
 import { Paperclip, Send } from 'lucide-react'
 import { Input } from '../ui/input'
 
 const ChatInput = () => {
-  const { handleSubmit, onSubmit, register, emitUserTyping } = useChatBox()
-
   return (
     <div className='flex items-center gap-2 px-4 chat-input'>
       <div className='text-white'>
         <Paperclip />{' '}
       </div>
       <div className='flex-grow relative'>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        {/* <form onSubmit={handleSubmit(onSubmit)}>
           <Input
             purpose='type-message'
             gradient='purple'
@@ -24,7 +21,7 @@ const ChatInput = () => {
           <button className='text-white absolute right-4 bottom-2 send-btn'>
             <Send />
           </button>
-        </form>
+        </form> */}
       </div>
     </div>
   )
