@@ -10,6 +10,7 @@ import SearchList from '../SearchList'
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 import { Input } from '../ui/input'
 import ShimmerBtn from '../ui/shimmer-btn'
+import TooltipContainer from '../ui/TooltipContainer'
 import UserNameSparkle from '../UserNameSparkle'
 
 // causes hydration error so make these a non ssr
@@ -77,12 +78,14 @@ const Header = () => {
                   {friends?.length}
                 </div>
               )}
-              <button
-                className='relative friends-btn'
-                onClick={handleFriendListClick}
-              >
-                <FaUserFriends />
-              </button>
+              <TooltipContainer text='Friends'>
+                <button
+                  className='relative friends-btn hover:shadow-md rounded-md hover:border hover:border-white p-1 transition-all'
+                  onClick={handleFriendListClick}
+                >
+                  <FaUserFriends />
+                </button>
+              </TooltipContainer>
 
               <NoSSRFriendList
                 handleCloseMenu={handleCloseMenu}
@@ -95,19 +98,27 @@ const Header = () => {
                   {friendRequests?.received.length}
                 </div>
               )}
-              <button
-                className='relative friend-requests-btn'
-                onClick={handleFriendRequestListClick}
-              >
-                <GiThreeFriends />
-              </button>
+              <TooltipContainer text='Friend Requests'>
+                <button
+                  className='relative friend-requests-btn hover:shadow-md rounded-md hover:border hover:border-white p-1 transition-all'
+                  onClick={handleFriendRequestListClick}
+                >
+                  <GiThreeFriends />
+                </button>
+              </TooltipContainer>
+
               <NoSSRFriendRequests
                 handleCloseMenu={handleCloseMenu}
                 isOpen={isFriendRequestListOpen}
               />
-              <button onClick={handleLogOut}>
-                <LogOut />
-              </button>
+              <TooltipContainer text='Log out'>
+                <button
+                  onClick={handleLogOut}
+                  className=' hover:shadow-md rounded-md hover:border hover:border-white p-1 transition-all'
+                >
+                  <LogOut />
+                </button>
+              </TooltipContainer>
             </div>
           </div>
         </div>

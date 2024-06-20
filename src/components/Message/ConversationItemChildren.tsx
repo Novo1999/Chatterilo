@@ -11,7 +11,6 @@ const ConversationItemChildren = ({
   const { user } = useAuthContext()
 
   const { messages, recipientUser, currentUser } = conversation
-  console.log('🚀 ~ messages:', messages)
   const hasMessage = messages?.length > 0
 
   const getSlicedMessage = (sliceEnd: number) => {

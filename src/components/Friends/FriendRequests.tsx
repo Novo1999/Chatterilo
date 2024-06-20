@@ -72,8 +72,6 @@ const FriendRequests = ({ isOpen, handleCloseMenu }: IFriend) => {
         <li className='hidden'></li>
         {friendRequestData?.length > 0 ? (
           friendRequestData?.map((friend) => {
-            console.log(friend)
-
             return friend.isLoading ? (
               <div
                 className='flex-center'

@@ -18,7 +18,6 @@ import { Button } from '../ui/button'
 const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
   const scope = useMenuAnimation(isOpen)
   let { user: { friends, username, conversations } = {} } = useAuthContext()
-  console.log('🚀 ~ FriendList ~ conversations:', conversations)
   const [modalOpen, setModalOpen] = useState(false)
   const { mutate: unfriendMutate } = useUnfriend()
   const { connectedUsers } = useConnectedUserContext()
@@ -63,15 +62,9 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
         <li className='hidden'></li>
         {friends?.length! > 0 ? (
           friends?.map((friend) => {
-            console.log('🚀 ~ friends?.map ~ friend:', friend)
             const friendIsInConversation = conversations
               ?.map((conv) => conv.recipientUser)
               ?.includes(friend._id)
-
-            console.log(
-              '🚀 ~ friends?.map ~ friendIsInConversation:',
-              friendIsInConversation
-            )
 
             return (
               <li key={friend?._id}>

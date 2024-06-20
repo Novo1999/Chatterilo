@@ -4,7 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 const ChatNav = ({ recipientName }: { recipientName: string }) => {
-  const { connectedUsers, recipient } = useChatBox()
+  const { connectedUsers, recipientUser } = useChatBox()
+  console.log('🚀 ~ ChatNav ~ recipientUser:', recipientUser)
 
   return (
     <nav className='flex-between text-gray-200 px-4 text-xs'>
@@ -26,14 +27,14 @@ const ChatNav = ({ recipientName }: { recipientName: string }) => {
           <div className='flex gap-2 items-center'>
             {connectedUsers
               .map((user) => user.id)
-              .includes(recipient?.data?._id) ? (
+              .includes(recipientUser?._id as string) ? (
               <div className='rounded-full bg-green-500 size-3'></div>
             ) : (
               <div className='rounded-full bg-gray-500 size-3'></div>
             )}
             {connectedUsers
               .map((user) => user.id)
-              .includes(recipient?.data?._id) ? (
+              .includes(recipientUser?._id as string) ? (
               <p className='font-thin relative'>Online</p>
             ) : (
               <p className='font-thin relative'>Offline</p>

@@ -23,8 +23,6 @@ const ConversationListItem = ({
     currentUser,
     _id: conversationId,
   } = conversation
-  console.log('🚀 ~ conversation:', conversation)
-  console.log(userId, recipientUser._id)
   const { replace } = useRouter()
   const pathname = usePathname()
 

@@ -117,8 +117,6 @@ const SearchList = ({
     )
   }
 
-  console.log(friends)
-
   if (!isLoading && !isError && searchData?.length > 0) {
     content = searchData?.map((user: IUser['user']) => {
       const isFriend = friends?.map((friend) => friend._id).includes(user?._id)

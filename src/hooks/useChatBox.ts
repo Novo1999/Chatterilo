@@ -1,5 +1,4 @@
 import useGetConversation from '@/hooks/api/useGetConversation'
-import useGetUser from '@/hooks/api/useGetUser'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
 import {
@@ -134,7 +133,7 @@ const useChatBox = () => {
       setTyperId(data.senderId)
     })
 
-    socket.on('not_typing', (data) => {
+    socket.on('not_typing', () => {
       setTyperId('')
     })
   }, [])
@@ -146,6 +145,7 @@ const useChatBox = () => {
     hasNoConversationId,
     recipientName,
     connectedUsers,
+    recipientUser,
     typerId,
     handleSubmit,
     onSubmit,
