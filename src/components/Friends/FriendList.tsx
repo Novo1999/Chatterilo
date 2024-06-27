@@ -4,10 +4,11 @@ import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
 import useMenuAnimation from '@/hooks/useMenuAnimation'
 import { socket } from '@/lib/socket'
+import { useQueryClient } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { MessageCircle, Trash } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { CgClose } from 'react-icons/cg'
 import { TbMoodEmpty } from 'react-icons/tb'
@@ -18,6 +19,10 @@ import { Button } from '../ui/button'
 const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
   const scope = useMenuAnimation(isOpen)
   let { user: { friends, username, conversations } = {} } = useAuthContext()
+  const queryClient = useQueryClient()
+
+  console.log('🚀 ~ FriendList ~ friends:', friends)
+  console.log('🚀 ~ FriendList ~ conversations:', conversations)
   const [modalOpen, setModalOpen] = useState(false)
   const { mutate: unfriendMutate } = useUnfriend()
   const { connectedUsers } = useConnectedUserContext()
@@ -34,6 +39,18 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
       },
     })
   }
+
+  const conversationParticipants = conversations
+    ?.map((conv) => [conv.participant1, conv.participant2])
+    .flat()
+
+  console.log(
+    '🚀 ~ conversationParticipants ~ conversationParticipants:',
+    conversationParticipants
+  )
+
+  const friendIsInConversation = (friendId: string) =>
+    conversationParticipants?.includes(friendId)
 
   const portalContent = (
     <nav className='font-poppins w-full' ref={scope}>
@@ -57,10 +74,6 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
         <li className='hidden'></li>
         {friends?.length! > 0 ? (
           friends?.map((friend) => {
-            const friendIsInConversation = conversations
-              ?.map((conv) => conv.recipientUser)
-              ?.includes(friend._id)
-
             return (
               <li key={friend?._id}>
                 <Link
@@ -100,10 +113,16 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
                         }
                       >
                         {/* message the user */}
-                        {!friendIsInConversation && (
+                        {!friendIsInConversation(friend?._id) && (
                           <Button
                             onClick={() =>
-                              createConversationMutate(friend?._id)
+                              createConversationMutate(friend?._id, {
+                                onSuccess: () => {
+                                  queryClient.invalidateQueries({
+                                    queryKey: ['current-user'],
+                                  })
+                                },
+                              })
                             }
                             asChild
                             variant='ghost'

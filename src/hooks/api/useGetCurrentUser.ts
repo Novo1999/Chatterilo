@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 const getCurrentUser = async () => {
   try {
     const data = await customFetch.get('/auth/current-user')
+    console.log('🚀 ~ getCurrentUser ~ data:', data)
     return data
   } catch (error) {
     throw error
