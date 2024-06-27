@@ -1,3 +1,4 @@
+import useCreateConversation from '@/hooks/api/useCreateConversation'
 import useUnfriend from '@/hooks/api/useUnfriend'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
@@ -20,6 +21,7 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
   const [modalOpen, setModalOpen] = useState(false)
   const { mutate: unfriendMutate } = useUnfriend()
   const { connectedUsers } = useConnectedUserContext()
+  const { mutate: createConversationMutate } = useCreateConversation()
 
   // unfriend user
   const handleUnfriend = (id: string) => {
@@ -100,6 +102,9 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
                         {/* message the user */}
                         {!friendIsInConversation && (
                           <Button
+                            onClick={() =>
+                              createConversationMutate(friend?._id)
+                            }
                             asChild
                             variant='ghost'
                             className='text-xl w-8 px-2 bg-green-400 hover:bg-green-500'
