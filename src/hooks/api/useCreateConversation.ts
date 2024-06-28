@@ -1,10 +1,9 @@
-import customFetch from '@/utils/customFetch'
+import customFetch from '@/utils/misc/customFetch'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 const createConversation = async (receiverId: string) => {
   try {
     const data = await customFetch.post(`/conversation/${receiverId}`)
-    console.log(data)
     return data
   } catch (error) {
     throw error

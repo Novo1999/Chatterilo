@@ -1,7 +1,7 @@
 import AuthProvider from '@/providers/AuthProvider'
 import ConnectedUserProvider from '@/providers/ConnectedUserProvider'
 import ReactQueryProvider from '@/providers/queryClient'
-import { caveat, createMetadata, poppins, sora } from '@/utils/constants'
+import { caveat, createMetadata, poppins, sora } from '@/utils/misc/constants'
 import { Toaster } from 'react-hot-toast'
 import './globals.css'
 

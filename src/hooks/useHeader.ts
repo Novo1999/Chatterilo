@@ -1,7 +1,7 @@
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
 import { socket } from '@/lib/socket'
-import customFetch from '@/utils/customFetch'
+import customFetch from '@/utils/misc/customFetch'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 

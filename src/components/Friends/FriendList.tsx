@@ -20,9 +20,6 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
   const scope = useMenuAnimation(isOpen)
   let { user: { friends, username, conversations } = {} } = useAuthContext()
   const queryClient = useQueryClient()
-
-  console.log('🚀 ~ FriendList ~ friends:', friends)
-  console.log('🚀 ~ FriendList ~ conversations:', conversations)
   const [modalOpen, setModalOpen] = useState(false)
   const { mutate: unfriendMutate } = useUnfriend()
   const { connectedUsers } = useConnectedUserContext()
@@ -43,11 +40,6 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
   const conversationParticipants = conversations
     ?.map((conv) => [conv.participant1, conv.participant2])
     .flat()
-
-  console.log(
-    '🚀 ~ conversationParticipants ~ conversationParticipants:',
-    conversationParticipants
-  )
 
   const friendIsInConversation = (friendId: string) =>
     conversationParticipants?.includes(friendId)

@@ -1,11 +1,10 @@
-import customFetch from '@/utils/customFetch'
+import customFetch from '@/utils/misc/customFetch'
 import { useQuery } from '@tanstack/react-query'
 import { usePathname } from 'next/navigation'
 
 const getCurrentUser = async () => {
   try {
     const data = await customFetch.get('/auth/current-user')
-    console.log('🚀 ~ getCurrentUser ~ data:', data)
     return data
   } catch (error) {
     throw error

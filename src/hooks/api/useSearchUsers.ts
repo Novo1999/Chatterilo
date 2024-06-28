@@ -1,4 +1,4 @@
-import customFetch from '@/utils/customFetch'
+import customFetch from '@/utils/misc/customFetch'
 import { useQuery } from '@tanstack/react-query'
 
 const searchUser = async (value: string) => {

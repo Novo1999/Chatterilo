@@ -5,7 +5,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { getValueOfX } from '@/utils/setValueofX'
+import { getValueOfX } from '@/utils/misc/getValueofX'
 import { motion } from 'framer-motion'
 
 interface FormRowProps {
