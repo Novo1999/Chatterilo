@@ -9,17 +9,13 @@ import getEmojiForSearchedUser from '@/utils/search/getEmojiForSearchedUser'
 import getFunctionalityForSearchedUserButton from '@/utils/search/getFunctionalityForSearchedUser'
 import { useQueryClient } from '@tanstack/react-query'
 import { useDebounce } from '@uidotdev/usehooks'
-import { CheckCircle, Info, Loader2 } from 'lucide-react'
+import { Info, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 import { MouseEvent, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { BiSolidMessageError } from 'react-icons/bi'
-import { FaCheckCircle } from 'react-icons/fa'
-import { IoMdPersonAdd } from 'react-icons/io'
-import { LiaUserFriendsSolid } from 'react-icons/lia'
 import { TbMoodEmpty } from 'react-icons/tb'
 import ErrorResponse from './misc/ErrorResponse'
-import TooltipContainer from './ui/TooltipContainer'
 
 const SearchList = ({
   isOpen,

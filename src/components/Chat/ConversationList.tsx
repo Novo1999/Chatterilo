@@ -2,7 +2,6 @@
 import useGetConversations from '@/hooks/api/useGetConversations'
 import renderUIBasedOnState from '@/utils/misc/renderUIBasedOnState'
 import { AxiosResponse } from 'axios'
-import { Loader2 } from 'lucide-react'
 import GenericLoader from '../ui/GenericLoader'
 import ConversationListItem from './ConversationListItem'
 

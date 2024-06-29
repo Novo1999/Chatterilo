@@ -1,6 +1,7 @@
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 const DEVICE_TYPE_MOBILE = 'mobile'
 
@@ -9,10 +10,27 @@ const ConversationItemChildren = ({
   receiverDetails,
   conversation,
 }: IConversationItemChildren) => {
-  const { participant1, participant2, _id, lastMessage, messages } =
-    conversation
+  const {
+    participant1,
+    participant2,
+    _id: conversationId,
+    lastMessage,
+    messages,
+  } = conversation
   const { connectedUsers } = useConnectedUserContext()
+  const { replace } = useRouter()
   console.log('🚀 ~ connectedUsers:', connectedUsers)
+  const searchParams = useSearchParams()
+  const pathname = usePathname()
+  const handleSelectChat = (conversationId: string) => {
+    const params = new URLSearchParams(searchParams)
+    if (conversationId) {
+      params.set('conversation', conversationId)
+    } else {
+      params.delete('conversation', conversationId)
+    }
+    replace(`${pathname}?${params.toString()}`)
+  }
 
   if (deviceType === DEVICE_TYPE_MOBILE) {
     return (
@@ -56,7 +74,7 @@ const ConversationItemChildren = ({
   } else {
     return (
       <div
-        // onClick={() => handleSelectChat(conversationId)}
+        onClick={() => handleSelectChat(conversationId)}
         className='hidden sm:flex justify-between items-center px-2 gap-2 *:text-gray-100 cursor-pointer py-4 rounded-md border border-white border-opacity-50 shadow-md'
       >
         <div className='flex gap-4 items-center'>

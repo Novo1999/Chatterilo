@@ -1,3 +1,4 @@
+import Chatbox from './ChatBox'
 import ConversationList from './ConversationList'
 
 const ConversationContainer = () => {
@@ -9,7 +10,7 @@ const ConversationContainer = () => {
         <ConversationList />
       </div>
       {/* chat box */}
-      {/* <Chatbox /> */}
+      <Chatbox />
     </section>
   )
 }
