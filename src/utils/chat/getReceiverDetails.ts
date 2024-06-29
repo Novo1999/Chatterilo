@@ -1,10 +1,13 @@
+let retryCount = 0
+
 const getReceiverDetails = (
   participant1: IUser['user'],
   userId: string,
   participant2: IUser['user']
 ) => {
-  if (!userId) {
-    throw new Error('No User ID')
+  if (!userId && retryCount <= 5) {
+    retryCount++
+    getReceiverDetails(participant1, userId, participant2)
   }
   if (userId && userId !== participant1._id) {
     return {

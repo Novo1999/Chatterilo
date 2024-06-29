@@ -1,9 +1,12 @@
 import useFriendRequest from '@/hooks/api/useFriendRequest'
+import useManageFriendRequest from '@/hooks/api/useManageFriendRequest'
 import useSearchUsers from '@/hooks/api/useSearchUsers'
 import useAuthContext from '@/hooks/contextHooks/useAuthContext'
 import useConnectedUserContext from '@/hooks/contextHooks/useConnectedUserContext'
 import useMenuAnimation from '@/hooks/useMenuAnimation'
 import { socket } from '@/lib/socket'
+import getEmojiForSearchedUser from '@/utils/search/getEmojiForSearchedUser'
+import getFunctionalityForSearchedUserButton from '@/utils/search/getFunctionalityForSearchedUser'
 import { useQueryClient } from '@tanstack/react-query'
 import { useDebounce } from '@uidotdev/usehooks'
 import { CheckCircle, Info, Loader2 } from 'lucide-react'
@@ -11,10 +14,12 @@ import Link from 'next/link'
 import { MouseEvent, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { BiSolidMessageError } from 'react-icons/bi'
+import { FaCheckCircle } from 'react-icons/fa'
 import { IoMdPersonAdd } from 'react-icons/io'
 import { LiaUserFriendsSolid } from 'react-icons/lia'
 import { TbMoodEmpty } from 'react-icons/tb'
 import ErrorResponse from './misc/ErrorResponse'
+import TooltipContainer from './ui/TooltipContainer'
 
 const SearchList = ({
   isOpen,
@@ -117,12 +122,40 @@ const SearchList = ({
     )
   }
 
+  const { mutate: acceptMutate } = useManageFriendRequest('ACCEPT')
+
+  const acceptFriendRequest = (id: string) => {
+    const userSocketId = connectedUsers.find((user) => user.id === id)?.socketId
+    acceptMutate(id, {
+      onSuccess: () => {
+        if (!userSocketId) return
+
+        socket.emit('invalidate-user', { socketId: userSocketId })
+      },
+    })
+  }
+
   if (!isLoading && !isError && searchData?.length > 0) {
     content = searchData?.map((user: IUser['user']) => {
       const isFriend = friends?.map((friend) => friend._id).includes(user?._id)
-      const hasFriendRequest =
-        friendRequests?.sent.includes(user?._id) ||
-        friendRequests?.received.includes(user?._id)
+      const userSentFriendRequest = friendRequests?.sent?.includes(user?._id)
+      const userReceivedFriendRequest = friendRequests?.received?.includes(
+        user?._id
+      )
+
+      const conditions = [
+        isFriend,
+        userSentFriendRequest,
+        userReceivedFriendRequest,
+      ] as boolean[]
+
+      const functions = [
+        handleCancelFriend,
+        acceptFriendRequest,
+        handleAddFriend,
+      ]
+      const emoji = getEmojiForSearchedUser(conditions)
+
       return (
         <li key={user?._id}>
           <Link
@@ -141,23 +174,16 @@ const SearchList = ({
                 </div>
               </div>
               <button
-                // check if current user sent request to the user , if sent, they can cancel it otherwise check if they are friends, if friends, then do nothing, else user can add as friend
                 onClick={(e) =>
-                  hasFriendRequest
-                    ? handleCancelFriend(e, user?._id)
-                    : !isFriend && handleAddFriend(e, user?._id)
+                  getFunctionalityForSearchedUserButton(
+                    e as any,
+                    conditions,
+                    user?._id,
+                    functions
+                  )
                 }
               >
-                {/* show the check only when user has sent this user friend request or has them as friend already */}
-                {hasFriendRequest ? (
-                  <CheckCircle />
-                ) : !isFriend ? (
-                  <IoMdPersonAdd className='text-xl' />
-                ) : (
-                  <div className='relative right-2 text-3xl'>
-                    <LiaUserFriendsSolid />
-                  </div>
-                )}
+                {emoji}
               </button>
             </div>
           </Link>

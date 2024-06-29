@@ -14,6 +14,16 @@ interface IConversation {
   participant2: IUser['user']
   _id: string
   lastMessage?: string
+  lastMessageTimeStamp?: string
+}
+
+interface IConversationItemChildren {
+  deviceType: string
+  receiverDetails: {
+    receiverId: string
+    userName: string
+  }
+  conversation: IConversation
 }
 
 interface IUser {
