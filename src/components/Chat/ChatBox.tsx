@@ -61,10 +61,17 @@ const Chatbox = () => {
     )
   }
 
-  const doesTypingUserIdMatchesConversationParticipant =
-    typingUserId ===
-    getParticipantBasedOnTypingUserId(conversation?.data, typingUserId)
+  const currentParticipantTyping = getParticipantBasedOnTypingUserId(
+    conversation?.data,
+    receiverDetails as IReceiverDetails
+  )
 
+  console.log(
+    '🚀 ~ Chatbox ~ currentParticipantTyping:',
+    currentParticipantTyping
+  )
+  const doesTypingUserIdMatchesConversationParticipant =
+    typingUserId === currentParticipantTyping.participantId
   // no message yet
   if (!isLoading && !isError && conversation?.data?._id && hasNoMessage) {
     content = (
@@ -94,7 +101,7 @@ const Chatbox = () => {
             url='https://lottie.host/000993b4-caf2-4485-a517-2bfddf7b425e/QCho9MI46G.json'
           />
           <p className='text-sm text-white'>
-            {receiverDetails?.userName} is typing...
+            {currentParticipantTyping?.participantUserName} is typing...
           </p>
         </div>
 

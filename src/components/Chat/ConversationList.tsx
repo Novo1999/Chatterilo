@@ -32,7 +32,7 @@ const ConversationList = () => {
   }
   if (dataIsAvailable) {
     content = (
-      <div>
+      <div className='flex flex-col gap-2'>
         {conversationsData?.data?.map((conversation: IConversation) => {
           return (
             <ConversationListItem
