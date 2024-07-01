@@ -1,11 +1,11 @@
 const getParticipantBasedOnTypingUserId = (
   conversation: IConversation,
-  receiverDetails: IReceiverDetails
+  typingUserId: string
 ) => {
-  if (conversation?.participant2?._id === receiverDetails?.receiverId) {
-    return conversation?.participant1?._id
-  } else {
+  if (conversation?.participant2?._id === typingUserId) {
     return conversation?.participant2?._id
+  } else {
+    return conversation?.participant1?._id
   }
 }
 export default getParticipantBasedOnTypingUserId

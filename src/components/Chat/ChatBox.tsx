@@ -3,9 +3,12 @@
 import useChatBox from '@/hooks/useChatBox'
 import getParticipantBasedOnTypingUserId from '@/utils/chat/getParticipantBasedOnTypingUserId'
 import getReceiverDetails from '@/utils/chat/getReceiverDetails'
+import { WELCOME_MESSAGE } from '@/utils/misc/constants'
 import { motion } from 'framer-motion'
 import { Loader, LucideMessageSquareDashed } from 'lucide-react'
 import MessageError from '../Message/Message-Error'
+import LottiePlayer from '../misc/LottiePlayer'
+import { TextGenerateEffect } from '../ui/text-effect'
 import ChatInput from './ChatInput'
 import ChatNav from './ChatNav'
 
@@ -20,7 +23,15 @@ const Chatbox = () => {
   let content = null
 
   if (!conversationId) {
-    return <p>Nothing</p>
+    return (
+      <div className='bg-[#21333e] w-full h-full flex justify-center items-center flex-col'>
+        <LottiePlayer
+          url='https://lottie.host/f53fca5b-a648-4eaa-8761-6a8cc3cbcd89/zDjLLwGtIj.json'
+          className='size-48'
+        />
+        <TextGenerateEffect words={WELCOME_MESSAGE} />
+      </div>
+    )
   }
 
   const receiverDetails =
@@ -52,10 +63,7 @@ const Chatbox = () => {
 
   const doesTypingUserIdMatchesConversationParticipant =
     typingUserId ===
-    getParticipantBasedOnTypingUserId(
-      conversation?.data,
-      receiverDetails as IReceiverDetails
-    )
+    getParticipantBasedOnTypingUserId(conversation?.data, typingUserId)
 
   // no message yet
   if (!isLoading && !isError && conversation?.data?._id && hasNoMessage) {
@@ -74,11 +82,22 @@ const Chatbox = () => {
           </div>
         </motion.section>
 
-        {doesTypingUserIdMatchesConversationParticipant && (
-          <p className='text-white text-xs  ml-12 relative bottom-1'>
-            typing...
+        <div
+          className={`flex justify-start ml-12 ${
+            doesTypingUserIdMatchesConversationParticipant
+              ? 'visible'
+              : 'invisible'
+          } items-center`}
+        >
+          <LottiePlayer
+            className='text-white ml-12 relative bottom-1 size-20 left-0'
+            url='https://lottie.host/000993b4-caf2-4485-a517-2bfddf7b425e/QCho9MI46G.json'
+          />
+          <p className='text-sm text-white'>
+            {receiverDetails?.userName} is typing...
           </p>
-        )}
+        </div>
+
         <ChatInput />
       </>
     )

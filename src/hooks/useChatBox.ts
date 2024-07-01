@@ -48,7 +48,6 @@ const useChatBox = () => {
 
   useEffect(() => {
     socket.on('typing', (data) => {
-      console.log('🚀 ~ socket.on ~ data:', data)
       setTypingUserId(data.senderId)
     })
 

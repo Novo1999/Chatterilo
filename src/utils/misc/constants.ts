@@ -3,6 +3,8 @@ import { Caveat, Poppins, Sora } from 'next/font/google'
 
 export const BASE_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/api`
 
+export const WELCOME_MESSAGE = 'Select From The Left To Start Chatting'
+
 export const sora = Sora({
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700', '800'],
