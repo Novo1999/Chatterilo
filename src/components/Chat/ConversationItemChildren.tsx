@@ -19,7 +19,6 @@ const ConversationItemChildren = ({
   } = conversation
   const { connectedUsers } = useConnectedUserContext()
   const { replace } = useRouter()
-  console.log('🚀 ~ connectedUsers:', connectedUsers)
   const searchParams = useSearchParams()
   const pathname = usePathname()
   const handleSelectChat = (conversationId: string) => {

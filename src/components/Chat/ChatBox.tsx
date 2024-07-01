@@ -1,29 +1,20 @@
 'use client'
 
-import useGetConversation from '@/hooks/api/useGetConversation'
-import useAuthContext from '@/hooks/contextHooks/useAuthContext'
+import useChatBox from '@/hooks/useChatBox'
+import getParticipantBasedOnTypingUserId from '@/utils/chat/getParticipantBasedOnTypingUserId'
 import getReceiverDetails from '@/utils/chat/getReceiverDetails'
-import { Loader } from 'lucide-react'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { motion } from 'framer-motion'
+import { Loader, LucideMessageSquareDashed } from 'lucide-react'
 import MessageError from '../Message/Message-Error'
 import ChatInput from './ChatInput'
 import ChatNav from './ChatNav'
-import Conversation from './Conversation'
 
 const Chatbox = () => {
-  const searchParams = useSearchParams()
-  const pathname = usePathname()
-  const conversationId = searchParams.get('conversation')
-  const { user } = useAuthContext()
-  const {
-    data: conversation,
-    isLoading,
-    isError,
-  } = useGetConversation(conversationId as string)
-  console.log('🚀 ~ Chatbox ~ conversation:', conversation)
-  const userId = user?._id
-  console.log('🚀 ~ Chatbox ~ userId:', userId)
-  const hasNoLastMessage = !conversation?.data?.lastMessage
+  const { userId, conversation, conversationId, isLoading, isError, pathname } =
+    useChatBox()
+  const { typingUserId } = useChatBox()
+
+  const hasNoMessage = conversation?.data?.messages?.length === 0
 
   // content
   let content = null
@@ -40,6 +31,7 @@ const Chatbox = () => {
           conversation?.data?.participant2
         )
       : null
+
   if (!isLoading && isError) {
     content = <MessageError />
   }
@@ -58,28 +50,55 @@ const Chatbox = () => {
     )
   }
 
-  if (hasNoLastMessage) {
+  const doesTypingUserIdMatchesConversationParticipant =
+    typingUserId ===
+    getParticipantBasedOnTypingUserId(
+      conversation?.data,
+      receiverDetails as IReceiverDetails
+    )
+
+  // no message yet
+  if (!isLoading && !isError && conversation?.data?._id && hasNoMessage) {
     content = (
-      <div className='text-white p-4'>
-        Start messaging by selecting from the left
-      </div>
+      <>
+        <motion.section
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          className='flex justify-center items-center mt-12'
+        >
+          <div className='flex flex-col items-center justify-center bg-[#2E4756] rounded-full size-96 p-10'>
+            <div className='text-white p-4'>Start Messaging Now</div>
+            <div>
+              <LucideMessageSquareDashed className='text-5xl text-white size-36' />
+            </div>
+          </div>
+        </motion.section>
+
+        {doesTypingUserIdMatchesConversationParticipant && (
+          <p className='text-white text-xs  ml-12 relative bottom-1'>
+            typing...
+          </p>
+        )}
+        <ChatInput />
+      </>
     )
   }
 
   // main content
-  if (!isLoading && !isError && conversation?.data?._id) {
+  if (!isLoading && !isError && conversation?.data?._id && !hasNoMessage) {
     content = (
       <>
         <ChatNav recipientName={receiverDetails?.userName as string} />
 
         {/* <Conversation messages={currentConversation.conversationMessages} /> */}
 
-        {/* {typerId === currentConversation?.recipientUser?._id && (
+        {doesTypingUserIdMatchesConversationParticipant && (
           <p className='text-white text-xs  ml-12 relative bottom-1'>
             typing...
           </p>
-        )} */}
+        )}
 
+        <p className='text-white text-xs  ml-12 relative bottom-1'>typing...</p>
         {/* bottom input and button */}
         <ChatInput />
       </>

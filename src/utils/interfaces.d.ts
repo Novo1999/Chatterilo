@@ -17,6 +17,11 @@ interface IConversation {
   lastMessageTimeStamp?: string
 }
 
+interface IReceiverDetails {
+  receiverId: string
+  userName: string
+}
+
 interface IConversationItemChildren {
   deviceType: string
   receiverDetails: {

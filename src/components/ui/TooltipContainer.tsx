@@ -1,3 +1,4 @@
+'use client'
 import {
   Tooltip,
   TooltipContent,
@@ -5,7 +6,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { TooltipPortal } from '@radix-ui/react-tooltip'
-import { ReactNode } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 
 const TooltipContainer = ({
   children,
@@ -14,17 +15,24 @@ const TooltipContainer = ({
   children: ReactNode
   text: string
 }) => {
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
   return (
-    <TooltipProvider>
-      <Tooltip delayDuration={50}>
-        <TooltipTrigger asChild>{children}</TooltipTrigger>
-        <TooltipPortal container={document.body}>
-          <TooltipContent>
-            <p>{text}</p>
-          </TooltipContent>
-        </TooltipPortal>
-      </Tooltip>
-    </TooltipProvider>
+    isMounted && (
+      <TooltipProvider>
+        <Tooltip delayDuration={50}>
+          <TooltipTrigger asChild>{children}</TooltipTrigger>
+          <TooltipPortal container={document.body}>
+            <TooltipContent>
+              <p>{text}</p>
+            </TooltipContent>
+          </TooltipPortal>
+        </Tooltip>
+      </TooltipProvider>
+    )
   )
 }
 export default TooltipContainer

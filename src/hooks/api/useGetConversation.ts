@@ -2,7 +2,6 @@ import customFetch from '@/utils/misc/customFetch'
 import { useQuery } from '@tanstack/react-query'
 
 const getSingleConversation = async (id: string) => {
-  console.log('🚀 ~ getSingleConversation ~ id:', id)
   try {
     const data = await customFetch.get(`/conversation/${id}`)
     return data
