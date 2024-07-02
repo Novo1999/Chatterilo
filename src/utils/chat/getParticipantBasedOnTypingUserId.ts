@@ -4,7 +4,7 @@ const getParticipantBasedOnTypingUserId = (
 ) => {
   const conversationParticipant1 = conversation?.participant1
   const conversationParticipant2 = conversation?.participant2
-  if (conversation?.participant2?._id === receiverDetails?.receiverId) {
+  if (conversationParticipant1?._id === receiverDetails?.receiverId) {
     return {
       participantId: conversationParticipant1?._id,
       participantUserName: conversationParticipant1?.username,

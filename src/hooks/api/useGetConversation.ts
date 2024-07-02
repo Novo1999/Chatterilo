@@ -14,6 +14,7 @@ const useGetConversation = (conversationId: string) => {
   const query = useQuery({
     queryKey: ['conversation', conversationId],
     queryFn: () => getSingleConversation(conversationId),
+    enabled: !!conversationId,
   })
 
   return query

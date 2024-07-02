@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 const ChatNav = ({ recipientName }: { recipientName: string }) => {
   return (
-    <nav className='flex-between text-gray-200 px-4 text-xs'>
+    <nav className='flex-between text-gray-200 px-4 py-4 relative bottom-4 bg-[#2E4756] text-xs'>
       {/* nav left */}
       <div className='flex gap-2 items-center'>
         <Link href='/'>

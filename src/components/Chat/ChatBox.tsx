@@ -1,5 +1,6 @@
 'use client'
 
+import useGetConversationLength from '@/hooks/api/useGetConversationLength'
 import useChatBox from '@/hooks/useChatBox'
 import getParticipantBasedOnTypingUserId from '@/utils/chat/getParticipantBasedOnTypingUserId'
 import getReceiverDetails from '@/utils/chat/getReceiverDetails'
@@ -13,16 +14,34 @@ import ChatInput from './ChatInput'
 import ChatNav from './ChatNav'
 
 const Chatbox = () => {
-  const { userId, conversation, conversationId, isLoading, isError, pathname } =
-    useChatBox()
+  const {
+    userId,
+    conversation,
+    conversationId,
+    isLoading,
+    isError,
+    pathname,
+    receiverDetails,
+  } = useChatBox()
   const { typingUserId } = useChatBox()
 
   const hasNoMessage = conversation?.data?.messages?.length === 0
 
+  const {
+    isLoading: isTotalConversationLoading,
+    isError: isTotalConversationError,
+    data,
+  } = useGetConversationLength()
+
   // content
   let content = null
 
-  if (!conversationId) {
+  if (
+    !isTotalConversationError &&
+    !isTotalConversationLoading &&
+    data?.data?.conversationLength > 0 &&
+    !conversationId
+  ) {
     return (
       <div className='bg-[#21333e] w-full h-full flex justify-center items-center flex-col'>
         <LottiePlayer
@@ -34,14 +53,14 @@ const Chatbox = () => {
     )
   }
 
-  const receiverDetails =
-    !isLoading && !isError
-      ? getReceiverDetails(
-          conversation?.data?.participant1,
-          userId,
-          conversation?.data?.participant2
-        )
-      : null
+  // const receiverDetails =
+  //   !isLoading && !isError
+  //     ? getReceiverDetails(
+  //         conversation?.data?.participant1,
+  //         userId,
+  //         conversation?.data?.participant2
+  //       )
+  //     : null
 
   if (!isLoading && isError) {
     content = <MessageError />
@@ -65,23 +84,24 @@ const Chatbox = () => {
     conversation?.data,
     receiverDetails as IReceiverDetails
   )
-
   console.log(
     '🚀 ~ Chatbox ~ currentParticipantTyping:',
     currentParticipantTyping
   )
+
   const doesTypingUserIdMatchesConversationParticipant =
     typingUserId === currentParticipantTyping.participantId
   // no message yet
   if (!isLoading && !isError && conversation?.data?._id && hasNoMessage) {
     content = (
-      <>
+      <div className='flex flex-col justify-between gap-6 h-full'>
+        <ChatNav recipientName={receiverDetails?.userName as string} />
         <motion.section
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           className='flex justify-center items-center mt-12'
         >
-          <div className='flex flex-col items-center justify-center bg-[#2E4756] rounded-full size-96 p-10'>
+          <div className='flex flex-col items-center justify-center bg-[#2E4756] rounded-full size-96 absolute'>
             <div className='text-white p-4'>Start Messaging Now</div>
             <div>
               <LucideMessageSquareDashed className='text-5xl text-white size-36' />
@@ -89,24 +109,26 @@ const Chatbox = () => {
           </div>
         </motion.section>
 
-        <div
-          className={`flex justify-start ml-12 ${
-            doesTypingUserIdMatchesConversationParticipant
-              ? 'visible'
-              : 'invisible'
-          } items-center`}
-        >
-          <LottiePlayer
-            className='text-white ml-12 relative bottom-1 size-20 left-0'
-            url='https://lottie.host/000993b4-caf2-4485-a517-2bfddf7b425e/QCho9MI46G.json'
-          />
-          <p className='text-sm text-white'>
-            {currentParticipantTyping?.participantUserName} is typing...
-          </p>
+        {/* typing */}
+        <div className='flex flex-col'>
+          <div
+            className={`flex justify-start ml-12 items-center ${
+              doesTypingUserIdMatchesConversationParticipant
+                ? 'visible'
+                : 'invisible'
+            }`}
+          >
+            <LottiePlayer
+              className='text-white ml-12 relative size-12 left-0'
+              url='https://lottie.host/000993b4-caf2-4485-a517-2bfddf7b425e/QCho9MI46G.json'
+            />
+            <p className='text-xs text-white'>
+              {currentParticipantTyping?.participantUserName} is typing...
+            </p>
+          </div>
+          <ChatInput />
         </div>
-
-        <ChatInput />
-      </>
+      </div>
     )
   }
 

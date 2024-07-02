@@ -8,7 +8,7 @@ const Conversation = ({ messages }: { messages: IMessage[] }) => {
   if (messages.length === 0) {
     content = (
       <div className='h-60'>
-        <p>No Messages</p>
+        <p>No Conversations</p>
       </div>
     )
   } else

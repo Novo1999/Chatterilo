@@ -66,6 +66,7 @@ const useChatBox = () => {
     isError,
     pathname,
     userId,
+    receiverDetails,
   }
 }
 export default useChatBox

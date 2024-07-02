@@ -4,6 +4,7 @@ import renderUIBasedOnState from '@/utils/misc/renderUIBasedOnState'
 import { AxiosResponse } from 'axios'
 import GenericLoader from '../ui/GenericLoader'
 import ConversationListItem from './ConversationListItem'
+import TotalConversations from './TotalConversations'
 
 const ConversationList = () => {
   const { data: conversationsData, isLoading, isError } = useGetConversations()
@@ -33,6 +34,7 @@ const ConversationList = () => {
   if (dataIsAvailable) {
     content = (
       <div className='flex flex-col gap-2'>
+        <TotalConversations />
         {conversationsData?.data?.map((conversation: IConversation) => {
           return (
             <ConversationListItem
