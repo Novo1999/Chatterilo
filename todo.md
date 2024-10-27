@@ -15,3 +15,12 @@
 - notifications
 
 <!-- ekta user message send korle oita db er message e giye save hobe, ebong, user er conversation model e populate hobe oi message ta, conversation model e ekta object id add hobe and oi id diye tule anbe message from message db -->
+
+invalidate my conversation after clicking accept request button
+
+<!-- friend added to conversation behavior tracking -->
+
+when user adds a friend to conversation
+this happens
+add a new id to users conv field
+add a new conv in conv schema

@@ -35,13 +35,13 @@ const useChatBox = () => {
 
     socket.emit('user_typing', {
       matchedConnectedUser,
-      senderId: receiverDetails?.receiverId,
+      senderId: userId,
     })
 
     timeoutId = setTimeout(() => {
       socket.emit('user_not_typing', {
         matchedConnectedUser,
-        senderId: receiverDetails?.receiverId,
+        senderId: userId,
       })
     }, 1500)
   }

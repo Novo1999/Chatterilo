@@ -111,7 +111,10 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
                               createConversationMutate(friend?._id, {
                                 onSuccess: () => {
                                   queryClient.invalidateQueries({
-                                    queryKey: ['current-user'],
+                                    queryKey: [
+                                      'current-user',
+                                      'all-conversations',
+                                    ],
                                   })
                                 },
                               })

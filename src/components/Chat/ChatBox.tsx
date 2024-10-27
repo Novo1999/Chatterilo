@@ -84,10 +84,6 @@ const Chatbox = () => {
     conversation?.data,
     receiverDetails as IReceiverDetails
   )
-  console.log(
-    '🚀 ~ Chatbox ~ currentParticipantTyping:',
-    currentParticipantTyping
-  )
 
   const doesTypingUserIdMatchesConversationParticipant =
     typingUserId === currentParticipantTyping.participantId
