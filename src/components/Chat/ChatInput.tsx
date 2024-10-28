@@ -1,12 +1,21 @@
+import { useGetCurrentUser } from '@/hooks/api/useGetCurrentUser'
+import useSendMessage from '@/hooks/api/useSendMessage'
 import useChatBox from '@/hooks/useChatBox'
 import { Paperclip, Send } from 'lucide-react'
-import { useForm } from 'react-hook-form'
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import { Input } from '../ui/input'
 
 const ChatInput = () => {
   const { register, handleSubmit } = useForm()
+  const { mutate } = useSendMessage()
+  const { data } = useGetCurrentUser()
+  console.log("🚀 ~ ChatInput ~ data:", data)
 
-  const onSubmit = () => {}
+  const onSubmit: SubmitHandler<FieldValues> = (inputData) => {
+    const userId = data?.data?.user?._id
+
+    mutate({ sender: userId, message: inputData.message })
+  }
 
   const { emitUserTyping } = useChatBox()
 

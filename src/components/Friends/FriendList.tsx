@@ -19,7 +19,6 @@ import { Button } from '../ui/button'
 const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
   const scope = useMenuAnimation(isOpen)
   let { user: { friends, username, conversations } = {} } = useAuthContext()
-  const queryClient = useQueryClient()
   const [modalOpen, setModalOpen] = useState(false)
   const { mutate: unfriendMutate } = useUnfriend()
   const { connectedUsers } = useConnectedUserContext()
@@ -108,16 +107,7 @@ const FriendList = ({ isOpen, handleCloseMenu }: IFriend) => {
                         {!friendIsInConversation(friend?._id) && (
                           <Button
                             onClick={() =>
-                              createConversationMutate(friend?._id, {
-                                onSuccess: () => {
-                                  queryClient.invalidateQueries({
-                                    queryKey: [
-                                      'current-user',
-                                      'all-conversations',
-                                    ],
-                                  })
-                                },
-                              })
+                              createConversationMutate(friend?._id)
                             }
                             asChild
                             variant='ghost'

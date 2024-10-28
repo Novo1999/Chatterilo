@@ -62,7 +62,7 @@ interface IConnectedUsersContext {
 
 interface IMessage {
   id: string
-  content: string
+  message: string
   timestamp: string
   reaction?: string
   sender: string

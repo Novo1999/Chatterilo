@@ -4,11 +4,11 @@ import { ReactNode } from 'react'
 import MessageText from './MessageText'
 
 const Message = ({ position, message }: MessageProp) => {
-  const { content, timestamp } = message
-  const isToday = moment().isSame(timestamp.split(' ')[0], 'day')
-  const formattedTimestamp = isToday
-    ? `${timestamp.split(' ')[1]} ${timestamp.split(' ')[2]}`
-    : timestamp.split(' ')[0]
+  const { message: messageText, timestamp } = message
+  // const isToday = moment().isSame(timestamp.split(' ')[0], 'day')
+  // const formattedTimestamp = isToday
+  //   ? `${timestamp.split(' ')[1]} ${timestamp.split(' ')[2]}`
+  //   : timestamp.split(' ')[0]
 
   // if position left
   if (position === 'left') {
@@ -22,16 +22,16 @@ const Message = ({ position, message }: MessageProp) => {
             alt='avatar'
             className='size-10 rounded-full'
           />
-          <MessageText>{content}</MessageText>
+          <MessageText>{messageText}</MessageText>
         </div>
-        <p className='text-[8px] italic opacity-80'>{formattedTimestamp}</p>
+        <p className='text-[8px] italic opacity-80'>{""}</p>
       </div>
     )
   } else {
     return (
       <div className='flex flex-col items-end justify-end'>
         <div className='flex gap-2'>
-          <MessageText>{content}</MessageText>
+          <MessageText>{messageText}</MessageText>
           <Image
             src='https://i.pravatar.cc/300'
             width={300}
@@ -40,7 +40,7 @@ const Message = ({ position, message }: MessageProp) => {
             className='size-10 rounded-full'
           />
         </div>
-        <p className='text-[8px] italic opacity-80'>{formattedTimestamp}</p>
+        <p className='text-[8px] italic opacity-80'>{""}</p>
       </div>
     )
   }

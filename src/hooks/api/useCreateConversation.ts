@@ -11,9 +11,23 @@ const createConversation = async (receiverId: string) => {
 }
 
 const useCreateConversation = () => {
+  const queryClient = useQueryClient()
+
   const mutation = useMutation({
     mutationFn: (receiverId: string) => createConversation(receiverId),
+    onSuccess: () => {
+      for (const key of ['my-conversations', 'current-user']) {
+        queryClient.invalidateQueries({
+          queryKey: [
+            key,
+          ],
+          exact: true,
+        })
+      }
+
+    },
   })
+
   return mutation
 }
 

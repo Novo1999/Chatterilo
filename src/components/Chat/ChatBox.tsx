@@ -3,7 +3,6 @@
 import useGetConversationLength from '@/hooks/api/useGetConversationLength'
 import useChatBox from '@/hooks/useChatBox'
 import getParticipantBasedOnTypingUserId from '@/utils/chat/getParticipantBasedOnTypingUserId'
-import getReceiverDetails from '@/utils/chat/getReceiverDetails'
 import { WELCOME_MESSAGE } from '@/utils/misc/constants'
 import { motion } from 'framer-motion'
 import { Loader, LucideMessageSquareDashed } from 'lucide-react'
@@ -12,6 +11,7 @@ import LottiePlayer from '../misc/LottiePlayer'
 import { TextGenerateEffect } from '../ui/text-effect'
 import ChatInput from './ChatInput'
 import ChatNav from './ChatNav'
+import Conversation from './Conversation'
 
 const Chatbox = () => {
   const {
@@ -23,6 +23,7 @@ const Chatbox = () => {
     pathname,
     receiverDetails,
   } = useChatBox()
+  console.log(conversation?.data)
   const { typingUserId } = useChatBox()
 
   const hasNoMessage = conversation?.data?.messages?.length === 0
@@ -53,15 +54,6 @@ const Chatbox = () => {
     )
   }
 
-  // const receiverDetails =
-  //   !isLoading && !isError
-  //     ? getReceiverDetails(
-  //         conversation?.data?.participant1,
-  //         userId,
-  //         conversation?.data?.participant2
-  //       )
-  //     : null
-
   if (!isLoading && isError) {
     content = <MessageError />
   }
@@ -84,6 +76,7 @@ const Chatbox = () => {
     conversation?.data,
     receiverDetails as IReceiverDetails
   )
+
 
   const doesTypingUserIdMatchesConversationParticipant =
     typingUserId === currentParticipantTyping.participantId
@@ -108,11 +101,10 @@ const Chatbox = () => {
         {/* typing */}
         <div className='flex flex-col'>
           <div
-            className={`flex justify-start ml-12 items-center ${
-              doesTypingUserIdMatchesConversationParticipant
+            className={`flex justify-start ml-12 items-center ${doesTypingUserIdMatchesConversationParticipant
                 ? 'visible'
                 : 'invisible'
-            }`}
+              }`}
           >
             <LottiePlayer
               className='text-white ml-12 relative size-12 left-0'
@@ -134,7 +126,7 @@ const Chatbox = () => {
       <>
         <ChatNav recipientName={receiverDetails?.userName as string} />
 
-        {/* <Conversation messages={currentConversation.conversationMessages} /> */}
+        <Conversation messages={conversation.data.messages} />
 
         {doesTypingUserIdMatchesConversationParticipant && (
           <p className='text-white text-xs  ml-12 relative bottom-1'>
@@ -142,8 +134,6 @@ const Chatbox = () => {
           </p>
         )}
 
-        <p className='text-white text-xs  ml-12 relative bottom-1'>typing...</p>
-        {/* bottom input and button */}
         <ChatInput />
       </>
     )
@@ -151,11 +141,9 @@ const Chatbox = () => {
 
   return (
     <div
-      className={`w-full bg-[#16262E] ${
-        pathname.startsWith('/conversation') ? 'flex' : 'hidden'
-      }  md:flex flex-col justify-between ${
-        !userId ? 'ml-2' : ''
-      } rounded-b-md shadow-slate-400 py-4 shadow-sm`}
+      className={`w-full bg-[#16262E] ${pathname.startsWith('/conversation') ? 'flex' : 'hidden'
+        }  md:flex flex-col justify-between ${!userId ? 'ml-2' : ''
+        } rounded-b-md shadow-slate-400 py-4 shadow-sm`}
     >
       {content}
     </div>
