@@ -1,4 +1,4 @@
-import { createContext, Dispatch } from 'react'
+import { createContext, Dispatch, useContext } from 'react'
 
 const defaultUser: IUser = {
   user: {
@@ -24,7 +24,14 @@ export const AuthContext = createContext<IUser>(defaultUser)
 export const ConnectedUserContext = createContext<IConnectedUsersContext>(
   defaultConnectedUsersContext
 )
-export const MessagesContext = createContext<IMessageState | null>(null)
 export const MessagesDispatchContext = createContext<Dispatch<IAction> | null>(
   null
 )
+
+
+export const ConversationContext = createContext<IConversationsContext| null>(null)
+
+
+export const useConversationContext = () => {
+  return useContext(ConversationContext)
+}

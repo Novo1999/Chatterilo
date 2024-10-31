@@ -31,12 +31,13 @@ const ConversationItemChildren = ({
     replace(`${pathname}?${params.toString()}`)
   }
 
+
   if (deviceType === DEVICE_TYPE_MOBILE) {
     return (
       <Link
         className='flex sm:hidden justify-between items-center px-2 gap-2 *:text-gray-100 cursor-pointer py-4 rounded-md border border-white border-opacity-50 shadow-md'
         href={`messages/${receiverDetails?.receiverId}`}
-        // TODO: add path id here
+      // TODO: add path id here
       >
         <div className='flex gap-4 items-center'>
           <div className='relative'>

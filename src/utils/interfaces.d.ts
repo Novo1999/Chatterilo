@@ -61,21 +61,14 @@ interface IConnectedUsersContext {
 }
 
 interface IMessage {
-  id: string
+  _id: string
   message: string
   timestamp: string
   reaction?: string
   sender: string
 }
 
-interface IMessageState {
-  currentConversation: {
-    currentConversationId: string
-    conversationMessages: IMessage[]
-    currentUser?: IUser['user']
-    recipientUser?: IUser['user']
-  }
-}
+
 
 interface IAction {
   type: string
@@ -95,8 +88,18 @@ interface ISendMessage {
 }
 
 interface IConversationObj {
-  recipientId: string
-  conversationId: string
+  _id: string,
+  participant1: IUser
+  participant2: IUser
+  lastMessage: string
+  lastMessageTimeStamp: Date
+  messages: IMessage[]
+}
+
+
+interface IConversationsContext {
+  conversations: IConversationObj[]
+  setConversations: Dispatch<SetStateAction<IConversations[]>>
 }
 
 interface ISaveMessage {

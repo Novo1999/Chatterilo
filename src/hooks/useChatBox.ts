@@ -1,3 +1,4 @@
+import { useConversationContext } from '@/context'
 import { socket } from '@/lib/socket'
 import getReceiverDetails from '@/utils/chat/getReceiverDetails'
 import { useQueryClient } from '@tanstack/react-query'
@@ -29,6 +30,15 @@ const useChatBox = () => {
     (cUser) => cUser.id === receiverDetails?.receiverId
   )
   let timeoutId: NodeJS.Timeout
+
+  const { setConversations, conversations } = useConversationContext()!
+  console.log("🚀 ~ useChatBox ~ conversations:", conversations)
+
+  useEffect(() => {
+    if(isLoading && isError) return
+    if(conversation) setConversations(prev => ([...prev, conversation]))
+  }, [isLoading, isError, conversation])
+
 
   const [typingUserId, setTypingUserId] = useState('')
 
