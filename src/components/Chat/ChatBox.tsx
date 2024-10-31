@@ -23,7 +23,6 @@ const Chatbox = () => {
     pathname,
     receiverDetails,
   } = useChatBox()
-  console.log(conversation?.data)
   const { typingUserId } = useChatBox()
 
   const hasNoMessage = conversation?.data?.messages?.length === 0

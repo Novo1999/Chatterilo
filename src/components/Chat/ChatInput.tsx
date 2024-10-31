@@ -1,6 +1,7 @@
 import { useGetCurrentUser } from '@/hooks/api/useGetCurrentUser'
 import useSendMessage from '@/hooks/api/useSendMessage'
 import useChatBox from '@/hooks/useChatBox'
+import { useQueryClient } from '@tanstack/react-query'
 import { Paperclip, Send } from 'lucide-react'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import { Input } from '../ui/input'
@@ -9,12 +10,20 @@ const ChatInput = () => {
   const { register, handleSubmit } = useForm()
   const { mutate } = useSendMessage()
   const { data } = useGetCurrentUser()
-  console.log("🚀 ~ ChatInput ~ data:", data)
+  const { emitSendMessage, conversationId } = useChatBox()
+  const queryClient = useQueryClient()
 
-  const onSubmit: SubmitHandler<FieldValues> = (inputData) => {
+
+  const onSubmit: SubmitHandler<FieldValues> = async (inputData) => {
     const userId = data?.data?.user?._id
 
     mutate({ sender: userId, message: inputData.message })
+
+    emitSendMessage(inputData.message)
+
+    queryClient.invalidateQueries({
+      queryKey: ['conversation', conversationId]
+    })
   }
 
   const { emitUserTyping } = useChatBox()

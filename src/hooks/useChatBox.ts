@@ -1,5 +1,6 @@
 import { socket } from '@/lib/socket'
 import getReceiverDetails from '@/utils/chat/getReceiverDetails'
+import { useQueryClient } from '@tanstack/react-query'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import useGetConversation from './api/useGetConversation'
@@ -10,6 +11,7 @@ const useChatBox = () => {
   const searchParams = useSearchParams()
   const pathname = usePathname()
   const conversationId = searchParams.get('conversation')
+  const queryClient = useQueryClient()
   const {
     data: conversation,
     isLoading,
@@ -46,6 +48,22 @@ const useChatBox = () => {
     }, 1500)
   }
 
+  const emitSendMessage = (message: string) => {
+    socket.emit("message-sent", {
+      conversationId,
+      sender: userId,
+      receiver: receiverDetails?.receiverId
+      , matchedConnectedUser,
+      message
+    })
+  }
+
+  useEffect(() => {
+    socket.on("new-message", data => {
+      console.log(data)
+    })
+  }, [])
+
   useEffect(() => {
     socket.on('typing', (data) => {
       setTypingUserId(data.senderId)
@@ -67,6 +85,7 @@ const useChatBox = () => {
     pathname,
     userId,
     receiverDetails,
+    emitSendMessage
   }
 }
 export default useChatBox

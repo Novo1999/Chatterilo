@@ -3,9 +3,7 @@ import Message from '../Message/Message'
 
 const Conversation = ({ messages }: { messages: IMessage[] }) => {
   const { user } = useAuthContext()
-  console.log("🚀 ~ Conversation ~ user:", user || "")
   let content = null
-console.log(messages)
 
   if (messages.length === 0) {
     content = (
