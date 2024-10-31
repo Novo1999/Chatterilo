@@ -14,6 +14,7 @@ const useSearchUsers = (searchInput: string) => {
   const query = useQuery({
     queryKey: ['search', searchInput],
     queryFn: () => searchUser(searchInput),
+    enabled: !!searchInput
   })
   return query
 }

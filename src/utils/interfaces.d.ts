@@ -97,9 +97,10 @@ interface IConversationObj {
 }
 
 
-interface IConversationsContext {
-  conversations: IConversationObj[]
-  setConversations: Dispatch<SetStateAction<IConversations[]>>
+
+interface ConversationContextType {
+  conversations: IConversationObj[];
+  setConversations: Dispatch<SetStateAction<IConversationObj[]>>;
 }
 
 interface ISaveMessage {

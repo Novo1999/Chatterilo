@@ -1,5 +1,6 @@
 'use client'
 
+import { useConversationContext } from '@/context'
 import useGetConversationLength from '@/hooks/api/useGetConversationLength'
 import useChatBox from '@/hooks/useChatBox'
 import getParticipantBasedOnTypingUserId from '@/utils/chat/getParticipantBasedOnTypingUserId'
@@ -27,12 +28,14 @@ const Chatbox = () => {
 
   const hasNoMessage = conversation?.data?.messages?.length === 0
 
+  const { conversations, setConversations } = useConversationContext() ?? {}
+
   const {
     isLoading: isTotalConversationLoading,
     isError: isTotalConversationError,
     data,
   } = useGetConversationLength()
-
+ 
   // content
   let content = null
 
@@ -101,8 +104,8 @@ const Chatbox = () => {
         <div className='flex flex-col'>
           <div
             className={`flex justify-start ml-12 items-center ${doesTypingUserIdMatchesConversationParticipant
-                ? 'visible'
-                : 'invisible'
+              ? 'visible'
+              : 'invisible'
               }`}
           >
             <LottiePlayer
@@ -125,7 +128,7 @@ const Chatbox = () => {
       <>
         <ChatNav recipientName={receiverDetails?.userName as string} />
 
-        <Conversation messages={conversation.data.messages} />
+        <Conversation messages={conversations?.find(conv => conv._id === conversation.data._id)?.messages || []} />
 
         {doesTypingUserIdMatchesConversationParticipant && (
           <p className='text-white text-xs  ml-12 relative bottom-1'>

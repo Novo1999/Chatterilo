@@ -29,9 +29,7 @@ export const MessagesDispatchContext = createContext<Dispatch<IAction> | null>(
 )
 
 
-export const ConversationContext = createContext<IConversationsContext| null>(null)
+export const ConversationContext = createContext<ConversationContextType | undefined>(undefined);
 
 
-export const useConversationContext = () => {
-  return useContext(ConversationContext)
-}
+export const useConversationContext = () => useContext(ConversationContext)

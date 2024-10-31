@@ -1,7 +1,6 @@
 import { useConversationContext } from '@/context'
 import { socket } from '@/lib/socket'
 import getReceiverDetails from '@/utils/chat/getReceiverDetails'
-import { useQueryClient } from '@tanstack/react-query'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import useGetConversation from './api/useGetConversation'
@@ -12,7 +11,6 @@ const useChatBox = () => {
   const searchParams = useSearchParams()
   const pathname = usePathname()
   const conversationId = searchParams.get('conversation')
-  const queryClient = useQueryClient()
   const {
     data: conversation,
     isLoading,
@@ -30,14 +28,7 @@ const useChatBox = () => {
     (cUser) => cUser.id === receiverDetails?.receiverId
   )
   let timeoutId: NodeJS.Timeout
-
-  const { setConversations, conversations } = useConversationContext()!
-  console.log("🚀 ~ useChatBox ~ conversations:", conversations)
-
-  useEffect(() => {
-    if(isLoading && isError) return
-    if(conversation) setConversations(prev => ([...prev, conversation]))
-  }, [isLoading, isError, conversation])
+  const { conversations, setConversations } = useConversationContext() ?? {}
 
 
   const [typingUserId, setTypingUserId] = useState('')
@@ -62,17 +53,38 @@ const useChatBox = () => {
     socket.emit("message-sent", {
       conversationId,
       sender: userId,
-      receiver: receiverDetails?.receiverId
-      , matchedConnectedUser,
+      matchedConnectedUser,
       message
     })
   }
 
   useEffect(() => {
-    socket.on("new-message", data => {
-      console.log(data)
+    socket.once("new-message", (data) => {
+      const { message, conversationId, sender } = data ?? {}
+      if (!data) return
+
+      setConversations((prevConversations: IConversationObj[]) => {
+        const matchedConversationIndex = prevConversations?.findIndex(
+          (conv) => conv._id === conversationId
+        )
+        if (matchedConversationIndex === -1) return prevConversations
+
+        const updatedConversations = [...prevConversations]
+        const matchedConversation = { ...updatedConversations[matchedConversationIndex] }
+
+        matchedConversation.messages = [
+          ...matchedConversation.messages,
+          { message, _id: conversationId, sender }
+        ] as IMessage[]
+        updatedConversations[matchedConversationIndex] = matchedConversation
+
+        return updatedConversations
+      })
     })
-  }, [])
+
+    return () => socket.off("new-message")
+  }, [setConversations])
+
 
   useEffect(() => {
     socket.on('typing', (data) => {
