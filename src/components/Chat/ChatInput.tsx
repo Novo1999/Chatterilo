@@ -14,16 +14,12 @@ const ChatInput = () => {
   const queryClient = useQueryClient()
 
 
-  const onSubmit: SubmitHandler<FieldValues> = async (inputData) => {
+  const onSubmit: SubmitHandler<FieldValues> = (inputData) => {
     const userId = data?.data?.user?._id
 
     mutate({ sender: userId, message: inputData.message })
 
     emitSendMessage(inputData.message)
-
-    queryClient.invalidateQueries({
-      queryKey: ['conversation', conversationId]
-    })
   }
 
   const { emitUserTyping } = useChatBox()

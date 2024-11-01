@@ -58,32 +58,6 @@ const useChatBox = () => {
     })
   }
 
-  useEffect(() => {
-    socket.once("new-message", (data) => {
-      const { message, conversationId, sender } = data ?? {}
-      if (!data) return
-
-      setConversations((prevConversations: IConversationObj[]) => {
-        const matchedConversationIndex = prevConversations?.findIndex(
-          (conv) => conv._id === conversationId
-        )
-        if (matchedConversationIndex === -1) return prevConversations
-
-        const updatedConversations = [...prevConversations]
-        const matchedConversation = { ...updatedConversations[matchedConversationIndex] }
-
-        matchedConversation.messages = [
-          ...matchedConversation.messages,
-          { message, _id: conversationId, sender }
-        ] as IMessage[]
-        updatedConversations[matchedConversationIndex] = matchedConversation
-
-        return updatedConversations
-      })
-    })
-
-    return () => socket.off("new-message")
-  }, [setConversations])
 
 
   useEffect(() => {

@@ -3,10 +3,12 @@
 import { useConversationContext } from '@/context'
 import useGetConversationLength from '@/hooks/api/useGetConversationLength'
 import useChatBox from '@/hooks/useChatBox'
+import { socket } from '@/lib/socket'
 import getParticipantBasedOnTypingUserId from '@/utils/chat/getParticipantBasedOnTypingUserId'
 import { WELCOME_MESSAGE } from '@/utils/misc/constants'
 import { motion } from 'framer-motion'
 import { Loader, LucideMessageSquareDashed } from 'lucide-react'
+import { useEffect } from 'react'
 import MessageError from '../Message/Message-Error'
 import LottiePlayer from '../misc/LottiePlayer'
 import { TextGenerateEffect } from '../ui/text-effect'
@@ -30,6 +32,33 @@ const Chatbox = () => {
 
   const { conversations, setConversations } = useConversationContext() ?? {}
 
+
+  useEffect(() => {
+    socket.on("new-message", (data) => {
+      const { message, conversationId, sender } = data ?? {}
+      if (!data) return
+
+      setConversations((prevConversations: IConversationObj[]) => {
+        const matchedConversationIndex = prevConversations?.findIndex(
+          (conv) => conv._id === conversationId
+        )
+        if (matchedConversationIndex === -1) return prevConversations
+
+        const updatedConversations = [...prevConversations]
+        const matchedConversation = { ...updatedConversations[matchedConversationIndex] }
+
+        matchedConversation.messages = [
+          ...matchedConversation.messages,
+          { message, _id: conversationId, sender }
+        ] as IMessage[]
+        updatedConversations[matchedConversationIndex] = matchedConversation
+
+        return updatedConversations
+      })
+    })
+
+  }, [setConversations])
+  
   const {
     isLoading: isTotalConversationLoading,
     isError: isTotalConversationError,
